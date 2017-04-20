@@ -323,7 +323,7 @@
             }
         }
     ],
-    "device_type": "{device_type}",
+    "device_type": "hip07-d05-ubuntu",
     "job_name": "{job_name}",
     "logging_level": "DEBUG",
     "priority": "high",
