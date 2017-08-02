@@ -33,7 +33,7 @@
 	  "parameters": {
 		"testdef_repos": [
 		  {
-			"git-repo": "git://git.linaro.org/qa/test-definitions.git",
+			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
 			"testdef": "ubuntu/acpi-smoke-test.yaml"
 		  }
 		],
@@ -46,7 +46,7 @@
 	  "parameters": {
 		"testdef_repos": [
 		  {
-			"git-repo": "git://git.linaro.org/qa/test-definitions.git",
+			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
 			"testdef": "ubuntu/acpica-tools.yaml"
 		  }
 		],
@@ -59,7 +59,7 @@
 	  "parameters": {
 		"testdef_repos": [
 		  {
-			"git-repo": "git://git.linaro.org/qa/test-definitions.git",
+			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
 			"testdef": "ubuntu/acpica.yaml"
 		  }
 		],
@@ -72,7 +72,7 @@
             "parameters": {
                 "testdef_repos": [
                     {
-                        "git-repo": "http://git.linaro.org/qa/test-definitions.git",
+			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
                         "testdef": "common/dt-selftests.yaml"
                     }
                 ],
@@ -99,7 +99,7 @@
             "parameters": {
                 "testdef_repos": [
                     {
-                        "git-repo": "http://git.linaro.org/qa/test-definitions.git",
+			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
                         "testdef": "ubuntu/sysbench.yaml"
                     }
                 ],
@@ -111,7 +111,7 @@
             "parameters": {
                 "testdef_repos": [
                     {
-                        "git-repo": "http://git.linaro.org/qa/test-definitions.git",
+			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
 			"parameters": {
                             "DeviceID": "/dev/sda2"
                         },
@@ -154,7 +154,7 @@
             "parameters": {
                 "testdef_repos": [
                     {
-                        "git-repo": "http://git.linaro.org/qa/test-definitions.git",
+			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
                         "testdef": "ubuntu/device_read_perf.yaml"
                     }
                 ],
@@ -167,7 +167,7 @@
 		"parameters": {
 			"testdef_repos": [
 			{
-				"git-repo": "https://git.linaro.org/qa/test-definitions.git",
+				"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
 				"parameters": {
 					"PARTITION": "/dev/sda2"
 				},
@@ -183,7 +183,7 @@
 	  "parameters": {
 		"testdef_repos": [
 		  {
-			"git-repo": "git://git.linaro.org/qa/test-definitions.git",
+			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
 			"testdef": "ubuntu/perf.yaml"
 		  }
 		],
@@ -196,7 +196,7 @@
 	  "parameters": {
 		"testdef_repos": [
 		  {
-			"git-repo": "git://git.linaro.org/qa/test-definitions.git",
+			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
 			"testdef": "ubuntu/smoke-tests-basic.yaml"
 		  }
 		],
@@ -242,7 +242,7 @@
             "parameters": {
                 "testdef_repos": [
                     {
-                        "git-repo": "http://git.linaro.org/qa/test-definitions.git",
+			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
                         "testdef": "ubuntu/kselftest-net.yaml"
                     }
                 ],
@@ -255,7 +255,7 @@
             "parameters": {
                 "testdef_repos": [
                     {
-                        "git-repo": "http://git.linaro.org/qa/test-definitions.git",
+			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
                         "testdef": "ubuntu/ltp-network.yaml"
                     }
                 ],
@@ -268,7 +268,7 @@
             "parameters": {
                 "testdef_repos": [
                     {
-                        "git-repo": "http://git.linaro.org/qa/test-definitions.git",
+			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
                         "testdef": "ubuntu/exec-latency.yaml"
                     }
                 ],
@@ -280,7 +280,7 @@
             "parameters": {
                 "testdef_repos": [
                     {
-                        "git-repo": "http://git.linaro.org/qa/test-definitions.git",
+			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
                         "testdef": "common/cyclictest-basic.yaml"
                     }
                 ],
