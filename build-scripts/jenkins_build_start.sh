@@ -412,7 +412,7 @@ function show_help(){
     :
 }
 
-function parse_params() {
+function parse_input() {
     # A POSIX variable
     OPTIND=1         # Reset in case getopts has been used previously in the shell.
 
@@ -447,7 +447,7 @@ function source_properties_file() {
 }
 
 function main() {
-    parse_params "$@"
+    parse_input "$@"
     source_properties_file
 
     prepare_tools
