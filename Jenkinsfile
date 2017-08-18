@@ -15,7 +15,8 @@ node ('compile'){
         }
     }
     stage('Build') {
-        sh "./local/ci-scripts/build-scripts/jenkins_build_start.sh 2>&1  | tee build.log"
+        writeFile file: 'env.properties', text: 'SKIP_BUILD="true"'
+        sh "./local/ci-scripts/build-scripts/jenkins_build_start.sh -p env.properties 2>&1  | tee build.log"
     }
     stage('Test') {
         sh "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log"
