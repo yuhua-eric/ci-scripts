@@ -419,7 +419,7 @@ function parse_params() {
     # Initialize our own variables:
     propertiese_file=""
 
-    while getopts "h?vf:" opt; do
+    while getopts "h?p:" opt; do
         case "$opt" in
             h|\?)
                 show_help
@@ -434,7 +434,7 @@ function parse_params() {
 
     [ "$1" = "--" ] && shift
 
-    echo "output_file='$output_file', Leftovers: $@"
+    echo "propertiese_file='$propertiese_file', Leftovers: $@"
 }
 
 # used to load paramters in pipeline job.
