@@ -17,45 +17,6 @@ kernel = None
 platform_list = []
 legacy_platform_list = []
 
-hisi_x5hd2_dkb = {'device_type': 'hi3716cv200',
-                  'templates': ['generic-arm-dtb-kernel-ci-boot-template.json',
-                                'generic-arm-dtb-kernel-ci-boot-nfs-template.json',
-                                'generic-arm-dtb-kernel-ci-boot-nfs-mp-template.json',
-                                'generic-arm-dtb-kernel-ci-ltp-mm-template.json',
-                                'generic-arm-dtb-kernel-ci-ltp-syscalls-template.json',
-                                'generic-arm-dtb-kernel-ci-kselftest-template.json'],
-                  'defconfig_blacklist': ['arm-allmodconfig'],
-                  'kernel_blacklist': [],
-                  'nfs_blacklist': ['v3.',
-                                    'lsk-v3.'],
-                  'lpae': False,
-                  'fastboot': False}
-
-d01 = {'device_type': 'd01',
-       'templates': ['d01-arm-dtb-kernel-ci-boot-template.json'],
-       'defconfig_blacklist': ['arm-allmodconfig',
-                               'arm-multi_v7_defconfig+linaro-base+distribution'],
-       'kernel_blacklist': [],
-       'nfs_blacklist': [],
-       'lpae': True,
-       'fastboot': False}
-
-d02 = {'device_type': 'd02',
-    'templates': ['d02-arm64-kernel-ci-boot-template.json',
-                              'd02-arm64-kernel-ci-boot-sata-template.json',
-                              'd02-arm64-kernel-ci-boot-nfs-template.json',
-                              'd02-arm64-kernel-ci-boot-esl-template.json',
-                              'd02-arm64-kernel-ci-boot-pxe-template.json',
-                              'd02-arm64-kernel-ci-boot-norflash-template.json',
-                              'd02-arm64-kernel-ci-weekly-template.json'],
-    'defconfig_blacklist': ['arm64-allnoconfig',
-                            'arm64-allmodconfig'],
-                            'kernel_blacklist': [],
-                            'nfs_blacklist': [],
-                            'lpae': False,
-                            'be': False,
-                            'fastboot': False}
-
 d03 = {'device_type': 'd03',
     'templates': ['d03-arm64-kernel-ci-boot-template.json',
                               'd03-arm64-kernel-ci-boot-sata-template.json',
@@ -84,17 +45,6 @@ d05 = {'device_type': 'd05',
                             'fastboot': False}
 
 
-hi6220_hikey = {'device_type': 'hi6220-hikey',
-                'templates': ['generic-arm64-dtb-kernel-ci-boot-template.json',
-                              'generic-arm64-dtb-kernel-ci-kselftest-template.json',
-                              'generic-arm64-uboot-dtb-kernel-ci-hackbench-template.json'],
-                'defconfig_blacklist': ['arm64-allnoconfig',
-                                        'arm64-allmodconfig'],
-               'kernel_blacklist': [],
-               'nfs_blacklist': [],
-               'lpae': False,
-               'fastboot': False}
-
 dummy_ssh = {'device_type': 'dummy_ssh',
              'templates': [ 'device_read_perf.json',
                             'iperf_client.json',
@@ -117,15 +67,9 @@ dummy_ssh = {'device_type': 'dummy_ssh',
                             #'network_tests_basic.json',
                             'sysbench.json'],}
 
-device_map = {'hip04-d01.dtb': [d01],
-              'hip05-d02.dtb': [d02],
+device_map = {
               'D03': [d03],
               'D05': [d05],
-              'hisi-x5hd2-dkb.dtb': [hisi_x5hd2_dkb],
-              #'qemu-arm-legacy': [qemu_arm],
-              #'qemu-aarch64-legacy': [qemu_aarch64],
-              #'juno.dtb': [juno, juno_kvm],
-              #'hi6220-hikey.dtb': [hi6220_hikey],
               }
 
 parse_re = re.compile('href="([^./"?][^"?]*)"')
