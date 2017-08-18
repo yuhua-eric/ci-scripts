@@ -447,7 +447,7 @@ function source_properties_file() {
 }
 
 function main() {
-    parse_params "#@"
+    parse_params "$@"
     source_properties_file
 
     prepare_tools
