@@ -417,7 +417,7 @@ function parse_params() {
     OPTIND=1         # Reset in case getopts has been used previously in the shell.
 
     # Initialize our own variables:
-    propertiese_file=""
+    properties_file=""
 
     while getopts "h?p:" opt; do
         case "$opt" in
@@ -425,7 +425,7 @@ function parse_params() {
                 show_help
                 exit 0
                 ;;
-            p)  propertiese_file=$OPTARG
+            p)  properties_file=$OPTARG
                 ;;
         esac
     done
@@ -434,21 +434,21 @@ function parse_params() {
 
     [ "$1" = "--" ] && shift
 
-    echo "propertiese_file='$propertiese_file', Leftovers: $@"
+    echo "properties_file='$properties_file', Leftovers: $@"
 }
 
 # used to load paramters in pipeline job.
-function source_propertiese_file() {
-    if [ -n "${propertiese_file}" ];then
-        if [ -e "${propertiese_file}" ];then
-            source "${propertiese_file}"
+function source_properties_file() {
+    if [ -n "${properties_file}" ];then
+        if [ -e "${properties_file}" ];then
+            source "${properties_file}"
         fi
     fi
 }
 
 function main() {
     parse_params "#@"
-    source_propertiese_file
+    source_properties_file
 
     prepare_tools
 
