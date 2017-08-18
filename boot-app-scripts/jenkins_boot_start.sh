@@ -44,6 +44,20 @@ function parse_params() {
     popd    # restore current work directory
 }
 
+function save_to_properties() {
+    cat << EOF > ${WORKSPACE}/env.properties
+TREE_NAME="${TREE_NAME}"
+GIT_DESCRIBE="${GIT_DESCRIBE}"
+SHELL_PLATFORM="${SHELL_PLATFORM}"
+SHELL_DISTRO="${SHELL_DISTRO}"
+BOOT_PLAN="${BOOT_PLAN}"
+APP_PLAN="${APP_PLAN}"
+ARCH_MAP="${ARCH_MAP}"
+EOF
+    # EXECUTE_STATUS="Failure"x
+    cat ${WORKSPACE}/env.properties
+}
+
 function prepare_tools() {
     dev_tools="python-yaml python-keyring expect"
 
@@ -434,6 +448,8 @@ function main() {
     print_time "the time of preparing all envireonment is "
     trigger_lava_build
     collect_result
+
+    save_to_properties
 }
 
 main "$@"
