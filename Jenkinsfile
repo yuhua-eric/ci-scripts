@@ -12,7 +12,8 @@ node ('compile'){
         sh 'env'
 
         // save the properties
-        sh "echo SKIP_BUILD=true > env.properties"
+        //sh "echo SKIP_BUILD=true > env.properties"
+        sh 'echo "" > env.properties'
         sh "echo SHELL_PLATFORM=\\\"${SHELL_PLATFORM}\\\" >> env.properties"
         sh "echo ARCH_MAP=\\\"${ARCH_MAP}\\\" >> env.properties"
         sh "echo BOOT_PLAN=\\\"${BOOT_PLAN}\\\" >> env.properties"
