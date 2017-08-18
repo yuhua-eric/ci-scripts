@@ -27,4 +27,13 @@ node ('compile'){
     stage('Test') {
         sh "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log"
     }
+
+    stage('Result') {
+        //get mail info
+        mailTo = readFile 'MAIL_LIST.txt'
+        mailSubject = readFile 'MAIL_SUBJECT.txt'
+        mailContent = readFile 'MAIL_CONTENT.txt'
+        // send test result
+        mail bcc: '', body: mailContent, cc: '', from: 'qinsl0106@thundersoft.com', replyTo: '', subject: mailSubject, to: mailTo
+    }
 }
