@@ -8,7 +8,7 @@ node ('compile'){
             git url: 'https://github.com/qinshulei/ci-scripts.git'
         }
     }
-    stage('Show env') {
+    stage('Setup') {
         sh 'env'
 
         // save the properties
@@ -26,9 +26,5 @@ node ('compile'){
     }
     stage('Test') {
         sh "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log"
-    }
-
-    stage('Results') {
-        echo "generate result"
     }
 }

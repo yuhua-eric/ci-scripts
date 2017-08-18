@@ -423,6 +423,29 @@ function source_properties_file() {
     fi
 }
 
+function generate_mail(){
+    cd ${WORKSPACE}
+    echo "qinsl0106@thundersoft.com;zhangbp0704@thundersoft.com" > MAIL_LIST.txt
+    echo "Estuary CI - ${GIT_DESCRIBE} - Result" > MAIL_SUBJECT.txt
+    cat > MAIL_CONTENT.txt <<EOF
+( This mail is send by Jenkins automatically, don't reply )
+Project Name: $PROJECT_NAME
+Version: ${GIT_DESCRIBE}
+Boot and Test Status: $BUILD_STATUS
+Trigger Reason: ${CAUSE}
+Build Log Address: ${BUILD_URL}console
+Build Project Address: $BUILD_URL
+Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}
+The Test Cases Definition Address: https://github.com/qinshulei/ci-test-cases
+
+EOF
+    echo "Test summary is below:" >> MAIL_CONTENT.txt
+    cat whole_summary.txt >> MAIL_CONTENT.txt
+
+    echo "The test time stamp is below:" >> MAIL_CONTENT.txt
+    cat timestamp_boot.txt >> MAIL_CONTENT.txt
+}
+
 function main() {
     parse_input "$@"
     source_properties_file
@@ -448,6 +471,7 @@ function main() {
     print_time "the time of preparing all envireonment is "
     trigger_lava_build
     collect_result
+    generate_mail
 
     save_to_properties
 }
