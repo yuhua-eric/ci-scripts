@@ -48,17 +48,17 @@ actions:
     timeout:
       minutes: 15
     definitions:
-    - repository: https://github.com/zwx168238/ci-test-cases
-      from: git
-      path: distro/ubuntu/ubuntu_smoke.yaml
-      name: smoke-tests
+      - repository: https://github.com/qinshulei/ci-test-cases
+        from: git
+        path: common/prepare.yaml
+        name: common-prepare
 
-    - repository: https://github.com/zwx168238/ci-test-cases
-      from: git
-      path: distro/ubuntu/smoke-tests-basic.yaml
-      name: smoke-tests-basic
+      - repository: https://github.com/qinshulei/ci-test-cases
+        from: git
+        path: common/smoke.yaml
+        name: common-smoke
 
-    - repository: https://github.com/zwx168238/ci-test-cases
-      from: git
-      path: distro/ubuntu/ubuntu_smoke.yaml
-      name: smoke-tests2
+      - repository: https://github.com/qinshulei/ci-test-cases
+        from: git
+        path: distro/ubuntu/ubuntu_smoke.yaml
+        name: distro-ubuntu-smoke
