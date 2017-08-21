@@ -7,8 +7,7 @@ node ('compile'){
         dir ('./local/ci-scripts') {
             git url: 'https://github.com/qinshulei/ci-scripts.git'
         }
-    }
-    stage('Setup') {
+        // prepare variables.
         sh 'env'
 
         // save the properties
@@ -20,10 +19,13 @@ node ('compile'){
         sh "echo APP_PLAN=\\\"${APP_PLAN}\\\" >> env.properties"
         sh "echo VERSION=\\\"${VERSION}\\\" >> env.properties"
         sh "echo GIT_DESCRIBE=\\\"${GIT_DESCRIBE}\\\" >> env.properties"
+
     }
+
     stage('Build') {
         sh "./local/ci-scripts/build-scripts/jenkins_build_start.sh -p env.properties 2>&1  | tee build.log"
     }
+
     stage('Test') {
         sh "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log"
     }
