@@ -97,6 +97,28 @@ function parse_params() {
     popd    # restore current work directory
 }
 
+function generate_failed_mail(){
+    cd ${WORKSPACE}
+    echo "qinsl0106@thundersoft.com,zhangbp0704@thundersoft.com" > MAIL_LIST.txt
+    echo "Estuary CI - ${GIT_DESCRIBE} - Failed" > MAIL_SUBJECT.txt
+    cat > MAIL_CONTENT.txt <<EOF
+( This mail is send by Jenkins automatically, don't reply )
+Project Name: $PROJECT_NAME
+Version: ${GIT_DESCRIBE}
+Build Status: failed
+Boot and Test Status: failed
+Trigger Reason: ${CAUSE}
+Build Log Address: ${BUILD_URL}console
+Build Project Address: $BUILD_URL
+Build and Generated Binaries Address: NONE
+The Test Cases Definition Address: https://github.com/qinshulei/ci-test-cases
+
+The build is failed unexpectly. Please check the log and fix it.
+
+EOF
+
+}
+
 function save_to_properties() {
     cat << EOF > ${WORKSPACE}/env.properties
 TREE_NAME="${TREE_NAME}"
@@ -462,6 +484,8 @@ function main() {
 
     save_to_properties
     show_properties
+
+    generate_failed_mail
 
     print_time "the begin time is "
     prepare_repo_tool
