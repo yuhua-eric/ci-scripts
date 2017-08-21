@@ -13,7 +13,7 @@ function init_input_params() {
 
     VERSION=${VERSION:-""}
 
-    GIT_DESCRIBE=${GIT_DESCRIBE:-"uefi_b386a15_grub_daac831_kernel_6eade8c"}
+    GIT_DESCRIBE=${GIT_DESCRIBE:-""}
 
     SHELL_PLATFORM=${SHELL_PLATFORM:-"d05"}
     SHELL_DISTRO=${SHELL_DISTRO:-"Ubuntu"}

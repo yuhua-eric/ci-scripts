@@ -60,6 +60,8 @@ function init_input_params() {
     # select a version
     VERSION=${VERSION:-""}
 
+    GIT_DESCRIBE=${GIT_DESCRIBE:-""}
+
     # select borad
     SHELL_PLATFORM=${SHELL_PLATFORM:-"d05"}
     SHELL_DISTRO=${SHELL_DISTRO:-"Ubuntu"}
@@ -490,17 +492,28 @@ function main() {
     print_time "the begin time is "
     prepare_repo_tool
 
-    sync_code
-    clean_build
+    # if GIT_DESCRIBE have exist, skip build.
+    if [ -z "${GIT_DESCRIBE}" ];then
+       sync_code
+       clean_build
 
-    # hotfix_download_estuary_defconfig
-
-    do_build
-    get_version_info
-    parse_arch_map
-    if [ x"$SKIP_CP_IMAGE" = x"false" ];then
-        cp_image
+       # hotfix_download_estuary_defconfig
+       do_build
+       get_version_info
+       parse_arch_map
+       if [ x"$SKIP_CP_IMAGE" = x"false" ];then
+           cp_image
+       fi
+    else
+        DES_DIR=$FTP_DIR/$TREE_NAME/$GIT_DESCRIBE
+        if [ -d $DES_DIR ];then
+            echo "Skip build, use old build : ${GIT_DESCRIBE}"
+        else
+            echo "ERROR: wrong ${GIT_DESCRIBE}, don't exist in ftp."
+            exit -1
+        fi
     fi
+
     save_to_properties
 }
 
