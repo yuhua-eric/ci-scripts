@@ -425,7 +425,7 @@ function source_properties_file() {
 
 function generate_mail(){
     cd ${WORKSPACE}
-    echo "qinsl0106@thundersoft.com;zhangbp0704@thundersoft.com" > MAIL_LIST.txt
+    echo "qinsl0106@thundersoft.com,zhangbp0704@thundersoft.com" > MAIL_LIST.txt
     echo "Estuary CI - ${GIT_DESCRIBE} - Result" > MAIL_SUBJECT.txt
     cat > MAIL_CONTENT.txt <<EOF
 ( This mail is send by Jenkins automatically, don't reply )
