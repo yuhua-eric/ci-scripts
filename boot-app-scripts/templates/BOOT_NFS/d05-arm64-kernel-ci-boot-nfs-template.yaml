@@ -62,3 +62,23 @@ actions:
         from: git
         path: distro/ubuntu/ubuntu_smoke.yaml
         name: distro-ubuntu-smoke
+
+      - repository: https://github.com/qinshulei/ci-test-cases
+        from: git
+        path: distro/ubuntu/ubuntu_docker.yaml
+        name: distro-ubuntu-docker
+
+      - repository: https://github.com/qinshulei/ci-test-cases
+        from: git
+        path: distro/ubuntu/ubuntu_ftp.yaml
+        name: distro-ubuntu-ftp
+
+      - repository: https://github.com/qinshulei/ci-test-cases
+        from: git
+        path: distro/ubuntu/ubuntu_lxc.yaml
+        name: distro-ubuntu-lxc
+
+      - repository: https://github.com/qinshulei/ci-test-cases
+        from: git
+        path: distro/ubuntu/ubuntu_mysql.yaml
+        name: distro-ubuntu-mysql

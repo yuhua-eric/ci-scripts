@@ -465,6 +465,11 @@ EOF
 
     echo "The test time stamp is below:" >> MAIL_CONTENT.txt
     cat timestamp_boot.txt >> MAIL_CONTENT.txt
+
+    echo  ""
+    echo "The Test Case details is below:" >> MAIL_CONTENT.txt
+    cat details_summary.txt >> MAIL_CONTENT.txt
+
     cd -
 }
 
