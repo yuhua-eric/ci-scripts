@@ -109,7 +109,6 @@ Project Name: $PROJECT_NAME
 Version: ${GIT_DESCRIBE}
 Build Status: failed
 Boot and Test Status: failed
-Trigger Reason: ${CAUSE}
 Build Log Address: ${BUILD_URL}console
 Build Project Address: $BUILD_URL
 Build and Generated Binaries Address: NONE

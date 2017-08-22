@@ -4,17 +4,11 @@ Build:
         - Ubuntu
 
     Platform:
-        - D02
         - D03
         - D05
+        - D06
+
 DISTRO:
-    D02:
-        - Ubuntu: Ubuntu_ARM64.tar.gz
-        - Fedora: Fedora_ARM64.tar.gz
-        - OpenSuse: OpenSuse_ARM64.tar.gz
-        - Debian: Debian_ARM64.tar.gz
-        - CentOS: CentOS_ARM64.tar.gz
-        - Rancher: Rancher_ARM64.tar.gz
     D03:
         - Ubuntu: Ubuntu_ARM64.tar.gz
         - Fedora: Fedora_ARM64.tar.gz
@@ -30,8 +24,8 @@ DISTRO:
 # the dictionary for the board and arch mapping
 Arch:
     d03: arm64
-    d02: arm64
     d05: arm64
+    d06: arm64
 
 # for lava connection
 LAVA:
@@ -39,9 +33,11 @@ LAVA:
     lavaserver: http://192.168.1.108/RPC2/
     lavastream: /anonymous/admin/
     lavauser: admin
+    lavaurl: http://192.168.1.108
 
 # for lava job parameter
 Jenkins:
+    url: http://192.168.1.108:8080
     Boot: boot
     App:
         - WEEKLY_TESTING

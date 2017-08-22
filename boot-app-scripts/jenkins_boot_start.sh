@@ -433,7 +433,6 @@ Project Name: $PROJECT_NAME
 Version: ${GIT_DESCRIBE}
 Build Status: success
 Boot and Test Status: failed
-Trigger Reason: ${CAUSE}
 Build Log Address: ${BUILD_URL}console
 Build Project Address: $BUILD_URL
 Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}
@@ -454,8 +453,7 @@ function generate_success_mail(){
 ( This mail is send by Jenkins automatically, don't reply )
 Project Name: $PROJECT_NAME
 Version: ${GIT_DESCRIBE}
-Boot and Test Status: $BUILD_STATUS
-Trigger Reason: ${CAUSE}
+Boot and Test Status: Success
 Build Log Address: ${BUILD_URL}console
 Build Project Address: $BUILD_URL
 Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}

@@ -13,6 +13,12 @@ node ('compile'){
         // save the properties
         //sh "echo SKIP_BUILD=true > env.properties"
         sh 'echo "" > env.properties'
+
+        // save jenkins enviroment properties.
+        sh "echo BUILD_URL=\\\"${BUILD_URL}\\\" >> env.properties"
+
+        // save jenkins parameters.
+        sh "echo TREE_NAME=\\\"${TREE_NAME}\\\" >> env.properties"
         sh "echo SHELL_PLATFORM=\\\"${SHELL_PLATFORM}\\\" >> env.properties"
         sh "echo ARCH_MAP=\\\"${ARCH_MAP}\\\" >> env.properties"
         sh "echo BOOT_PLAN=\\\"${BOOT_PLAN}\\\" >> env.properties"
