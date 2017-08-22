@@ -465,10 +465,11 @@ EOF
 function generate_success_mail(){
     cd ${WORKSPACE}
     if [ "${DEBUG}" = "true" ];then
-        echo "${SUCCESS_LIST}" > MAIL_LIST.txt
-    else
         echo "qinsl0106@thundersoft.com,zhangbp0704@thundersoft.com" > MAIL_LIST.txt
+    else
+        echo "${SUCCESS_MAIL_LIST}" > MAIL_LIST.txt
     fi
+
     echo "Estuary CI - ${GIT_DESCRIBE} - Result" > MAIL_SUBJECT.txt
     cat > MAIL_CONTENT.txt <<EOF
 ( This mail is send by Jenkins automatically, don't reply )
@@ -481,9 +482,11 @@ Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}
 The Test Cases Definition Address: https://github.com/qinshulei/ci-test-cases
 
 EOF
+    echo  ""
     echo "Test summary is below:" >> MAIL_CONTENT.txt
     cat whole_summary.txt >> MAIL_CONTENT.txt
 
+    echo  ""
     echo "The test time stamp is below:" >> MAIL_CONTENT.txt
     cat timestamp_boot.txt >> MAIL_CONTENT.txt
 
