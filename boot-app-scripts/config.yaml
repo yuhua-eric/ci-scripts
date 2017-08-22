@@ -47,3 +47,7 @@ Jenkins:
 Ftpinfo:
     ftpserver: http://192.168.1.108:8083
     FTP_DIR : /fileserver
+
+# mail list
+Mail:
+  SUCCESS_LIST: zhangbp0704@thundersoft.com,qinsl0106@thundersoft.com,zhaojunhua@hisilicon.com,xuxj@thundersoft.com,lixiaoping3@huawei.com,peiqiang@huawei.com,z.liuxinliang@hisilicon.com,zhangfeng56@huawei.com,fengliang12@huawei.com,liucaili2@huawei.com

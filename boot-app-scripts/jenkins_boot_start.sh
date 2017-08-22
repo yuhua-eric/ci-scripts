@@ -41,6 +41,8 @@ function parse_params() {
 
     : ${ARCH_MAP:=`python parameter_parser.py -f config.yaml -s Arch`}
 
+    : ${SUCCESS_MAIL_LIST:=`python parameter_parser.py -f config.yaml -s Mail -k SUCCESS_LIST`}
+
     popd    # restore current work directory
 }
 
@@ -363,6 +365,10 @@ function collect_result() {
         rm -rf  ${WORKSPACE}/${WHOLE_SUM}
     fi
 
+    if [  -e  ${WORKSPACE}/${DETAILS_SUM} ]; then
+        rm -rf  ${WORKSPACE}/${DETAILS_SUM}
+    fi
+
     if [  -e  ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} ]; then
         rm -rf  ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
     fi
@@ -371,6 +377,8 @@ function collect_result() {
     mv ${CI_SCRIPTS_DIR}/boot-app-scripts/${DETAILS_SUM} ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
 
     cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} ${WORKSPACE}/${WHOLE_SUM}
+    cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} ${WORKSPACE}/${DETAILS_SUM}
+
     cp -rf ${timefile} ${WORKSPACE} || true
 
     #zip -r ${{GIT_DESCRIBE}}_results.zip ${GIT_DESCRIBE}/*
@@ -456,7 +464,11 @@ EOF
 
 function generate_success_mail(){
     cd ${WORKSPACE}
-    echo "qinsl0106@thundersoft.com,zhangbp0704@thundersoft.com" > MAIL_LIST.txt
+    if [ "${DEBUG}" = "true" ];then
+        echo "${SUCCESS_LIST}" > MAIL_LIST.txt
+    else
+        echo "qinsl0106@thundersoft.com,zhangbp0704@thundersoft.com" > MAIL_LIST.txt
+    fi
     echo "Estuary CI - ${GIT_DESCRIBE} - Result" > MAIL_SUBJECT.txt
     cat > MAIL_CONTENT.txt <<EOF
 ( This mail is send by Jenkins automatically, don't reply )
