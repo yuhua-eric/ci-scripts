@@ -42,6 +42,6 @@ node ('compile'){
         mailSubject = readFile 'MAIL_SUBJECT.txt'
         mailContent = readFile 'MAIL_CONTENT.txt'
         // send test result
-        mail bcc: '', body: mailContent, cc: '', from: '18512526406@163.com', replyTo: '18512526406@163.com', subject: mailSubject, to: mailTo
+        mail bcc: '', body: mailContent, cc: '', from: 'qinsl0106@thundersoft.com', replyTo: 'qinsl0106@thundersoft.com', subject: mailSubject, to: mailTo
     }
 }
