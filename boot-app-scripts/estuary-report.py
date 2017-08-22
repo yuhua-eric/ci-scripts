@@ -20,6 +20,7 @@ from lib import utils
 #log2html = 'https://git.linaro.org/people/kevin.hilman/build-scripts.git/blob_plain/HEAD:/log2html.py'
 #for test report
 whole_summary_name = 'whole_summary.txt'
+details_summary_name = 'details_summary.txt'
 total_str = "Total number of test cases: "
 fail_str = "Failed number of test cases: "
 suc_str = "Success number of test cases: "
@@ -195,6 +196,15 @@ def generate_test_report(job_id, connection):
     for item in test:
         case_dict[item['suite']].append(item)
 
+    # try to write details file
+    details_dir = os.getcwd()
+    details_file = os.path.join(details_dir, details_summary_name)
+    if os.path.exists(details_file):
+        os.remove(details_file)
+    with open(details_file, "wt") as wfp:
+        wfp.write("*" * 24 + " DETAILS TESTCASE START " + "*" * 24 + '\n')
+        wfp.write("suite_name\t" + "case_name\t\t" + "case_result\t" + '\n')
+
     for key in case_dict.keys():
         if key == 'lava':
             for item in case_dict[key]:
@@ -216,13 +226,10 @@ def generate_test_report(job_id, connection):
                     test_fail += 1
                 else:
                     test_total += 1
-
-    print 'boot total : ' + str(boot_total)
-    print 'boot success: ' + str(boot_success)
-    print 'boot fail: ' + str(boot_fail)
-    print 'test total : ' + str(test_total)
-    print 'test success: ' + str(test_success)
-    print 'test fail: ' + str(test_fail)
+                with open(details_file, "at") as wfp:
+                    wfp.write(item['suite'] + '\t' + item['name'] + '\t\t' + item['result'] + '\n')
+    with open(details_file, "at") as wfp:
+        wfp.write("*" * 24 + " DETAILS TESTCASE END " + "*" * 24 + '\n')
 
     #try to write summary file
     summary_dir = os.getcwd()
@@ -230,9 +237,6 @@ def generate_test_report(job_id, connection):
     if os.path.exists(summary_file):
         os.remove(summary_file)
     with open(summary_file, 'w') as wfp:
-        total_num = 0
-        suc_num = 0
-        fail_num = 0
         wfp.write("*" * 20 + " BOOT SUMMARY START " + "*" * 20 + '\n')
         wfp.write("\n" + total_str + str(boot_total))
         wfp.write("\n" + fail_str + str(boot_fail))

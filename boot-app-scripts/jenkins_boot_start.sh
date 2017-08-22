@@ -357,10 +357,19 @@ function collect_result() {
     cp test_result.tar.gz  ${WORKSPACE}
 
     WHOLE_SUM='whole_summary.txt'
+    DETAILS_SUM='details_summary.txt'
+
     if [  -e  ${WORKSPACE}/${WHOLE_SUM} ]; then
         rm -rf  ${WORKSPACE}/${WHOLE_SUM}
     fi
+
+    if [  -e  ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} ]; then
+        rm -rf  ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
+    fi
+
     mv ${CI_SCRIPTS_DIR}/boot-app-scripts/${WHOLE_SUM} ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
+    mv ${CI_SCRIPTS_DIR}/boot-app-scripts/${DETAILS_SUM} ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
+
     cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} ${WORKSPACE}/${WHOLE_SUM}
     cp -rf ${timefile} ${WORKSPACE} || true
 
