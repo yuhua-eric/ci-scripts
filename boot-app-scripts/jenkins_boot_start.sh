@@ -446,7 +446,7 @@ function generate_failed_mail(){
     echo "Estuary CI - ${GIT_DESCRIBE} - Failed" > MAIL_SUBJECT.txt
     cat > MAIL_CONTENT.txt <<EOF
 ( This mail is send by Jenkins automatically, don't reply )
-Project Name: $PROJECT_NAME
+Project Name: ${TREE_NAME}
 Version: ${GIT_DESCRIBE}
 Build Status: success
 Boot and Test Status: failed
@@ -473,7 +473,7 @@ function generate_success_mail(){
     echo "Estuary CI - ${GIT_DESCRIBE} - Result" > MAIL_SUBJECT.txt
     cat > MAIL_CONTENT.txt <<EOF
 ( This mail is send by Jenkins automatically, don't reply )
-Project Name: $PROJECT_NAME
+Project Name: ${TREE_NAME}
 Version: ${GIT_DESCRIBE}
 Boot and Test Status: Success
 Build Log Address: ${BUILD_URL}console
