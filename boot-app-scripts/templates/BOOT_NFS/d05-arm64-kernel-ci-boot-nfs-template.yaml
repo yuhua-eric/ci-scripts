@@ -16,7 +16,7 @@ metadata:
 
 timeouts:
   job:
-    minutes: 60
+    minutes: 80
   action:
     minutes: 20
   connection:
@@ -46,7 +46,7 @@ actions:
     - 'root@ubuntu:'
 - test:
     timeout:
-      minutes: 15
+      minutes: 60
     definitions:
       - repository: https://github.com/qinshulei/ci-test-cases
         from: git
