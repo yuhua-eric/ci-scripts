@@ -239,6 +239,9 @@ function do_build() {
         sed -i -e "/$DISTRO/s/no/yes/" $BUILD_CFG_FILE
     done
 
+    # TODO: disable packages install first. open this when the package is required and ready.
+    sed -i -e '/"cmd":/s/install/none/' $BUILD_CFG_FILE
+
     # Set all packages supported to yes
     echo $PACKAGES
     for package in $PACKAGES; do
