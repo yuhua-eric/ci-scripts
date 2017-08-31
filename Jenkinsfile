@@ -10,8 +10,8 @@ def clone2local(giturl, localdir) {
 
 node ('compile'){
     stage('Preparation') { // for display purposes
-        clone2local 'https://github.com/qinshulei/ci-scripts.git' './local/ci-scripts'
-        clone2local 'https://github.com/qinshulei/ci-test-cases.git' './local/ci-test-cases'
+        clone2local('https://github.com/qinshulei/ci-scripts.git', './local/ci-scripts')
+        clone2local('https://github.com/qinshulei/ci-test-cases.git', './local/ci-test-cases')
 
         // prepare variables.
         sh 'env'
