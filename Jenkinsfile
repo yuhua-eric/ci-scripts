@@ -1,12 +1,18 @@
+def clone2local(giturl, localdir) {
+    def exists = fileExists localdir
+    if (!exists){
+        new File(localdir).mkdir()
+    }
+    dir (localdir) {
+        git url: giturl
+    }
+}
+
 node ('compile'){
     stage('Preparation') { // for display purposes
-        def exists = fileExists './local/ci-scripts'
-        if (!exists){
-            new File('./local/ci-scripts').mkdir()
-        }
-        dir ('./local/ci-scripts') {
-            git url: 'https://github.com/qinshulei/ci-scripts.git'
-        }
+        clone2local 'https://github.com/qinshulei/ci-scripts.git' './local/ci-scripts'
+        clone2local 'https://github.com/qinshulei/ci-test-cases.git' './local/ci-test-cases'
+
         // prepare variables.
         sh 'env'
 

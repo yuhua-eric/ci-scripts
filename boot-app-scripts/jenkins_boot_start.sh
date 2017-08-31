@@ -399,6 +399,7 @@ function collect_result() {
 
 function init_env() {
     CI_SCRIPTS_DIR=${WORKSPACE}/local/ci-scripts
+    TEST_CASE_DIR=${WORKSPACE}/local/ci-test-cases
 }
 
 
