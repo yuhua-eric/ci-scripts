@@ -438,7 +438,7 @@ def main(args):
     config = configuration.get_config(args)
 
     TEST_CASE_DEFINITION_DIR = config.get("testDir")
-    TEST_CASE_DEFINITION_FILE_LIST = findAllTestCase(testDir)
+    TEST_CASE_DEFINITION_FILE_LIST = findAllTestCase(TEST_CASE_DEFINITION_DIR)
 
     setup_job_dir(os.getcwd() + '/jobs')
     print 'Scanning %s for kernel information...' % config.get("url")
