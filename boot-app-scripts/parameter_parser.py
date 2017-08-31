@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#                      
-#    E-mail    :    wu.wu@hisilicon.com 
+#
+#    E-mail    :    wu.wu@hisilicon.com
 #    Data      :    2016-03-02 11:44:33
 #    Desc      :
 import yaml
@@ -60,4 +60,3 @@ if __name__ == "__main__":
                 print value
         if args.key and args.value:
             value = read_value_of_array(args.filename, args.section, args.key, args.value)
-

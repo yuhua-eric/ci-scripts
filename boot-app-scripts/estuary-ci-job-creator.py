@@ -1,15 +1,19 @@
 #!/usr/bin/python
+import ConfigParser
+import argparse
+import fnmatch
+import httplib
+import os
+import os.path
+import re
+import shutil
+import subprocess
 import urllib2
 import urlparse
-import httplib
-import re
-import os
-import shutil
-import argparse
-import subprocess
-import ConfigParser
+import yaml
 
 from lib import configuration
+from lib import utils
 import parameter_parser
 
 base_url = None
@@ -18,11 +22,10 @@ platform_list = []
 legacy_platform_list = []
 
 d03 = {'device_type': 'd03',
-    'templates': ['d03-arm64-kernel-ci-boot-template.json',
-                              'd03-arm64-kernel-ci-boot-sata-template.json',
-                              'd03-arm64-kernel-ci-boot-nfs-template.json',
-                              'd03-arm64-kernel-ci-boot-pxe-template.json',
-                              'd03-arm64-kernel-ci-weekly-template.json'],
+    'templates': ['d03-arm64-kernel-ci-boot-template.yaml',
+                              'd03-arm64-kernel-ci-boot-sata-template.yaml',
+                              'd03-arm64-kernel-ci-boot-nfs-template.yaml',
+                              'd03-arm64-kernel-ci-boot-pxe-template.yaml'],
     'defconfig_blacklist': ['arm64-allnoconfig',
                             'arm64-allmodconfig'],
                             'kernel_blacklist': [],
@@ -31,11 +34,10 @@ d03 = {'device_type': 'd03',
                             'be': False,
                             'fastboot': False}
 d05 = {'device_type': 'd05',
-    'templates': ['d05-arm64-kernel-ci-boot-template.json',
-                              'd05-arm64-kernel-ci-boot-sata-template.json',
+    'templates': ['d05-arm64-kernel-ci-boot-template.yaml',
+                              'd05-arm64-kernel-ci-boot-sata-template.yaml',
                               'd05-arm64-kernel-ci-boot-nfs-template.yaml',
-                              'd05-arm64-kernel-ci-boot-pxe-template.json',
-                              'd05-arm64-kernel-ci-weekly-template.json'],
+                              'd05-arm64-kernel-ci-boot-pxe-template.yaml'],
     'defconfig_blacklist': ['arm64-allnoconfig',
                             'arm64-allmodconfig'],
                             'kernel_blacklist': [],
@@ -46,26 +48,7 @@ d05 = {'device_type': 'd05',
 
 
 dummy_ssh = {'device_type': 'dummy_ssh',
-             'templates': [ 'device_read_perf.json',
-                            'iperf_client.json',
-                            'ltp.json',
-                            'perf.json',
-                            'cyclictest-basic.json',
-                            'exec_latency.json',
-                            'kselftest-net.json',
-                            'netperf.json',
-                            'fio.json',
-                            'lkp.json',
-                            'docker.json',
-                            'ftp.json',
-                            'lxc.json',
-                            'mysql.json',
-                            'hadoop.json',
-                            'smoke_basic_test.json',
-                            'smoke.json',
-                            'qemu.json',
-                            #'network_tests_basic.json',
-                            'sysbench.json'],}
+             'templates': [ 'dummy_ssh_template.yaml'],}
 
 device_map = {
               'D03': [d03],
@@ -73,6 +56,10 @@ device_map = {
               }
 
 parse_re = re.compile('href="([^./"?][^"?]*)"')
+
+# add by wuyanjun  2016/3/9
+distro_list = []
+
 
 def setup_job_dir(directory):
     print 'Setting up YAML output directory at: jobs/'
@@ -83,8 +70,6 @@ def setup_job_dir(directory):
     #    os.makedirs(directory)
     print 'Done setting up YAML output directory'
 
-# add by wuyanjun  2016/3/9
-distro_list = []
 def get_nfs_url(distro_url, device_type):
     parse_re = re.compile('href="([^./"?][^"?]*)"')
     if not distro_url.endswith('.tar.gz') or not distro_url.endswith('.gz'):
@@ -110,7 +95,7 @@ def get_nfs_url(distro_url, device_type):
 # add by wuyanjun 2016-06-25
 def get_pubkey():
     key_loc = os.path.join(os.path.expandvars('$HOME'), '.ssh', 'id_rsa.pub')
-   
+
     if os.path.exists(key_loc):
         pubkey = open(key_loc, 'r').read().rstrip()
     else:
@@ -122,6 +107,40 @@ def get_pubkey():
             pubkey = ""
     return pubkey
 
+def generate_test_definition(github_url, test_path, name):
+    test_definition =  "      - repository: " + github_url +"\n"
+    test_definition += "        from: git\n"
+    test_definition += "        path: " + test_path + "\n"
+    test_definition += "        name: " + name + "\n"
+    return test_definition
+
+def generate_test_definitions():
+    github_url = "https://github.com/qinshulei/ci-test-cases"
+    # filter the test
+    work_test_list=[]
+    load_yaml = utils.load_yaml
+    start_point = len(TEST_CASE_DEFINITION_DIR) + 1
+    for file in TEST_CASE_DEFINITION_FILE_LIST:
+        test_yaml = load_yaml(file)
+        name = test_yaml['metadata']['name']
+        ready = test_yaml['metadata']['ready']
+        level = test_yaml['metadata']['level']
+        print "name = " + str(name) + " " \
+            "ready = " + str(ready) + " " \
+            "level = " + str(level) + " "
+        if ready == True:
+            test_path = file[start_point:]
+            test_yaml['metadata']['test_path'] = test_path
+            work_test_list.append(test_yaml)
+
+    work_test_list = sorted(work_test_list, key = lambda x: x['metadata']['level'], reverse=True)
+
+    all_definitions = ""
+    for test in work_test_list:
+        definition = generate_test_definition(github_url, test['metadata']['test_path'], test['metadata']['name'])
+        all_definitions += definition
+
+    return all_definitions
 
 def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                 distro_url, distro="Ubuntu", sasFlag=False):
@@ -137,6 +156,9 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
     defconfig = build_info[3]
     has_modules = True
     checked_modules = False
+
+    # TODO : think filter the test job by platform
+    test_definitions=generate_test_definitions()
 
     pubkey = get_pubkey()
     for platform in platform_list:
@@ -164,22 +186,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                     except:
                         print "Unable to load test configuration"
                         exit(1)
-                if 'BIG_ENDIAN' in defconfig and plan != 'boot-be':
-                    print 'BIG_ENDIAN is not supported on %s. Skipping JSON creation' % device_type
-                elif 'LPAE' in defconfig and not lpae:
-                    print 'LPAE is not supported on %s. Skipping JSON creation' % device_type
-                elif defconfig in device['defconfig_blacklist']:
-                    print '%s has been blacklisted. Skipping JSON creation' % defconfig
-                elif any([x for x in device['kernel_blacklist'] if x in kernel_version]):
-                    print '%s has been blacklisted. Skipping JSON creation' % kernel_version
-                elif any([x for x in device['nfs_blacklist'] if x in kernel_version]) \
-                        and plan in ['boot-nfs', 'boot-nfs-mp']:
-                    print '%s has been blacklisted. Skipping JSON creation' % kernel_version
-                elif 'be_blacklist' in device \
-                        and any([x for x in device['be_blacklist'] if x in kernel_version]) \
-                        and plan in ['boot-be']:
-                    print '%s has been blacklisted. Skipping JSON creation' % kernel_version
-                elif targets is not None and device_type not in targets:
+                if targets is not None and device_type not in targets:
                     print '%s device type has been omitted. Skipping JSON creation.' % device_type
                 #elif not any([x for x in defconfigs if x == defconfig]) and plan != 'boot':
                 #    print '%s has been omitted from the %s test plan. Skipping JSON creation.' % (defconfig, plan)
@@ -211,7 +218,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                         total_templates = list(set(single_templates).union(set(both_templates)))
                     else:
                         # may be need to improve here because of all test cases will be executed
-                        total_templates = [x for x in device_templates] 
+                        total_templates = [x for x in device_templates]
                     # may need to change
                     get_nfs_url(distro_url, device_type)
                     for template in total_templates:
@@ -229,7 +236,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                         tmp = line.replace('{dtb_url}', platform)
                                         tmp = tmp.replace('{kernel_url}', kernel)
                                         # add by wuyanjun
-                                        # if the jobs are not the boot jobs of LAVA, try to use the 
+                                        # if the jobs are not the boot jobs of LAVA, try to use the
                                         # dummy_ssh as the board device, or use the ${board_type} itself.
                                         if 'boot' not in plan and 'BOOT' not in plan:
                                             tmp = tmp.replace('{device_type}', 'dummy_ssh'+'_'+device_type)
@@ -277,6 +284,10 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                             tmp = tmp.replace('{priority}', priority.lower())
                                         else:
                                             tmp = tmp.replace('{priority}', 'high')
+
+                                        if test_definitions:
+                                            tmp = tmp.replace('{test_definitions}', test_definitions)
+
                                         fout.write(tmp)
                             # add by wuyanjun 2016/3/8
                             # to support filling all the nfsroot url in the json template
@@ -403,9 +414,31 @@ def walk_url(url, distro_url, plans=None, arch=None, targets=None,
         walk_url(url + dir, distro_url, plans, arch, targets, priority,\
                 distro, SasFlag)
 
+def findAllTestCase(testDir):
+    test_case_yaml_file_list=[]
+    for root, dirs, files in os.walk(testDir):
+        # exclude dirs
+        dirs[:] = [os.path.join(root, d) for d in dirs]
+        dirs[:] = [d for d in dirs if not re.match('.*\.git$', d)]
+
+        # exclude/include files
+        files = [os.path.join(root, f) for f in files]
+        files = [f for f in files if not re.match('(.*\.sh$)|(.*\.bash$)', f)]
+        files = [f for f in files if re.match('(.*\.yaml$)|(.*\.yml$)', f)]
+        for fname in files:
+            test_case_yaml_file_list.append(fname)
+            print fname
+    return test_case_yaml_file_list
+
 def main(args):
     global test_kind
+    global TEST_CASE_DEFINITION_DIR
+    global TEST_CASE_DEFINITION_FILE_LIST
+
     config = configuration.get_config(args)
+
+    TEST_CASE_DEFINITION_DIR = config.get("testDir")
+    TEST_CASE_DEFINITION_FILE_LIST = findAllTestCase(testDir)
 
     setup_job_dir(os.getcwd() + '/jobs')
     print 'Scanning %s for kernel information...' % config.get("url")
@@ -432,6 +465,7 @@ if __name__ == '__main__':
             to create jobs for")
     parser.add_argument("--arch", help="specific the architecture to create jobs\
             for")
+    parser.add_argument("--testDir", help="specific test case dir")
     parser.add_argument("--targets", nargs='+', help="specific targets to create\
             jobs for")
     parser.add_argument("--priority", choices=['high', 'medium', 'low', 'HIGH',\

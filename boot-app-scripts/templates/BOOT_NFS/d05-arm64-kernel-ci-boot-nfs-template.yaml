@@ -48,17 +48,4 @@ actions:
     timeout:
       minutes: 60
     definitions:
-      - repository: https://github.com/qinshulei/ci-test-cases
-        from: git
-        path: common/prepare.yaml
-        name: common-prepare
-
-      - repository: https://github.com/qinshulei/ci-test-cases
-        from: git
-        path: common/smoke.yaml
-        name: common-smoke
-
-      - repository: https://github.com/qinshulei/ci-test-cases
-        from: git
-        path: distro/ubuntu/ubuntu_smoke.yaml
-        name: ubuntu-smoke
+{test_definitions}
