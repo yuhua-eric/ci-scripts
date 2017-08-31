@@ -57,3 +57,8 @@ actions:
         from: git
         path: common/smoke.yaml
         name: common-smoke
+
+      - repository: https://github.com/qinshulei/ci-test-cases
+        from: git
+        path: distro/ubuntu/ubuntu_smoke.yaml
+        name: ubuntu-smoke
