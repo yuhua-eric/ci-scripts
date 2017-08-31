@@ -19,7 +19,6 @@ import parameter_parser
 base_url = None
 kernel = None
 platform_list = []
-legacy_platform_list = []
 
 d03 = {'device_type': 'd03',
     'templates': ['d03-arm64-kernel-ci-boot-template.yaml',
@@ -114,7 +113,7 @@ def generate_test_definition(github_url, test_path, name):
     test_definition += "        name: " + name + "\n"
     return test_definition
 
-def generate_test_definitions():
+def generate_test_definitions(distro, device_type):
     github_url = "https://github.com/qinshulei/ci-test-cases"
     # filter the test
     work_test_list=[]
@@ -128,7 +127,7 @@ def generate_test_definitions():
         print "name = " + str(name) + " " \
             "ready = " + str(ready) + " " \
             "level = " + str(level) + " "
-        if ready == True:
+        if ready == True and device_type.lower() in test_yaml['metadata']['devices'] and distro.lower() in test_yaml['metadata']['os']:
             test_path = file[start_point:]
             test_yaml['metadata']['test_path'] = test_path
             work_test_list.append(test_yaml)
@@ -156,9 +155,6 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
     defconfig = build_info[3]
     has_modules = True
     checked_modules = False
-
-    # TODO : think filter the test job by platform
-    test_definitions=generate_test_definitions()
 
     pubkey = get_pubkey()
     for platform in platform_list:
@@ -221,6 +217,10 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                         total_templates = [x for x in device_templates]
                     # may need to change
                     get_nfs_url(distro_url, device_type)
+
+                    # TODO : think filter the test job by platform, distro, device type, level, scope
+                    test_definitions=generate_test_definitions(distro, device_type)
+
                     for template in total_templates:
                         job_name = tree + '-' + kernel_version + '-' + defconfig[:100] + \
                                 '-' + platform_name + '-' + device_type + '-' + plan
@@ -344,7 +344,6 @@ def walk_url(url, distro_url, plans=None, arch=None, targets=None,
     global base_url
     global kernel
     global platform_list
-    global legacy_platform_list
 
     try:
         html = urllib2.urlopen(url, timeout=30).read()
@@ -383,9 +382,6 @@ def walk_url(url, distro_url, plans=None, arch=None, targets=None,
             if 'zImage' in name and 'arm' in url:
                 kernel = url + name
                 base_url = url
-            if name.endswith('.dtb') and name in device_map:
-                if (base_url and base_url in url) or (base_url is None):
-                    legacy_platform_list.append(url + name)
         elif arch == 'arm64':
             if 'Image' in name and 'arm64' in url:
                 kernel = url + name
@@ -404,11 +400,6 @@ def walk_url(url, distro_url, plans=None, arch=None, targets=None,
                 base_url = None
                 kernel = None
             platform_list = []
-        elif legacy_platform_list:
-            print 'Found artifacts at: %s' % base_url
-            create_jobs(base_url, kernel, plans, legacy_platform_list, targets,
-                        priority, distro_url, distro, SasFlag)
-            legacy_platform_list = []
 
     for dir in dirs:
         walk_url(url + dir, distro_url, plans, arch, targets, priority,\
