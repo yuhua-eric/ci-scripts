@@ -16,10 +16,10 @@ function init_input_params() {
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
 
     SHELL_PLATFORM=${SHELL_PLATFORM:-"d05"}
-    SHELL_DISTRO=${SHELL_DISTRO:-"Ubuntu"}
+    SHELL_DISTRO=${SHELL_DISTRO:-""}
     ARCH_MAP=${ARCH_MAP:-"d05 arm64"}
 
-    BOOT_PLAN=${BOOT_PLAN:-"BOOT_NFS BOOT_SAS"}
+    BOOT_PLAN=${BOOT_PLAN:-"BOOT_NFS"}
     APP_PLAN=${APP_PLAN:-"TEST"}
 }
 

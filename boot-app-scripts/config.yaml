@@ -1,7 +1,8 @@
 Build:
     # parameters for the build
     Distro:
-        - Ubuntu
+        - ubuntu
+        - centos
 
     Platform:
         - D03
@@ -11,11 +12,7 @@ Build:
 DISTRO:
     D03:
         - Ubuntu: Ubuntu_ARM64.tar.gz
-        - Fedora: Fedora_ARM64.tar.gz
-        - OpenSuse: OpenSuse_ARM64.tar.gz
-        - Debian: Debian_ARM64.tar.gz
         - CentOS: CentOS_ARM64.tar.gz
-        - Rancher: Rancher_ARM64.tar.gz
     D05:
         - CentOS: CentOS_ARM64.tar.gz
         - Ubuntu: Ubuntu_ARM64.tar.gz
