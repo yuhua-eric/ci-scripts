@@ -2,7 +2,7 @@ Build:
     # parameters for the build
     Distro:
         - Ubuntu
-        - Centos
+        - CentOS
 
     Platform:
         - D03
