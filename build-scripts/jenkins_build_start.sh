@@ -64,7 +64,7 @@ function init_input_params() {
 
     # select borad
     SHELL_PLATFORM=${SHELL_PLATFORM:-"d05"}
-    SHELL_DISTRO=${SHELL_DISTRO:-"Ubuntu"}
+    SHELL_DISTRO=${SHELL_DISTRO:-""}
     ARCH_MAP=${ARCH_MAP:-"d05 arm64"}
 
     # test plan
