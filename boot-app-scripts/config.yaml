@@ -3,6 +3,11 @@ Build:
     Distro:
         - Ubuntu
         - CentOS
+        #- Debian
+        #- Fedora
+        #- OpenSuse
+        #- Rancher
+        #- OpenEmbedded
 
     Platform:
         - D03
