@@ -223,7 +223,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
 
                     for template in total_templates:
                         job_name = tree + '-' + kernel_version + '-' + defconfig[:100] + \
-                                '-' + platform_name + '-' + device_type + '-' + plan
+                                '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
                         if template in dummy_ssh['templates']:
                             job_json = cwd + '/jobs/' + job_name + '-' + template
                         else:
