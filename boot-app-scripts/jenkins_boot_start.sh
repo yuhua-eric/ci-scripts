@@ -195,6 +195,9 @@ function clean_workspace() {
     ##### remove all file from the workspace #####
     rm -rf ${CI_SCRIPTS_DIR}/uef* test_result.tar.gz||true
     rm -rf ${WORKSPACE}/*.txt||true
+
+    ### reset CI scripts ####
+    cd ${CI_SCRIPTS_DIR}/; git clean -fdx; cd -
 }
 
 function trigger_lava_build() {
