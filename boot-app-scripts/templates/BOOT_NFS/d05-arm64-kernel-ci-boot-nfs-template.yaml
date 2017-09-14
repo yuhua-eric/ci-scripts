@@ -35,7 +35,7 @@ actions:
 - boot:
     timeout:
       minutes: 5
-    method: grub-efi
+    method: grub
     commands: nfs
     auto_login:
       login_prompt: "login:"
