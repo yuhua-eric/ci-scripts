@@ -20,7 +20,7 @@ timeouts:
   action:
     minutes: 20
   connection:
-    minutes: 5
+    minutes: 10
 actions:
 - deploy:
       to: tftp
@@ -34,7 +34,7 @@ actions:
       os: ubuntu
 - boot:
     timeout:
-      minutes: 5
+      minutes: 10
     method: grub
     commands: nfs
     auto_login:
@@ -44,6 +44,7 @@ actions:
       password: root
     prompts:
     - 'root@ubuntu:'
+    - 'root@centos ~'
 - test:
     timeout:
       minutes: 60

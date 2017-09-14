@@ -200,6 +200,7 @@ def load_jobs():
     top = os.getcwd()
     for root, dirnames, filenames in os.walk(top):
         for filename in fnmatch.filter(filenames, '*.yaml'):
+            print "Find job : " + filename
             job_map[os.path.join(root, filename)] = None
 
 
