@@ -64,9 +64,6 @@ def setup_job_dir(directory):
     print 'Setting up YAML output directory at: jobs/'
     if not os.path.exists(directory):
         os.makedirs(directory)
-    #else:
-    #    shutil.rmtree(directory)
-    #    os.makedirs(directory)
     print 'Done setting up YAML output directory'
 
 def get_nfs_url(distro_url, device_type):
@@ -114,6 +111,7 @@ def generate_test_definition(github_url, test_path, name):
     return test_definition
 
 def generate_test_definitions(distro, device_type):
+    # TODO : put it into parameters
     github_url = "https://github.com/qinshulei/ci-test-cases"
     # filter the test
     work_test_list=[]
@@ -184,8 +182,6 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                         exit(1)
                 if targets is not None and device_type not in targets:
                     print '%s device type has been omitted. Skipping JSON creation.' % device_type
-                #elif not any([x for x in defconfigs if x == defconfig]) and plan != 'boot':
-                #    print '%s has been omitted from the %s test plan. Skipping JSON creation.' % (defconfig, plan)
                 else:
                     # add by wuyanjun in 2016/5/28
                     # add the profile of test cases, so only UT test case can be
