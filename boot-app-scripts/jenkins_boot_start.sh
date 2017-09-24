@@ -212,14 +212,13 @@ function trigger_lava_build() {
             rm -fr ${JOBS_DIR} ${RESULTS_DIR}
 
             # generate the boot jobs for all the targets
-            if [ "$boot_plan" = "BOOT_SAS" ] || [ "$boot_plan" = "BOOT_SATA" ]; then
+            if [ "$boot_plan" = "BOOT_ISO" ]; then
                 # TODO : need rewrite the logic by lava2 way to boot from STAT or SAS.
                 :
             else
+                # BOOT_NFS
                 # boot from NFS
                 print_time "the start time of $boot_plan is "
-                rm -fr ${JOBS_DIR} ${RESULTS_DIR}
-
                 generate_jobs $boot_plan $DISTRO
 
                 if [ -d ${JOBS_DIR} ]; then
