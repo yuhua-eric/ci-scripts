@@ -30,8 +30,8 @@ d03 = {'device_type': 'd03',
                             'kernel_blacklist': [],
                             'nfs_blacklist': [],
                             'lpae': False,
-                            'be': False,
-                            'fastboot': False}
+                            'be': False
+                            }
 d05 = {'device_type': 'd05',
     'templates': ['d05-arm64-kernel-ci-boot-template.yaml',
                               'd05-arm64-kernel-ci-boot-sata-template.yaml',
@@ -42,8 +42,8 @@ d05 = {'device_type': 'd05',
                             'kernel_blacklist': [],
                             'nfs_blacklist': [],
                             'lpae': False,
-                            'be': False,
-                            'fastboot': False}
+                            'be': False
+                            }
 
 
 dummy_ssh = {'device_type': 'dummy_ssh',
@@ -146,13 +146,9 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
     url = urlparse.urlparse(kernel)
     build_info = url.path.split('/')
     image_url = base_url
-    # TODO: define image_type dynamically
-    image_type = 'kernel-ci'
     tree = build_info[1]
     kernel_version = build_info[2]
     defconfig = build_info[3]
-    has_modules = True
-    checked_modules = False
 
     pubkey = get_pubkey()
     for platform in platform_list:
@@ -161,10 +157,6 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
             device_type = device['device_type']
             device_templates = device['templates']
             lpae = device['lpae']
-            fastboot = device['fastboot']
-            test_suite = None
-            test_set = None
-            test_desc = None
             test_type = None
             defconfigs = []
             for plan in plans:
@@ -172,9 +164,6 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                     config = ConfigParser.ConfigParser()
                     try:
                         config.read(cwd + '/templates/' + plan + '/' + plan + '.ini')
-                        test_suite = config.get(plan, 'suite')
-                        test_set = config.get(plan, 'set')
-                        test_desc = config.get(plan, 'description')
                         test_type = config.get(plan, 'type')
                         defconfigs = config.get(plan, 'defconfigs').split(',')
                     except:
@@ -189,28 +178,10 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                     for json in dummy_ssh['templates']:
                         device_templates.append(json)
 
-                    total_templates = []
+                    total_templates = [x for x in device_templates]
                     config_plan = ConfigParser.ConfigParser()
                     config_plan.read(cwd + '/templates/' + plan + '/' + plan + '.ini')
-                    if test_kind != "BOTH":
-                        single_templates = []
-                        both_templates = []
-                        try:
-                            single_templates = [ x for x in device_templates if \
-                                    x.split(".json")[0] in \
-                                    config_plan.get("TEST_KIND", test_kind).split(",")]
-                        except:
-                            print "There is no %s test cases" % test_kind
-                        try:
-                            both_templates = [ x for x in device_templates if \
-                                    x.split(".json")[0] in \
-                                    config_plan.get("TEST_KIND", 'BOTH').split(",")]
-                        except:
-                            print "There is no UT and ST test cases"
-                        total_templates = list(set(single_templates).union(set(both_templates)))
-                    else:
-                        # may be need to improve here because of all test cases will be executed
-                        total_templates = [x for x in device_templates]
+
                     # may need to change
                     get_nfs_url(distro_url, device_type)
 
@@ -242,7 +213,6 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                                 job_json.split("/")[-1].split(".yaml")[0])
                                         tmp = tmp.replace('{distro}', distro)
                                         # end by wuyanjun
-                                        tmp = tmp.replace('{image_type}', image_type)
                                         tmp = tmp.replace('{image_url}', image_url)
                                         tmp = tmp.replace('{tree}', tree)
                                         if platform_name.endswith('.dtb'):
@@ -257,7 +227,6 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                             tmp = tmp.replace('{lava_worker_pubkey}', pubkey)
 
                                         tmp = tmp.replace('{defconfig}', defconfig)
-                                        tmp = tmp.replace('{fastboot}', str(fastboot).lower())
                                         tmp = tmp.replace('{distro_name}', distro)
                                         # add by zhaoshijie, lava doesn't support centos in its source code,cheat it
                                         if 'boot' in plan or 'BOOT' in plan:
@@ -267,12 +236,6 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                         tmp = tmp.replace('{device_type_upper}', str(device_type).upper())
                                         if plan:
                                             tmp = tmp.replace('{test_plan}', plan)
-                                        if test_suite:
-                                            tmp = tmp.replace('{test_suite}', test_suite)
-                                        if test_set:
-                                            tmp = tmp.replace('{test_set}', test_set)
-                                        if test_desc:
-                                            tmp = tmp.replace('{test_desc}', test_desc)
                                         if test_type:
                                             tmp = tmp.replace('{test_type}', test_type)
                                         if priority:
