@@ -56,7 +56,6 @@ device_map = {
 
 parse_re = re.compile('href="([^./"?][^"?]*)"')
 
-# add by wuyanjun  2016/3/9
 distro_list = []
 
 
@@ -246,48 +245,18 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                         if test_definitions:
                                             tmp = tmp.replace('{test_definitions}', test_definitions)
 
-                                        fout.write(tmp)
-                            # add by wuyanjun 2016/3/8
-                            # to support filling all the nfsroot url in the json template
-                            with open(job_json, 'rb') as temp:
-                                whole_lines = temp.read()
-                            if re.findall('nfs_url', whole_lines):
-                                if len(distro_list):
-                                    fill_nfs_url(job_json, distro_list, device_type)
-                            else:
-                                if re.findall('nfs_distro', whole_lines):
-                                    rootfs_name = distro.lower()
-                                    modified_file = job_json.split('.yaml')[0] + '-' + rootfs_name + '.yaml'
-                                    with open(modified_file, 'wt') as fout:
-                                        with open(job_json, "rt") as fin:
-                                            for line in fin:
-                                                tmp = line
-                                                if re.search('{nfs_url}', tmp):
-                                                    tmp = line.replace('{nfs_url}', distro)
-                                                if re.search('{nfs_distro}', tmp):
-                                                    tmp = line.replace('{nfs_distro}', rootfs_name)
-                                                fout.write(tmp)
-                                    if os.path.exists(job_json):
-                                        os.remove(job_json)
+                                        if re.findall('nfs_url', tmp):
+                                            if len(distro_list):
+                                                nfs_url = ""
+                                                for distro_url in distro_list:
+                                                    if distro in distro_url:
+                                                        nfs_url = distro_url
+                                                tmp = line.replace('{nfs_url}', nfs_url)
+                                            else:
+                                                print 'error: need rootfs.tar.gz'
+                                                exit(1)
 
-# to fill the {nfs_url} instead of ${rootnfs_address_url}
-def fill_nfs_url(job_json, distro_list, device_type):
-    for distro in distro_list:
-        rootfs = re.findall("(.*?).tar.gz", distro.split('/')[-1])
-        rootfs_name = rootfs[0].split('_')[0].lower()
-        modified_file = job_json.split('.yaml')[0] + '-' + rootfs_name + '.yaml'
-        with open(modified_file, 'wt') as fout:
-            with open(job_json, "rt") as fin:
-                for line in fin:
-                    tmp = line
-                    if re.search('{nfs_url}', tmp):
-                        tmp = line.replace('{nfs_url}', distro)
-                    if re.search('{nfs_distro}', tmp):
-                        tmp = line.replace('{nfs_distro}', rootfs_name)
-                    fout.write(tmp)
-            #print 'JSON Job created: jobs/%s' % modified_file.split('/')[-1]
-    if os.path.exists(job_json):
-        os.remove(job_json)
+                                        fout.write(tmp)
 
 def walk_url(url, distro_url, plans=None, arch=None, targets=None,
             priority=None, distro="Ubuntu"):
