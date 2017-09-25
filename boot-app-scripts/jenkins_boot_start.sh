@@ -227,9 +227,13 @@ function trigger_lava_build() {
                 if [ -d ${JOBS_DIR} ]; then
                     if ! run_and_move_result $boot_plan $DISTRO ;then
                         if [ ! -d ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO} ];then
-                            mv ${DISTRO} ${GIT_DESCRIBE}/${RESULTS_DIR} && continue
+                            mv ${DISTRO} ${GIT_DESCRIBE}/${RESULTS_DIR}
+                            mv ${WHOLE_SUM} ${DETAILS_SUM} ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}
+                            continue
                         else
-                            cp -fr ${DISTRO}/* ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/ && continue
+                            cp -fr ${WHOLE_SUM} ${DETAILS_SUM} ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
+                            cp -fr ${DISTRO}/* ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
+                            continue
                         fi
                     fi
                 fi
@@ -266,8 +270,13 @@ function collect_result() {
         rm -rf  ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
     fi
 
-    mv ${CI_SCRIPTS_DIR}/boot-app-scripts/${WHOLE_SUM} ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
-    mv ${CI_SCRIPTS_DIR}/boot-app-scripts/${DETAILS_SUM} ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
+    echo '' | tee ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} | tee ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
+
+    for distro_name in $(ls ${GIT_DESCRIBE}/${RESULTS_DIR});do
+        echo "##### distro : ${distro_name} ######" | tee -a ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} | tee -a ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
+        cat ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${WHOLE_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
+        cat ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
+    done
 
     cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} ${WORKSPACE}/${WHOLE_SUM}
     cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} ${WORKSPACE}/${DETAILS_SUM}
@@ -377,12 +386,14 @@ The Test Cases Definition Address: https://github.com/qinshulei/ci-test-cases
 
 EOF
     echo  ""
-    echo "Test summary is below:" >> MAIL_CONTENT.txt
-    cat whole_summary.txt >> MAIL_CONTENT.txt
-
-    echo  ""
     echo "The test time stamp is below:" >> MAIL_CONTENT.txt
     cat timestamp_boot.txt >> MAIL_CONTENT.txt
+
+
+    ${GIT_DESCRIBE}/${RESULTS_DIR}
+    echo  ""
+    echo "Test summary is below:" >> MAIL_CONTENT.txt
+    cat whole_summary.txt >> MAIL_CONTENT.txt
 
     echo  ""
     echo "The Test Case details is below:" >> MAIL_CONTENT.txt

@@ -17,7 +17,6 @@ import shutil
 from lib import configuration
 from lib import utils
 
-#log2html = 'https://git.linaro.org/people/kevin.hilman/build-scripts.git/blob_plain/HEAD:/log2html.py'
 #for test report
 whole_summary_name = 'whole_summary.txt'
 details_summary_name = 'details_summary.txt'
