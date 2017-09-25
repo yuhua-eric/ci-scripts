@@ -44,8 +44,7 @@ d05 </description>
           <name>BOOT_PLAN</name>
           <description>Boot options:
 BOOT_NFS
-BOOT_PXE
-BOOT_SAS- This will cause all devices of certain device type to be deployed with certain distro.
+BOOT_ISO
 </description>
           <defaultValue>BOOT_NFS</defaultValue>
         </hudson.model.StringParameterDefinition>

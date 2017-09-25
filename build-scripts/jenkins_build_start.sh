@@ -79,7 +79,7 @@ function init_input_params() {
 }
 
 function parse_params() {
-    pushd ${CI_SCRIPTS_DIR}/boot-app-scripts    # change current work directory
+    pushd ${CI_SCRIPTS_DIR}
     : ${SHELL_PLATFORM:=`python parameter_parser.py -f config.yaml -s Build -k Platform`}
     : ${SHELL_DISTRO:=`python parameter_parser.py -f config.yaml -s Build -k Distro`}
 
@@ -409,7 +409,7 @@ function cp_image() {
         for DISTRO in $SHELL_DISTRO;do
             echo $DISTRO
 
-            pushd ${CI_SCRIPTS_DIR}/boot-app-scripts
+            pushd ${CI_SCRIPTS_DIR}
             distro_tar_name=`python parameter_parser.py -f config.yaml -s DISTRO -k $PLATFORM_U -v $DISTRO`
             popd
 

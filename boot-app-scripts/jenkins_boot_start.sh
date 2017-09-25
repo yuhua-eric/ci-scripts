@@ -24,7 +24,7 @@ function init_input_params() {
 }
 
 function parse_params() {
-    pushd ${CI_SCRIPTS_DIR}/boot-app-scripts    # change current work directory
+    pushd ${CI_SCRIPTS_DIR}
     : ${SHELL_PLATFORM:=`python parameter_parser.py -f config.yaml -s Build -k Platform`}
     : ${SHELL_DISTRO:=`python parameter_parser.py -f config.yaml -s Build -k Distro`}
 
