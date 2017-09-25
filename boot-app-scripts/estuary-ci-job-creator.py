@@ -14,7 +14,6 @@ import yaml
 
 from lib import configuration
 from lib import utils
-import parameter_parser
 
 base_url = None
 kernel = None
