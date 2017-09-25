@@ -10,7 +10,6 @@ metadata:
   kernel_defconfig : {defconfig}
   kernel_version : {kernel_version}
   kernel_tree : {tree}
-  kernel_endian : {endian}
   platform.fastboot : {fastboot}
   device_tree : {device_type}
 

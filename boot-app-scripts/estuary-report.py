@@ -257,7 +257,6 @@ def boot_report(config):
         kernel_defconfig_base = None
         kernel_version = None
         device_tree = None
-        kernel_endian = None
         kernel_tree = None
         kernel_addr = None
         initrd_addr = None
@@ -327,7 +326,6 @@ def boot_report(config):
                 kernel_defconfig = utils.get_value_by_key(job_metadata_info,'kernel_defconfig')
                 kernel_version = utils.get_value_by_key(job_metadata_info,'kernel_version')
                 kernel_tree = utils.get_value_by_key(job_metadata_info,'kernel_tree')
-                kernel_endian = utils.get_value_by_key(job_metadata_info,'kernel_endian')
                 device_tree = utils.get_value_by_key(job_metadata_info,'device_tree')
             except Exception:
                 continue
@@ -413,7 +411,6 @@ def boot_report(config):
                 boot_meta['dtb'] = device_tree
             boot_meta['dtb_addr'] = dtb_addr
             boot_meta['dtb_append'] = dtb_append
-            boot_meta['endian'] = kernel_endian
             boot_meta['fastboot'] = fastboot
             # TODO: Fix this
             boot_meta['initrd'] = None

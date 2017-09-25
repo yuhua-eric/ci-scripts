@@ -191,28 +191,24 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                             tmp = tmp.replace('{device_type}', 'dummy_ssh'+'_'+device_type)
                                         else:
                                             tmp = tmp.replace('{device_type}', device_type)
+
                                         tmp = tmp.replace('{job_name}',\
                                                 job_json.split("/")[-1].split(".yaml")[0])
                                         tmp = tmp.replace('{distro}', distro.lower())
+
                                         # end by wuyanjun
                                         tmp = tmp.replace('{image_url}', image_url)
                                         tmp = tmp.replace('{tree}', tree)
+
                                         if platform_name.endswith('.dtb'):
                                             tmp = tmp.replace('{device_tree}', platform_name)
                                         tmp = tmp.replace('{kernel_version}', kernel_version)
-                                        if 'BIG_ENDIAN' in defconfig and plan == 'boot-be':
-                                            tmp = tmp.replace('{endian}', 'big')
-                                        else:
-                                            tmp = tmp.replace('{endian}', 'little')
 
                                         tmp = tmp.replace('{defconfig}', defconfig)
                                         tmp = tmp.replace('{distro_name}', distro)
-                                        # add by zhaoshijie, lava doesn't support centos in its source code,cheat it
-                                        if 'boot' in plan or 'BOOT' in plan:
-                                            tmp = tmp.replace('{target_type}', 'ubuntu')
-                                        else:
-                                            tmp = tmp.replace('{target_type}', str(distro).lower())
+
                                         tmp = tmp.replace('{device_type_upper}', str(device_type).upper())
+
                                         if plan:
                                             tmp = tmp.replace('{test_plan}', plan)
                                         if test_type:
