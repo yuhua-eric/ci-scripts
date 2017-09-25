@@ -87,21 +87,6 @@ def get_nfs_url(distro_url, device_type):
         for direc in dirs:
             get_nfs_url(distro_url+direc, device_type)
 
-# add by wuyanjun 2016-06-25
-def get_pubkey():
-    key_loc = os.path.join(os.path.expandvars('$HOME'), '.ssh', 'id_rsa.pub')
-
-    if os.path.exists(key_loc):
-        pubkey = open(key_loc, 'r').read().rstrip()
-    else:
-        path = os.getcwd()
-        subprocess.call(os.path.join(path, "generate_keys.sh"), shell=True)
-        try:
-            pubkey = open(key_loc, 'r').read().rstrip()
-        except Exception:
-            pubkey = ""
-    return pubkey
-
 def generate_test_definition(github_url, test_path, name):
     test_definition =  "      - repository: " + github_url +"\n"
     test_definition += "        from: git\n"
@@ -221,9 +206,6 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                             tmp = tmp.replace('{endian}', 'big')
                                         else:
                                             tmp = tmp.replace('{endian}', 'little')
-                                        # add by wuyanjun in 2016-06-25
-                                        if pubkey:
-                                            tmp = tmp.replace('{lava_worker_pubkey}', pubkey)
 
                                         tmp = tmp.replace('{defconfig}', defconfig)
                                         tmp = tmp.replace('{distro_name}', distro)
