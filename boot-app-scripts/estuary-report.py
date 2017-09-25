@@ -25,36 +25,12 @@ total_str = "Total number of test cases: "
 fail_str = "Failed number of test cases: "
 suc_str = "Success number of test cases: "
 
-device_map = {'arndale': ['exynos5250-arndale', 'exynos'],
-              'snow': ['exynos5250-snow', 'exynos'],
-              'arndale-octa': ['exynos5420-arndale-octa','exynos'],
-              'panda-es': ['omap4-panda-es', 'omap2'],
-              'panda': ['omap4-panda', 'omap2'],
-              'omap5-uevm' : ['omap5-uevm', 'omap2' ],
-              'hi3716cv200': ['hisi-x5hd2-dkb', 'hisi'],
-              'd01': ['hip04-d01', 'hisi'],
-              'd02': ['hip05-d02', 'hisi'],
-              'd03': ['hip06-d03', 'hisi'],
+device_map = {'d03': ['hip06-d03', 'hisi'],
               'd05': ['d05_01', 'hisi'],
               'ssh': ['ssh01', None],
               #'dummy_ssh': ['hip05-d02', 'hisi'],
-              'hi6220-hikey': ['hi6220-hikey', 'hisi'],
-              'qemu-arm-cortex-a15': ['vexpress-v2p-ca15-tc1', 'vexpress'],
-              'qemu-arm-cortex-a15-a7': ['vexpress-v2p-ca15_a7', 'vexpress'],
-              'qemu-arm-cortex-a9': ['vexpress-v2p-ca9', 'vexpress'],
-              'qemu-arm': ['versatilepb', 'versatile'],
-              'qemu-aarch64': ['qemu-aarch64', 'qemu'],
-              'juno': ['juno', 'arm'],
-              'juno-kvm-host': ['juno-kvm-host', 'arm'],
-              'juno-kvm-guest': ['juno-kvm-guest', 'arm'],
-              'juno-kvm-uefi-host': ['juno-kvm-uefi-host', 'arm'],
-              'juno-kvm-uefi-guest': ['juno-kvm-uefi-guest', 'arm'],
               'x86': ['x86', None],
               'dummy-ssh': ['dummy-ssh', None],
-              'dummy_ssh_d02': ['dummy_ssh_d02', None],
-              'dummy_ssh_d01': ['dummy_ssh_d01', None],
-              'dummy_ssh_d03': ['dummy_ssh_d03', None],
-              'dummy_ssh_d05': ['dummy_ssh_d05', None],
               'kvm': ['x86-kvm', None]}
 
 def parse_yaml(yaml):
@@ -455,6 +431,7 @@ def boot_report(config):
             parser_and_get_result(job_file, log, directory, report_directory, connection)
             #try to generate test_summary
             generate_test_report(job_id, connection)
+
     if results and kernel_tree and kernel_version:
         print 'Creating summary for %s' % (kernel_version)
         boot = '%s-boot-report.txt' % (kernel_version)

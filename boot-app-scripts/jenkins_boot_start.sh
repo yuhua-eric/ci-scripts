@@ -75,6 +75,9 @@ function prepare_tools() {
 function init_boot_env() {
     JOBS_DIR=jobs
     RESULTS_DIR=results
+
+    WHOLE_SUM='whole_summary.txt'
+    DETAILS_SUM='details_summary.txt'
 }
 
 function generate_jobs() {
@@ -250,9 +253,6 @@ function collect_result() {
 
     tar czf test_result.tar.gz ${GIT_DESCRIBE}/*
     cp test_result.tar.gz  ${WORKSPACE}
-
-    WHOLE_SUM='whole_summary.txt'
-    DETAILS_SUM='details_summary.txt'
 
     if [  -e  ${WORKSPACE}/${WHOLE_SUM} ]; then
         rm -rf  ${WORKSPACE}/${WHOLE_SUM}
