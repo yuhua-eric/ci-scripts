@@ -133,7 +133,6 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
     kernel_version = build_info[2]
     defconfig = build_info[3]
 
-    pubkey = get_pubkey()
     for platform in platform_list:
         platform_name = platform.split('/')[-1].partition('_')[-1]
         for device in device_map[platform_name]:
