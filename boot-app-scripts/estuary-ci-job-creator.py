@@ -193,7 +193,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                             tmp = tmp.replace('{device_type}', device_type)
                                         tmp = tmp.replace('{job_name}',\
                                                 job_json.split("/")[-1].split(".yaml")[0])
-                                        tmp = tmp.replace('{distro}', distro)
+                                        tmp = tmp.replace('{distro}', distro.lower())
                                         # end by wuyanjun
                                         tmp = tmp.replace('{image_url}', image_url)
                                         tmp = tmp.replace('{tree}', tree)
