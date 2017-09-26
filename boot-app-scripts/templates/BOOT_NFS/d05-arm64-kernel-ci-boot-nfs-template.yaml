@@ -10,12 +10,13 @@ metadata:
   kernel_defconfig : {defconfig}
   kernel_version : {kernel_version}
   kernel_tree : {tree}
+  kernel_endian : {endian}
   platform.fastboot : {fastboot}
   device_tree : {device_type}
 
 timeouts:
   job:
-    minutes: 80
+    minutes: 120
   action:
     minutes: 20
   connection:
@@ -30,10 +31,10 @@ actions:
       nfsrootfs:
         url: '{nfs_url}'
         compression: gz
-      os: '{distro}'
+      os: ubuntu
 - boot:
     timeout:
-      minutes: 10
+      minutes: 15
     method: grub
     commands: nfs
     auto_login:
@@ -46,6 +47,6 @@ actions:
     - 'root@centos ~'
 - test:
     timeout:
-      minutes: 60
+      minutes: 120
     definitions:
 {test_definitions}
