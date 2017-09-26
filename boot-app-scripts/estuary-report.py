@@ -172,7 +172,7 @@ def generate_test_report(job_id, connection):
         case_dict[item['suite']].append(item)
 
     # try to write details file
-    details_dir = os.getcwd()
+    details_dir = os.getcwd() + '/results'
     details_file = os.path.join(details_dir, details_summary_name)
     if os.path.exists(details_file):
         os.remove(details_file)
@@ -207,7 +207,7 @@ def generate_test_report(job_id, connection):
         wfp.write("*" * 24 + " DETAILS TESTCASE END " + "*" * 24 + '\n')
 
     #try to write summary file
-    summary_dir = os.getcwd()
+    summary_dir = os.getcwd() + '/results'
     summary_file = os.path.join(summary_dir, whole_summary_name)
     if os.path.exists(summary_file):
         os.remove(summary_file)
@@ -239,6 +239,7 @@ def boot_report(config):
         report_directory = os.path.join(results_directory, config.get("lab"))
     else:
         report_directory = results_directory
+
     if os.path.exists(report_directory):
         shutil.rmtree(report_directory)
     utils.mkdir(report_directory)
@@ -247,7 +248,6 @@ def boot_report(config):
         print 'Job ID: %s' % job_id
         # Init
         boot_meta = {}
-        api_url = None
         arch = None
         board_instance = None
         boot_retries = 0
@@ -261,8 +261,6 @@ def boot_report(config):
         initrd_addr = None
         dtb_addr = None
         dtb_append = None
-        fastboot = None
-        fastboot_cmd = None
         job_file = ''
         board_offline = False
         kernel_boot_time = None
@@ -343,7 +341,6 @@ def boot_report(config):
             # Create txt format boot metadata
             print 'Creating boot log for %s' % (platform_name + job_name + '_' + job_id)
             log = 'boot-%s.txt' % (platform_name + job_name + '_' + job_id)
-            html = 'boot-%s.html' % (platform_name + job_name + '_' + job_id)
             if config.get("lab"):
                 directory = os.path.join(results_directory, kernel_defconfig + '/' + config.get("lab"))
             else:
@@ -375,7 +372,6 @@ def boot_report(config):
                 boot_meta['board_instance'] = board_instance
             boot_meta['retries'] = boot_retries
             boot_meta['boot_log'] = log
-            boot_meta['boot_log_html'] = html
             # TODO: Fix this
             boot_meta['version'] = '1.0'
             boot_meta['arch'] = arch
@@ -410,7 +406,6 @@ def boot_report(config):
                 boot_meta['dtb'] = device_tree
             boot_meta['dtb_addr'] = dtb_addr
             boot_meta['dtb_append'] = dtb_append
-            boot_meta['fastboot'] = fastboot
             # TODO: Fix this
             boot_meta['initrd'] = None
             boot_meta['initrd_addr'] = initrd_addr

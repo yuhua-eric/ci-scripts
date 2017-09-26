@@ -18,7 +18,6 @@ from lib import configuration
 
 job_map = {}
 
-
 def poll_jobs(connection, timeout):
     run = True
     submitted_jobs = {}
