@@ -393,7 +393,9 @@ Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}
 The Test Cases Definition Address: https://github.com/qinshulei/ci-test-cases
 
 EOF
-    ${GIT_DESCRIBE}/${RESULTS_DIR}
+
+    cd ${GIT_DESCRIBE}/${RESULTS_DIR}
+
     echo  ""
     echo "Test summary is below:" >> MAIL_CONTENT.txt
     cat whole_summary.txt >> MAIL_CONTENT.txt
