@@ -394,8 +394,7 @@ The Test Cases Definition Address: https://github.com/qinshulei/ci-test-cases
 
 EOF
 
-    cd ${GIT_DESCRIBE}/${RESULTS_DIR}
-
+    cd ${WORKSPACE}/local/ci-scripts/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
     echo  ""
     echo "Test summary is below:" >> MAIL_CONTENT.txt
     cat whole_summary.txt >> MAIL_CONTENT.txt
