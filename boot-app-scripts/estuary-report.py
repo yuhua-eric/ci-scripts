@@ -172,7 +172,7 @@ def generate_test_report(job_id, connection):
         case_dict[item['suite']].append(item)
 
     # try to write details file
-    details_dir = os.getcwd() + '/results'
+    details_dir = os.getcwd()
     details_file = os.path.join(details_dir, details_summary_name)
     if os.path.exists(details_file):
         os.remove(details_file)
@@ -207,7 +207,7 @@ def generate_test_report(job_id, connection):
         wfp.write("*" * 24 + " DETAILS TESTCASE END " + "*" * 24 + '\n')
 
     #try to write summary file
-    summary_dir = os.getcwd() + '/results'
+    summary_dir = os.getcwd()
     summary_file = os.path.join(summary_dir, whole_summary_name)
     if os.path.exists(summary_file):
         os.remove(summary_file)

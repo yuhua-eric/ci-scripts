@@ -145,6 +145,10 @@ function run_and_move_result() {
     fi
 
     [ ! -d ${dest_dir} ] && mkdir -p ${dest_dir}
+
+    [ -e ${WHOLE_SUM} ] && mv ${WHOLE_SUM} ${dest_dir}/
+    [ -e ${DETAILS_SUM} ] && mv ${DETAILS_SUM} ${dest_dir}/
+
     [ -d ${JOBS_DIR} ] && mv ${JOBS_DIR} ${dest_dir}/${JOBS_DIR}_${test_name}
     [ -d ${RESULTS_DIR} ] && mv ${RESULTS_DIR} ${dest_dir}/${RESULTS_DIR}_${test_name}
 
