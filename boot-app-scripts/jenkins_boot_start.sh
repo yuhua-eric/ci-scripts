@@ -393,11 +393,6 @@ Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}
 The Test Cases Definition Address: https://github.com/qinshulei/ci-test-cases
 
 EOF
-    echo  ""
-    echo "The test time stamp is below:" >> MAIL_CONTENT.txt
-    cat timestamp_boot.txt >> MAIL_CONTENT.txt
-
-
     ${GIT_DESCRIBE}/${RESULTS_DIR}
     echo  ""
     echo "Test summary is below:" >> MAIL_CONTENT.txt
