@@ -232,10 +232,8 @@ function trigger_lava_build() {
                     if ! run_and_move_result $boot_plan $DISTRO ;then
                         if [ ! -d ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO} ];then
                             mv ${DISTRO} ${GIT_DESCRIBE}/${RESULTS_DIR}
-                            mv ${WHOLE_SUM} ${DETAILS_SUM} ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}
                             continue
                         else
-                            cp -fr ${WHOLE_SUM} ${DETAILS_SUM} ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
                             cp -fr ${DISTRO}/* ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
                             continue
                         fi
