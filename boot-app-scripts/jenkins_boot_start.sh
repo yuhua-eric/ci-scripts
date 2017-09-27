@@ -374,13 +374,13 @@ EOF
 function generate_success_mail(){
     cd ${WORKSPACE}
     if [ "${DEBUG}" = "true" ];then
-        echo "qinsl0106@thundersoft.com,zhangbp0704@thundersoft.com" > MAIL_LIST.txt
+        echo "qinsl0106@thundersoft.com,zhangbp0704@thundersoft.com" > ${WORKSPACE}/MAIL_LIST.txt
     else
-        echo "${SUCCESS_MAIL_LIST}" > MAIL_LIST.txt
+        echo "${SUCCESS_MAIL_LIST}" > ${WORKSPACE}/MAIL_LIST.txt
     fi
 
-    echo "Estuary CI - ${GIT_DESCRIBE} - Result" > MAIL_SUBJECT.txt
-    cat > MAIL_CONTENT.txt <<EOF
+    echo "Estuary CI - ${GIT_DESCRIBE} - Result" > ${WORKSPACE}/MAIL_SUBJECT.txt
+    cat > ${WORKSPACE}/MAIL_CONTENT.txt <<EOF
 ( This mail is send by Jenkins automatically, don't reply )
 Project Name: ${TREE_NAME}
 Version: ${GIT_DESCRIBE}
@@ -394,12 +394,12 @@ EOF
 
     cd ${WORKSPACE}/local/ci-scripts/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
     echo  ""
-    echo "Test summary is below:" >> MAIL_CONTENT.txt
-    cat whole_summary.txt >> MAIL_CONTENT.txt
+    echo "Test summary is below:" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    cat whole_summary.txt >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo  ""
-    echo "The Test Case details is below:" >> MAIL_CONTENT.txt
-    cat details_summary.txt >> MAIL_CONTENT.txt
+    echo "The Test Case details is below:" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    cat details_summary.txt >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     cd -
 }
