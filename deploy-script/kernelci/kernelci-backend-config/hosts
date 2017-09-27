@@ -5,4 +5,4 @@
 #api.kernelci.org
 #api.armcloud.us
 #staging.api.armcloud.us
-openlab2 ansible_ssh_host=124.250.134.52 ansible_ssh_port=218 ansible_ssh_user=xuwei
+openlab2 ansible_ssh_host=120.31.149.194 ansible_ssh_port=218 ansible_ssh_user=xuwei

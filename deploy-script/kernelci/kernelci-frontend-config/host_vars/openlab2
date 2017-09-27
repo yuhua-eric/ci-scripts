@@ -5,7 +5,7 @@ backend_url: http://192.168.3.100:8888/
 #base_url: http://192.168.3.100:5000
 backend_token: db85d8fb-da63-4d77-950e-3dffcd8ce115
 secret_key: none
-file_server: http://124.250.134.52:808/
+file_server: http://120.31.149.194:808/
 google_analytics: none
 info_email: xuwei5@hisilicon.com
 ssl_stapling_resolver: 8.8.8.8

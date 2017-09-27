@@ -10,7 +10,7 @@ cd ci-scripts/deploy-script/kernelci/kerenelci-backend-config/
 ansible-playbook -i hosts site.yml --skip-tags=backup,firewall,web-server --ask-pass --ask-sudo-pass
 
 #change the default token
-curl -X POST -H "Content-Type: application/json" -H "Authorization: 123456" -d '{"email": "you@example.net", "admin": 1}' 124.250.134.52:8888/token
+curl -X POST -H "Content-Type: application/json" -H "Authorization: 123456" -d '{"email": "you@example.net", "admin": 1}' 120.31.149.194:8888/token
 
 #save the above token into the frontend host_vars backend_token
 echo "Please use the above token in the frontend host_vars as the backend_token!"
