@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>&lt;!-- Managed by Jenkins Job Builder --&gt;</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>30</daysToKeep>
+        <numToKeep>30</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <hudson.plugins.disk__usage.DiskUsageProperty plugin="disk-usage@0.28"/>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers>
+    <hudson.triggers.TimerTrigger>
+      <spec>H 3 * * *</spec>
+    </hudson.triggers.TimerTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>#!/bin/bash
+set -x
+
+# local copy of build scripts
+if [ ! -d local ]; then
+  mkdir -p local
+  (cd local; git clone https://github.com/open-estuary/ci-scripts.git -b openlab2.0)
+fi
+
+(cd local/ci-scripts; git pull)
+export PATH=${WORKSPACE}/local/ci-scripts/jenkins-helper-script/common/lava-ci:${PATH}
+
+export IMAGEPATH=&quot;$(find /var/www/images/kernel-ci/plinth -printf &apos;%T+ %p\n&apos; | sort -r | grep -E &quot;.*plinth-[0-9].[0-9]*.[0-9].{,5}.*/arm64-defconfig/Image&quot; |head -n1)&quot;
+URLPATH=${IMAGEPATH#*kernel-ci/plinth/}
+URLPATH=${URLPATH%I*}
+
+cd local/ci-scripts/jenkins-helper-script/common/lava-ci
+rm -rf jobs
+lava-kernel-ci-job-creator.py http://localhost:8083/plinth/$URLPATH --plans weekly-testing --targets hip06-d03 hip07-d05
+cd jobs
+lava-job-runner.py --username default --token g43y0wtyi0m2ua7in3xtfch1m2s1dd0k97ac1fqqhqd0qblimtehqkwk8mjimsyh0jczrnaibdlb23mtn17qca6i14tcl27h7md580za5p8w81fl035b6bk1ybw26lle --server http://localhost:8089/RPC2/ --stream /anonymous/plinth/ --poll POLL
+cd ..
+#lava-report.py --boot jobs/results/POLL --lab openlab2 --api http://localhost:8888/ --token db85d8fb-da63-4d77-950e-3dffcd8ce115
+rm -rf jobs
+#curl -X POST -H &quot;Authorization: db85d8fb-da63-4d77-950e-3dffcd8ce115&quot; -H &quot;Content-Type: application/json&quot; -d &apos;{&quot;job&quot;: &quot;&apos;$TREE_NAME&apos;&quot;, &quot;kernel&quot;: &quot;&apos;$GIT_DESCRIBE&apos;&quot;, &quot;boot_report&quot;: 1, &quot;send_to&quot;: [&quot;gabriele.paoloni@huawei.com&quot;, &quot;charles.chenxin@huawei.com&quot;, &quot;xavier.huwei@huawei.com&quot;, &quot;majun258@huawei.com&quot;, &quot;wangzhou1@hisilicon.com&quot;, &quot;xuwei5@hisilicon.com&quot;, &quot;liwenchang@hisilicon.com&quot;, &quot;tangchaofei@huawei.com&quot;, &quot;wanghuiqiang@huawei.com&quot;, &quot;xuzaibo@huawei.com&quot;, &quot;yisen.zhuang@huawei.com&quot;, &quot;zhangjukuo@huawei.com&quot;, &quot;john.garry@huawei.com&quot;, &quot;shiju.jose@huawei.com&quot;, &quot;dongyingjie@hisilicon.com&quot;, &quot;salil.mehta@huawei.com&quot;], &quot;send_cc&quot;: [&quot;yimin@huawei.com&quot;, &quot;liguozhu@hisilicon.com&quot;, &quot;zhaojunhua@hisilicon.com&quot;, &quot;lixiaoping3@huawei.com&quot;, &quot;zhangyi.ac@huawei.com&quot;, &quot;kong.kongxinwei@hisilicon.com&quot;, &quot;shameerali.kolothum.thodi@huawei.com&quot;, &quot;sanil.kumar@hisilicon.com&quot;, &quot;wangkefeng.wang@huawei.com&quot;, &quot;guohanjun@huawei.com&quot;, &quot;donald.liujie@huawei.com&quot;], &quot;format&quot;: [&quot;txt&quot;, &quot;html&quot;], &quot;delay&quot;: 10}&apos; http://192.168.3.100:8888/send  </command>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Shell>
+      <command>wget https://raw.githubusercontent.com/ariya/phantomjs/master/examples/rasterize.js
+phantomjs rasterize.js http://localhost:8089/dashboard/image-charts/Plinth report.jpg 1920px
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2.44">
+      <recipientList>gabriele.paoloni@huawei.com, charles.chenxin@huawei.com, huangdaode@hisilicon.com, xavier.huwei@huawei.com, wangzhou1@hisilicon.com, xuwei5@hisilicon.com, liwenchang@hisilicon.com, tangchaofei@huawei.com, wanghuiqiang@huawei.com, xuzaibo@huawei.com, yuanzhichang@hisilicon.com, yisen.zhuang@huawei.com, zhangjukuo@huawei.com, john.garry@huawei.com, shiju.jose@huawei.com, dongyingjie@hisilicon.com, linyunsheng@huawei.com, salil.mehta@huawei.com,yankejian@huawei.com,liudongdong3@huawei.com,lipeng321@huawei.com, cc:yimin@huawei.com, cc:liguozhu@hisilicon.com, cc:zhaojunhua@hisilicon.com, cc:lixiaoping3@huawei.com, cc:z.liuxinliang@hisilicon.com, cc:kong.kongxinwei@hisilicon.com, cc:shameerali.kolothum.thodi@huawei.com, cc:sanil.kumar@hisilicon.com, cc:wangkefeng.wang@huawei.com, cc:guohanjun@huawei.com, cc:ting.lei@hisilicon.com, cc:liao.heng@hisilicon.com, cc:zhouxiping@hisilicon.com, cc:zhouxufeng@huawei.com, cc:haifeng.wei@huawei.com, cc:chengchuanning@hisilicon.com, cc:zhanweitao@hisilicon.com, cc:jeffrey.wu@hisilicon.com, cc:yaohongshi@hisilicon.com, cc:fengyuming@hisilicon.com, cc:zhengqiang10@huawei.com, cc:tanxiaofei@huawei.com, cc:lijingyu@hisilicon.com, cc:ningguoqiang@huawei.com, cc:lisheng011@huawei.com, cc:wangyuanxiang1@huawei.com, cc:lipeng321@huawei.com</recipientList>
+      <configuredTriggers>
+        <hudson.plugins.emailext.plugins.trigger.AlwaysTrigger>
+          <email>
+            <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+            <body>$PROJECT_DEFAULT_CONTENT</body>
+            <recipientProviders>
+              <hudson.plugins.emailext.plugins.recipients.DevelopersRecipientProvider/>
+              <hudson.plugins.emailext.plugins.recipients.ListRecipientProvider/>
+            </recipientProviders>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+            <contentType>project</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.AlwaysTrigger>
+      </configuredTriggers>
+      <contentType>text/html</contentType>
+      <defaultSubject>[Plinth]Daily Release Image Testing Report</defaultSubject>
+      <defaultContent>The enclosed is a summary image report.&lt;br&gt;
+Please check the detail at: &lt;a href=&quot;http://124.250.134.52:800/dashboard/image-charts/Plinth&quot;&gt; Plinth LAVA Image Report&lt;/a&gt;&lt;br&gt;
+─&lt;br&gt;
+For more info write to &quot;xuwei5@hisilicon.com&quot;  &lt;br&gt;
+</defaultContent>
+      <attachmentsPattern>report.jpg</attachmentsPattern>
+      <presendScript>$DEFAULT_PRESEND_SCRIPT</presendScript>
+      <postsendScript>$DEFAULT_POSTSEND_SCRIPT</postsendScript>
+      <attachBuildLog>false</attachBuildLog>
+      <compressBuildLog>false</compressBuildLog>
+      <replyTo></replyTo>
+      <saveOutput>false</saveOutput>
+      <disabled>false</disabled>
+    </hudson.plugins.emailext.ExtendedEmailPublisher>
+  </publishers>
+  <buildWrappers>
+    <hudson.plugins.timestamper.TimestamperBuildWrapper plugin="timestamper@1.8.3"/>
+  </buildWrappers>
+</project>
