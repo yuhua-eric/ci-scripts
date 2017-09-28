@@ -86,7 +86,7 @@
                     {
 			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
 			"parameters": {
-                            "DeviceID": "/dev/sda2"
+                            "DeviceID": "/dev/sda3"
                         },
 
                         "testdef": "ubuntu/fio-test.yaml"
