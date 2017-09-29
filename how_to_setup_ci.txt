@@ -11,20 +11,20 @@
 1.4 Install the file server 
 The file server is mainly used to store the bianry files which will be used for the lava jobs. The installation is in the file named of ci-scripts/install-scripts/fileserver_install.sh. The fileserver use ngnix to provide the service. 
 
-1.5 Install the tftp server
+1.5 Install the tftp dhcp nfs to lava server
 The lava server needs the tftp service to make the board can boot successfully. So the tftp service need to deploy in the LAVA instance. That means you need to install dhcp service, nfs service and ftp service.
 
 About the Estuary jobs: 
-  estuary-build: to build all the platforms and all distros
-  estaury-boot: Do the boot as much as possible. And run the test cases automatically and collect the test results. Then push the results to the file server
+  estuary-ci: to build all the platforms and all distros
+              Do the boot as much as possible. And run the test cases automatically and collect the test results. Then push the results to the file server
     
 
                    push distro, toolchain, binaries
-    estuary-build ------------------------------------->  file server
+      build ------------------------------------->  file server
         |
         |
         |                pull distro, binaries
-    estaury-boot <-----------------------------------file server
+      boot <-----------------------------------file server
 
 
 2. The jenkins job parameters useage and descriptions. 
@@ -37,4 +37,3 @@ SHELL_DISTRO:   which distro will be built. Such as 'Ubuntu', 'Fedora' or 'Ubunt
 VERSION:        String Parameter, the value of it must be one value of the estaury tag list. If not set it, the ci will use the uefi_${uefi_commit_id}_grub_${grub_commit_id}_kernel_${kernel_commit_it} to instead of it.
 BOOT_PLAN:      string parameter, It must be one value or a subset of the directories located in ci-scripts/boot-app-scripts/templates. Actually the default value of it is 'boot'. When lava run this job in boards, it will deploy the sata disk with the predefined distribution so that in the later process boards can boot from sata disks and run all apps in the file system which located in the sata disks.
 APP_PLAN:       string parameter. select which kind of applications will run on the boards. Must be one value or a subset of directories names located in ci-scripts/boot-app-scripts/templates.
-ARCH_MAP:       the string parameter. Actually, it describe the map between the board and its architecture. Such as 'd03 arm64 d02 arm64 d02 arm64'. It also can be written in the config.yaml which locate in the ci-scripts/boot-app-scripts.

@@ -17,10 +17,13 @@ function init_input_params() {
 
     SHELL_PLATFORM=${SHELL_PLATFORM:-"d05"}
     SHELL_DISTRO=${SHELL_DISTRO:-""}
-    ARCH_MAP=${ARCH_MAP:-"d05 arm64"}
+
 
     BOOT_PLAN=${BOOT_PLAN:-"BOOT_NFS"}
     APP_PLAN=${APP_PLAN:-"TEST"}
+
+    # READ FROM config file
+    ARCH_MAP=${ARCH_MAP:-""}
 }
 
 function parse_params() {

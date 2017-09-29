@@ -65,7 +65,7 @@ function init_input_params() {
     # select borad
     SHELL_PLATFORM=${SHELL_PLATFORM:-"d05"}
     SHELL_DISTRO=${SHELL_DISTRO:-""}
-    ARCH_MAP=${ARCH_MAP:-"d05 arm64"}
+
 
     # test plan
     BOOT_PLAN=${BOOT_PLAN:-"BOOT_NFS"}
@@ -76,6 +76,9 @@ function init_input_params() {
 
     # all setup types
     SETUP_TYPE=${SETUP_TYPE:-""}
+
+    # only read from config file
+    ARCH_MAP=${ARCH_MAP:-""}
 }
 
 function parse_params() {
