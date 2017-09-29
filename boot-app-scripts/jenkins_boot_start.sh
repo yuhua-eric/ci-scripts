@@ -4,7 +4,7 @@ function init_build_option() {
 }
 
 function init_workspace() {
-    WORKSPACE=${WORKSPACE:-/home/ts/jenkins/workspace/estuary-build}
+    WORKSPACE=${WORKSPACE:-/home/ts/jenkins/workspace/estuary-ci}
     mkdir -p ${WORKSPACE}
 }
 

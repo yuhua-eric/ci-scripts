@@ -1,11 +1,8 @@
 #!/bin/bash -ex
-# the server need open mode :
-# modprobe loop
-# export CODE_REFERENCE=""
 
 # prepare system tools
 function prepare_tools() {
-    dev_tools="python-yaml"
+    dev_tools="sshpass"
 
     if ! (dpkg-query -l $dev_tools >/dev/null 2>&1); then
         sudo apt-get update
@@ -17,9 +14,8 @@ function prepare_tools() {
 }
 
 # jenkins job debug variables
-function init_build_option() {
-    SKIP_BUILD=${SKIP_BUILD:-"false"}
-    SKIP_CP_IMAGE=${SKIP_CP_IMAGE:-"false"}
+function init_deploy_option() {
+    SKIP_DEPLOY=${SKIP_DEPLOY:-"false"}
 }
 
 # ensure workspace exist
@@ -32,7 +28,6 @@ function init_workspace() {
 function init_env_params() {
     WORK_DIR=${WORKSPACE}/local
     CI_SCRIPTS_DIR=${WORK_DIR}/ci-scripts
-    CODE_REFERENCE=${CODE_REFERENCE:-/estuary_reference}
 }
 
 function init_build_env() {
@@ -45,13 +40,6 @@ function init_build_env() {
     ESTUARY_CFG_FILE=${OPEN_ESTUARY_DIR}/estuary/estuarycfg.json
 }
 
-function clean_build() {
-    if [ x"$SKIP_BUILD" = x"true" ];then
-        :
-    else
-        sudo rm -fr $BUILD_DIR
-    fi
-}
 
 function init_input_params() {
     # project name
@@ -117,7 +105,7 @@ Build Project Address: $BUILD_URL
 Build and Generated Binaries Address: NONE
 The Test Cases Definition Address: https://github.com/qinshulei/ci-test-cases
 
-The build is failed unexpectly. Please check the log and fix it.
+The deploy is failed unexpectly. Please check the log and fix it.
 
 EOF
 
@@ -171,144 +159,12 @@ function prepare_repo_tool() {
     popd
 }
 
-function sync_code() {
-    mkdir -p $OPEN_ESTUARY_DIR;
-
-    pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
-
-    # sync and checkout files from repo
-    #repo init
-    if [ x"$SKIP_BUILD" = x"true" ];then
-        echo "skip git reset and clean"
-    else
-        repo forall -c git reset --hard || true
-        repo forall -c git clean -dxf || true
-    fi
-
-    if [ "$VERSION"x != ""x ]; then
-        repo init -u "https://github.com/open-estuary/estuary.git" \
-             --reference=${CODE_REFERENCE} \
-             -b refs/tags/$VERSION --no-repo-verify --repo-url=git://android.git.linaro.org/tools/repo
-    else
-        repo init -u "https://github.com/open-estuary/estuary.git" \
-             --reference=${CODE_REFERENCE} \
-             -b master --no-repo-verify --repo-url=git://android.git.linaro.org/tools/repo
-    fi
-
-    set +e
-    false; while [ $? -ne 0 ]; do repo sync --force-sync; done
-    set -e
-
-    repo status
-
-    print_time "the end time of finishing downloading estuary is "
-
-    popd
-}
-
 # master don't have arch/arm64/configs/estuary_defconfig file
 function hotfix_download_estuary_defconfig() {
     cd $OPEN_ESTUARY_DIR/kernel/arch/arm64/configs
     wget https://raw.githubusercontent.com/open-estuary/kernel/v3.1/arch/arm64/configs/estuary_defconfig -o estuary_defconfig
     cd -
 }
-
-# config the estuarycfg.json , do the build
-function do_build() {
-    pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
-
-    BUILD_CFG_FILE=/tmp/estuarycfg.json
-    cp $ESTUARY_CFG_FILE $BUILD_CFG_FILE
-
-    # Set all platforms support to "no"
-    sed -i -e '/platform/s/yes/no/' $BUILD_CFG_FILE
-
-    # Make platforms supported to "yes"
-    echo $SHELL_PLATFORM
-    for PLATFORM in $SHELL_PLATFORM; do
-        PLATFORM_U=${PLATFORM^^}
-        sed -i -e "/$PLATFORM_U/s/no/yes/" $BUILD_CFG_FILE
-    done
-
-    # Set all distros support to "no"
-    distros=(Ubuntu OpenSuse Fedora Debian CentOS Rancher OpenEmbedded)
-    for ((i=0; i<${#distros[@]}; i++)); do
-        sed -i -e "/${distros[$i]}/s/yes/no/" $BUILD_CFG_FILE
-    done
-
-    # Make distros supported to "yes"
-    echo $SHELL_DISTRO
-    for DISTRO in $SHELL_DISTRO; do
-        sed -i -e "/$DISTRO/s/no/yes/" $BUILD_CFG_FILE
-    done
-
-    # TODO: disable packages install first. open this when the package is required and ready.
-    sed -i -e '/"cmd":/s/install/none/' $BUILD_CFG_FILE
-
-    # Set all packages supported to yes
-    echo $PACKAGES
-    for package in $PACKAGES; do
-        sed -i -e "/${package}/s/no/yes/" $BUILD_CFG_FILE
-    done
-
-    # Set all setup types supported to "no"
-    echo $SETUP_TYPE
-    for setuptype in $SETUP_TYPE;do
-        sed -i -e "/${setuptype}/s/yes/no/" $BUILD_CFG_FILE
-    done
-
-    cat $BUILD_CFG_FILE
-
-    if [ x"$SKIP_BUILD" = x"true" ];then
-        echo "skip build"
-    else
-        # Execute build
-        ./estuary/build.sh --file=$BUILD_CFG_FILE --builddir=$BUILD_DIR
-        if [ $? -ne 0 ]; then
-            echo "estuary build failed!"
-            exit -1
-        fi
-    fi
-
-    print_time "the end time of estuary build is "
-
-    popd
-
-}
-
-# generate version number by git sha
-function get_version_info() {
-    pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
-
-    if [ "$VERSION"x != ""x ]; then
-        GIT_DESCRIBE=$VERSION
-    else
-        #### get uefi commit
-        pushd uefi
-        UEFI_GIT_DESCRIBE=$(git log --oneline | head -1 | awk '{print $1}')
-        UEFI_GIT_DESCRIBE=uefi_${UEFI_GIT_DESCRIBE:0:7}
-        popd
-
-        #### get kernel commit
-        pushd kernel
-        KERNEL_GIT_DESCRIBE=$(git log --oneline | head -1 | awk '{print $1}')
-        KERNEL_GIT_DESCRIBE=kernel_${KERNEL_GIT_DESCRIBE:0:7}
-        popd
-
-        #### get grub commit
-        pushd grub
-        GURB_GIT_DESCRIBE=$(git log --oneline | head -1 | awk '{print $1}')
-        GURB_GIT_DESCRIBE=grub_${GURB_GIT_DESCRIBE:0:7}
-        popd
-
-        GIT_DESCRIBE=${UEFI_GIT_DESCRIBE}_${GURB_GIT_DESCRIBE}_${KERNEL_GIT_DESCRIBE}
-    fi
-
-    echo $GIT_DESCRIBE
-
-    popd
-}
-
 
 function parse_arch_map(){
     read -a arch_map <<< $(echo $ARCH_MAP)
@@ -475,13 +331,18 @@ function source_properties_file() {
     fi
 }
 
+function do_deploy() {
+    # do deploy
+    :
+}
+
 function main() {
     parse_input "$@"
     source_properties_file
 
     prepare_tools
 
-    init_build_option
+    init_deploy_option
     init_workspace
     init_env_params
     init_build_env
@@ -497,27 +358,9 @@ function main() {
     print_time "the begin time is "
     prepare_repo_tool
 
-    # if GIT_DESCRIBE have exist, skip build.
-    if [ -z "${GIT_DESCRIBE}" ];then
-       sync_code
-       clean_build
+    parse_arch_map
 
-       # hotfix_download_estuary_defconfig
-       do_build
-       get_version_info
-       parse_arch_map
-       if [ x"$SKIP_CP_IMAGE" = x"false" ];then
-           cp_image
-       fi
-    else
-        DES_DIR=$FTP_DIR/$TREE_NAME/$GIT_DESCRIBE
-        if [ -d $DES_DIR ];then
-            echo "Skip build, use old build : ${GIT_DESCRIBE}"
-        else
-            echo "ERROR: wrong ${GIT_DESCRIBE}, don't exist in ftp."
-            exit -1
-        fi
-    fi
+    do_deploy
 
     save_to_properties
 }
