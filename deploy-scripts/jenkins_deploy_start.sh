@@ -2,7 +2,7 @@
 
 # prepare system tools
 function prepare_tools() {
-    dev_tools="sshpass"
+    dev_tools="sshpass ipmitool"
 
     if ! (dpkg-query -l $dev_tools >/dev/null 2>&1); then
         sudo apt-get update
@@ -16,6 +16,15 @@ function prepare_tools() {
 # jenkins job debug variables
 function init_deploy_option() {
     SKIP_DEPLOY=${SKIP_DEPLOY:-"false"}
+
+    DHCP_CONFIG_DIR=/etc/dhcp
+    DHCP_SERVER=192.168.30.2
+    DHCP_FILENAME=dhcpd.conf
+
+    TFTP_DIR=/tftp
+
+    TFTP_ESTUARY_GRUB=grub.cfg
+    TFTP_LINARO_GRUB=linaro_install/grub.cfg
 }
 
 # ensure workspace exist
@@ -192,6 +201,16 @@ function source_properties_file() {
     fi
 }
 
+function config_dhcp() {
+    # config dhcp
+    :
+}
+
+function config_tftp() {
+    # config dhcp
+    :
+}
+
 function do_deploy() {
     # do deploy
     :
@@ -219,6 +238,8 @@ function main() {
     print_time "the begin time is "
     parse_arch_map
 
+    config_dhcp
+    config_tftp
     do_deploy
 
     save_to_properties
