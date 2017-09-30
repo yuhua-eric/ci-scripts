@@ -51,7 +51,7 @@ function init_input_params() {
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
 
     # select borad
-    SHELL_PLATFORM=${SHELL_PLATFORM:-"d05"}
+    SHELL_PLATFORM=${SHELL_PLATFORM:-""}
     SHELL_DISTRO=${SHELL_DISTRO:-""}
 
 
@@ -143,29 +143,6 @@ function init_timefile() {
     fi
 }
 
-function prepare_repo_tool() {
-    pushd $WORK_DIR
-    mkdir -p bin;
-    export PATH=${WORK_DIR}/bin:$PATH;
-    if [ ! -e bin ]; then
-        if which repo;then
-            echo "skip download repo"
-        else
-            echo "download repo"
-            wget -c http://download.open-estuary.org/AllDownloads/DownloadsEstuary/utils/repo -O bin/repo
-            chmod a+x bin/repo;
-        fi
-    fi
-    popd
-}
-
-# master don't have arch/arm64/configs/estuary_defconfig file
-function hotfix_download_estuary_defconfig() {
-    cd $OPEN_ESTUARY_DIR/kernel/arch/arm64/configs
-    wget https://raw.githubusercontent.com/open-estuary/kernel/v3.1/arch/arm64/configs/estuary_defconfig -o estuary_defconfig
-    cd -
-}
-
 function parse_arch_map(){
     read -a arch_map <<< $(echo $ARCH_MAP)
     declare -A -g arch
@@ -175,122 +152,6 @@ function parse_arch_map(){
             arch[${arch_map[$i]}]=${arch_map[$j]}
         fi
     done
-}
-
-# image dir tree:
-# .
-# `-- kernel-ci
-#     `-- open-estuary
-#         `-- uefi_b386a15_grub_daac831_kernel_6eade8c
-#             |-- arm64
-#             |   |-- Estuary.iso
-#             |   |-- Image
-#             |   |-- System.map
-#             |   |-- Ubuntu_ARM64.tar.gz
-#             |   |-- Ubuntu_ARM64.tar.gz.sum
-#             |   |-- deploy-utils.tar.bz2
-#             |   |-- gcc-linaro-aarch64-linux-gnu-4.9-2014.09_linux.tar.xz
-#             |   |-- gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux.tar.xz
-#             |   |-- grubaa64.efi
-#             |   |-- mini-rootfs.cpio.gz
-#             |   `-- vmlinux
-#             |-- d05-arm64
-#             |   |-- binary
-#             |   |   |-- Image_D05 -> ../../arm64/Image
-#             |   |   |-- UEFI_D05.fd
-#             |   |   |-- deploy-utils.tar.bz2 -> ../../arm64/deploy-utils.tar.bz2
-#             |   |   |-- grub.cfg
-#             |   |   |-- grubaa64.efi -> ../../arm64/grubaa64.efi
-#             |   |   `-- mini-rootfs.cpio.gz -> ../../arm64/mini-rootfs.cpio.gz
-#             |   |-- distro
-#             |   |   |-- Ubuntu_ARM64.tar.gz -> ../../arm64/Ubuntu_ARM64.tar.gz
-#             |   |   `-- Ubuntu_ARM64.tar.gz.sum -> ../../arm64/Ubuntu_ARM64.tar.gz.sum
-#             |   `-- toolchain
-#             |       `-- gcc-linaro-aarch64-linux-gnu-4.9-2014.09_linux.tar.xz -> ../../arm64/gcc-linaro-aarch64-linux-gnu-4.9-2014.09_linux.tar.xz
-#             `-- timestamp.log
-function cp_image() {
-    pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
-
-    DEPLOY_UTILS_FILE=deploy-utils.tar.bz2
-    MINI_ROOTFS_FILE=mini-rootfs.cpio.gz
-    GRUB_IMG_FILE=grubaa64.efi
-    GRUB_CFG_FILE=grub.cfg
-    KERNEL_IMG_FILE=Image
-    TOOLCHAIN_FILE=gcc-linaro-aarch64-linux-gnu-4.9-2014.09_linux.tar.xz
-
-    DES_DIR=$FTP_DIR/$TREE_NAME/$GIT_DESCRIBE
-    [ -d $DES_DIR ] && sudo rm -rf $DES_DIR
-    sudo mkdir -p $DES_DIR
-
-    sudo cp $timefile $DES_DIR
-
-    ls -l $BUILD_DIR
-    pushd $BUILD_DIR  # enter BUILD_DIR
-
-    # copy arch files
-    pushd binary
-    for arch_dir in arm*;do
-        sudo mkdir -p $DES_DIR/$arch_dir
-        sudo cp $arch_dir/* $DES_DIR/$arch_dir
-    done
-    popd
-
-    # copy platfom files
-    for PLATFORM in $SHELL_PLATFORM; do
-        echo $PLATFORM
-
-        PLATFORM_L="$(echo $PLATFORM | tr '[:upper:]' '[:lower:]')"
-        PLATFORM_U="$(echo $PLATFORM | tr '[:lower:]' '[:upper:]')"
-        PLATFORM_ARCH_DIR=$DES_DIR/${PLATFORM_L}-${arch[$PLATFORM_L]}
-        [ -d $PLATFORM_ARCH_DIR ] && sudo rm -fr $PLATFORM_ARCH_DIR
-        sudo mkdir -p ${PLATFORM_ARCH_DIR}/{binary,toolchain,distro}
-
-        # copy toolchain files
-        pushd $PLATFORM_ARCH_DIR/toolchain
-        sudo ln -s ../../${arch[$PLATFORM_L]}/$TOOLCHAIN_FILE
-        popd
-
-        # copy binary files
-        sudo find binary/$PLATFORM_U/ -type l -exec rm {} \;  || true # ensure remove symlinks
-        sudo cp -rf binary/$PLATFORM_U/* $PLATFORM_ARCH_DIR/binary
-
-        pushd $PLATFORM_ARCH_DIR/binary
-        sudo ln -s ../../${arch[$PLATFORM_L]}/$KERNEL_IMG_FILE ${KERNEL_IMG_FILE}_${PLATFORM_U}
-        sudo ln -s ../../${arch[$PLATFORM_L]}/$DEPLOY_UTILS_FILE
-        sudo ln -s ../../${arch[$PLATFORM_L]}/$MINI_ROOTFS_FILE
-        sudo ln -s ../../${arch[$PLATFORM_L]}/$GRUB_IMG_FILE
-
-        # TODO : ln: failed to create symbolic link './grub.cfg': File exists
-        sudo ln -s ../../${arch[$PLATFORM_L]}/$GRUB_CFG_FILE || true
-        popd
-
-        # copy distro files
-        for DISTRO in $SHELL_DISTRO;do
-            echo $DISTRO
-
-            pushd ${CI_SCRIPTS_DIR}
-            distro_tar_name=`python parameter_parser.py -f config.yaml -s DISTRO -k $PLATFORM_U -v $DISTRO`
-            popd
-
-            if [ x"$distro_tar_name" = x"" ]; then
-                continue
-            fi
-
-            echo $distro_tar_name
-
-            pushd $DES_DIR/${arch[$PLATFORM_L]}
-            [ ! -f ${distro_tar_name}.sum ] && sudo sh -c "md5sum $distro_tar_name > ${distro_tar_name}.sum"
-            popd
-
-            pushd $PLATFORM_ARCH_DIR/distro
-            sudo ln -s ../../${arch[$PLATFORM_L]}/$distro_tar_name
-            sudo ln -s ../../${arch[$PLATFORM_L]}/$distro_tar_name.sum
-            popd
-        done
-    done
-
-    popd  # leave BUILD_DIR
-    popd  # leave OPEN_ESTUARY_DIR
 }
 
 function show_help(){
@@ -356,8 +217,6 @@ function main() {
     generate_failed_mail
 
     print_time "the begin time is "
-    prepare_repo_tool
-
     parse_arch_map
 
     do_deploy
