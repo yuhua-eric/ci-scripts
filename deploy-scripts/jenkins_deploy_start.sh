@@ -213,7 +213,9 @@ function config_tftp() {
 
 function do_deploy() {
     # do deploy
-    :
+    pushd ${CI_SCRIPTS_DIR}/deploy-scripts
+    python deploy.py
+    popd
 }
 
 function main() {

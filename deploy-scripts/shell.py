@@ -350,6 +350,20 @@ class SShSession(ShellSession):
         self.connected = False
 
 
+class IpmiSession(ShellSession):
+    def __init__(self, shell_command):
+        super(SShSession, self).__init__(shell_command)
+        self.name = "IpmiSession"
+
+    def finalise(self):
+        self.disconnect("closing")
+        super(SShSession, self).finalise()
+
+    def disconnect(self, reason):
+        self.sendline('~.', disconnecting=True)
+        self.connected = False
+
+
 class Timeout(object):
     """
     The Timeout class is a declarative base which any actions can use. If an Action has
@@ -510,6 +524,24 @@ def run_command(command_list, allow_silent=False, allow_fail=False):  # pylint: 
     else:
         print('command output %s', log)
         return log
+
+def ipmi_connection(connection_command, time):
+    timeout = Timeout(time)
+    default_shell_prompt = "SOL"
+    logger = stdout_logger()
+    # TODO : create IPMI connection
+    shell = ShellCommand("%s\n" % command_str, timeout, logger=logger)
+    if shell.exitstatus:
+        print("%s command exited %d: %s" % (
+            command_str, shell.exitstatus, shell.readlines()))
+        exit(-1)
+
+    connection = IpmiSession(shell)
+    connection.prompt_str = [default_shell_prompt]
+    connection.connected = True
+    connection.wait()
+
+    return connection
 
 def ssh_connection(ssh_user, host, time):
     identity_file = None
