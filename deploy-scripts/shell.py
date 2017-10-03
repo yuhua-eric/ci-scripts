@@ -530,6 +530,7 @@ def ipmi_connection(connection_command, time):
     default_shell_prompt = "SOL"
     logger = stdout_logger()
     # TODO : create IPMI connection
+    command_str = connection_command
     shell = ShellCommand("%s\n" % command_str, timeout, logger=logger)
     if shell.exitstatus:
         print("%s command exited %d: %s" % (
