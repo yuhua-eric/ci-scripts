@@ -214,9 +214,11 @@ class ShellCommand(pexpect.spawn):  # pylint: disable=too-many-public-methods
             print("ShellCommand command timed out.")
             exit(-1)
         except ValueError as exc:
+            print "error : value error"
             exit(-1)
         except pexpect.EOF:
             # FIXME: deliberately closing the connection (and starting a new one) needs to be supported.
+            print "error : pexpect eof"
             exit(-1)
         return proc
 
@@ -293,8 +295,10 @@ class ShellSession(Connection):
                     continue
                 else:
                     # TODO: is someone expecting pexpect.TIMEOUT?
+                    print "error: upexpect timeout"
                     exit(-1)
             except KeyboardInterrupt:
+                print "error : keyboard interrupt"
                 exit(-1)
 
     def wait(self, max_end_time=None):
@@ -313,8 +317,10 @@ class ShellSession(Connection):
         try:
             return self.raw_connection.expect(self.prompt_str, timeout=timeout)
         except (pexpect.TIMEOUT):
+            print "error: time out"
             exit(-1)
         except KeyboardInterrupt:
+            print "error: keyboard interrupt"
             exit(-1)
 
     def listen_feedback(self, timeout):
@@ -329,6 +335,7 @@ class ShellSession(Connection):
             return self.raw_connection.expect([pexpect.EOF, pexpect.TIMEOUT],
                                               timeout=timeout)
         except KeyboardInterrupt:
+            print "error: keyboard interrupt"
             exit(-1)
         finally:
             self.raw_connection.logfile.is_feedback = False
@@ -537,9 +544,11 @@ def ipmi_connection(connection_command, time):
             command_str, shell.exitstatus, shell.readlines()))
         exit(-1)
 
+    print "ipmi_connection : established"
     connection = IpmiSession(shell)
     connection.prompt_str = [default_shell_prompt]
     connection.connected = True
+    print "ipmi_connection : waiting"
     connection.wait()
 
     return connection

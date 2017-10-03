@@ -21,6 +21,7 @@ def boot_device():
     shell.run_command(disconnction_command.split(' '), allow_fail=True)
     shell.run_command(power_off_command.split(' '), allow_fail=True)
     time.sleep(1)
+    print "start ipmi connection !"
     connection = shell.ipmi_connection(power_on_command, 300)
     connection.prompt_str = ['seconds to stop automatical booting']
     connection.wait()
