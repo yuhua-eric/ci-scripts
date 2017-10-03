@@ -555,7 +555,7 @@ def ipmi_connection(connection_command, total_time):
     connection.connected = True
     print "ipmi_connection : waiting"
 
-    #default_shell_prompt = "SOL"
+    #default_shell_prompt = "SOL Session operational."
     #connection.prompt_str = [default_shell_prompt]
     #connection.wait()
 
