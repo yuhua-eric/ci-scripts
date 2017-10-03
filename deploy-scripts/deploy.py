@@ -37,7 +37,7 @@ def boot_device():
 
 
 def main(args):
-    boot_devcie()
+    boot_device()
     exit(0)
 
 if __name__ == '__main__':

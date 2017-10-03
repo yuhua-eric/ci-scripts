@@ -2,7 +2,7 @@
 
 # prepare system tools
 function prepare_tools() {
-    dev_tools="sshpass ipmitool"
+    dev_tools="sshpass ipmitool python-pip python-pexpect"
 
     if ! (dpkg-query -l $dev_tools >/dev/null 2>&1); then
         sudo apt-get update
