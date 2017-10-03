@@ -312,7 +312,7 @@ class ShellSession(Connection):
             exit(-1)
         try:
             return self.raw_connection.expect(self.prompt_str, timeout=timeout)
-        except (TestError, pexpect.TIMEOUT):
+        except (pexpect.TIMEOUT):
             exit(-1)
         except KeyboardInterrupt:
             exit(-1)
