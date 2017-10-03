@@ -538,6 +538,8 @@ def ipmi_connection(connection_command, total_time):
     logger = stdout_logger()
     # TODO : create IPMI connection
     command_str = connection_command
+
+    print "the shell command is  : %s " % command_str
     shell = ShellCommand("%s\n" % command_str, timeout, logger=logger)
     if shell.exitstatus:
         print("%s command exited %d: %s" % (
