@@ -534,7 +534,7 @@ def run_command(command_list, allow_silent=False, allow_fail=False):  # pylint: 
 
 def ipmi_connection(connection_command, time):
     timeout = Timeout(time)
-    default_shell_prompt = "SOL"
+
     logger = stdout_logger()
     # TODO : create IPMI connection
     command_str = connection_command
@@ -546,10 +546,13 @@ def ipmi_connection(connection_command, time):
 
     print "ipmi_connection : established"
     connection = IpmiSession(shell)
-    connection.prompt_str = [default_shell_prompt]
+
     connection.connected = True
     print "ipmi_connection : waiting"
-    connection.wait()
+
+    #default_shell_prompt = "SOL"
+    #connection.prompt_str = [default_shell_prompt]
+    #connection.wait()
 
     return connection
 
