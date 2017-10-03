@@ -544,6 +544,9 @@ def ipmi_connection(connection_command, time):
             command_str, shell.exitstatus, shell.readlines()))
         exit(-1)
 
+    # wait for login
+    time.sleep(3)
+
     print "ipmi_connection : established"
     connection = IpmiSession(shell)
 
