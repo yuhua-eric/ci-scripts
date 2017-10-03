@@ -17,9 +17,9 @@ power_on_command = 'ipmitool -H %s -I lanplus -U %s -P %s power on' % (BMC_HOST,
 pxe_boot_command = 'ipmitool -H %s -I lanplus -U %s -P %s chassis bootdev pxe' % (BMC_HOST, BMC_USER, BMC_PASS)
 
 def boot_device():
-    shell.run_command(pxe_boot_command.split(' '))
-    shell.run_command(disconnction_command.split(' '))
-    shell.run_command(power_off_command.split(' '))
+    shell.run_command(pxe_boot_command.split(' '), allow_fail=True)
+    shell.run_command(disconnction_command.split(' '), allow_fail=True)
+    shell.run_command(power_off_command.split(' '), allow_fail=True)
     time.sleep(1)
     connection = shell.ipmi_connection(power_on_command, 300)
     connection.prompt_str = ['seconds to stop automatical booting']
