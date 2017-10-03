@@ -532,8 +532,8 @@ def run_command(command_list, allow_silent=False, allow_fail=False):  # pylint: 
         print('command output %s', log)
         return log
 
-def ipmi_connection(connection_command, time):
-    timeout = Timeout(time)
+def ipmi_connection(connection_command, total_time):
+    timeout = Timeout(total_time)
 
     logger = stdout_logger()
     # TODO : create IPMI connection
