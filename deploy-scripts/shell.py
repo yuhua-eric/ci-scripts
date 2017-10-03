@@ -352,12 +352,12 @@ class SShSession(ShellSession):
 
 class IpmiSession(ShellSession):
     def __init__(self, shell_command):
-        super(SShSession, self).__init__(shell_command)
+        super(IpmiSession, self).__init__(shell_command)
         self.name = "IpmiSession"
 
     def finalise(self):
         self.disconnect("closing")
-        super(SShSession, self).finalise()
+        super(IpmiSession, self).finalise()
 
     def disconnect(self, reason):
         self.sendline('~.', disconnecting=True)
