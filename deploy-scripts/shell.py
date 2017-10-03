@@ -533,7 +533,7 @@ def run_command(command_list, allow_silent=False, allow_fail=False):  # pylint: 
         return log
 
 def ipmi_connection(connection_command, total_time):
-    timeout = Timeout(total_time)
+    timeout = Timeout("ipmi-connection", total_time)
 
     logger = stdout_logger()
     # TODO : create IPMI connection
@@ -561,9 +561,9 @@ def ipmi_connection(connection_command, total_time):
 
     return connection
 
-def ssh_connection(ssh_user, host, time):
+def ssh_connection(ssh_user, host, total_time):
     identity_file = None
-    timeout = Timeout(time)
+    timeout = Timeout("ssh-conection", total_time)
 
     command = ['ssh']
     ssh_port = ["-p", "22"]
