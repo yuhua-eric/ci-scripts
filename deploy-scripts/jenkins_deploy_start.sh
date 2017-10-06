@@ -15,7 +15,7 @@ function prepare_tools() {
 
 # jenkins job debug variables
 function init_deploy_option() {
-    SKIP_DEPLOY=${SKIP_DEPLOY:-"false"}
+    SKIP_DEPLOY=${SKIP_DEPLOY:-"true"}
 
     DHCP_CONFIG_DIR=/etc/dhcp
     DHCP_SERVER=192.168.30.2

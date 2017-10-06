@@ -45,6 +45,7 @@ actions:
     prompts:
     - 'root@ubuntu:'
     - 'root@centos ~'
+    - 'root@debian:~#'
 - test:
     timeout:
       minutes: 120

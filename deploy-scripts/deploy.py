@@ -34,8 +34,23 @@ def boot_device():
     connection.prompt_str = ['login:']
     connection.wait()
     print "os login interrupt prompt find !"
-    connection.disconnect("close")
+
     # TODO: test login
+    # TODO : login the os and change sshd config to allow ssh root login
+    connection.prompt_str = ['Password:']
+    connection.sendline("root")
+    connection.wait()
+
+    connection.prompt_str = ['root@debian:~#', 'root@centos ~', 'root@ubuntu:']
+    connection.sendline("root")
+    connection.wait()
+
+    # fix the root login sshd config
+    connection.sendline('sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/" /etc/ssh/sshd_config')
+    connection.sendline("service sshd restart")
+
+    connection.disconnect("close")
+
 
 
 def main(args):
