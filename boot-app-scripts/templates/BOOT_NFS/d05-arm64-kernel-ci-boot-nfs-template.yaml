@@ -31,7 +31,7 @@ actions:
       nfsrootfs:
         url: '{nfs_url}'
         compression: gz
-      os: ubuntu
+      os: {distro}
 - boot:
     timeout:
       minutes: 15

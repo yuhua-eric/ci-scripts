@@ -23,8 +23,9 @@ timeouts:
 actions:
 - deploy:
       to: iso
-      iso:
-        url: '{iso_url}'
+      url: '{iso_url}'
+      os: {distro}
+
 - boot:
     timeout:
       minutes: 10
