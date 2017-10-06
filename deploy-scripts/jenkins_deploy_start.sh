@@ -15,7 +15,7 @@ function prepare_tools() {
 
 # jenkins job debug variables
 function init_deploy_option() {
-    SKIP_DEPLOY=${SKIP_DEPLOY:-"true"}
+    SKIP_DEPLOY=${SKIP_DEPLOY:-"false"}
 
     DHCP_CONFIG_DIR=/etc/dhcp
     DHCP_SERVER=192.168.30.2
@@ -204,11 +204,14 @@ function source_properties_file() {
 function config_dhcp() {
     # config dhcp
     :
+    # sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 cp -f /etc/dhcp/examples/dhcpd.conf.linaro /etc/dhcp/dhcpd.conf
+    # sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 service isc-dhcp-server restart
 }
 
 function config_tftp() {
     # config dhcp
     :
+    # cp -f /tftp/linaro_install/CentOS/linaro_centos.grub.cfg /tftp/linaro_install
 }
 
 function do_deploy() {
