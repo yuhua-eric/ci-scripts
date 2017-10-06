@@ -225,6 +225,25 @@ function trigger_lava_build() {
             if [ "$boot_plan" = "BOOT_ISO" ]; then
                 # TODO : need rewrite the logic by lava2 way to boot from STAT or SAS.
                 :
+            elif [ "$boot_plan" = "BOOT_PXE" ]; then
+                # pxe install in previous step.use ssh to do the pxe test.
+                # BOOT_NFS
+                # boot from NFS
+                print_time "the start time of $boot_plan is "
+                generate_jobs $boot_plan $DISTRO
+
+                if [ -d ${JOBS_DIR} ]; then
+                    if ! run_and_move_result $boot_plan $DISTRO ;then
+                        if [ ! -d ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO} ];then
+                            mv ${DISTRO} ${GIT_DESCRIBE}/${RESULTS_DIR}
+                            continue
+                        else
+                            cp -fr ${DISTRO}/* ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
+                            continue
+                        fi
+                    fi
+                fi
+                print_time "the end time of $boot_plan is "
             else
                 # BOOT_NFS
                 # boot from NFS
