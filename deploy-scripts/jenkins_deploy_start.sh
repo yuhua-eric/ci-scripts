@@ -215,6 +215,12 @@ function do_deploy() {
     # do deploy
     pushd ${CI_SCRIPTS_DIR}/deploy-scripts
     python deploy.py
+
+    SSH_PASS=root
+    SSH_USER=root
+    SSH_IP=192.168.30.201
+
+    sshpass -p ${SSH_PASS} ssh-copy-id -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP}
     popd
 }
 

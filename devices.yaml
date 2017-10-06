@@ -1,0 +1,6 @@
+Devices:
+  d0501:
+    sshname: sshd0501
+    type: d05
+    bmc: 192.168.3.169
+    ip: 192.168.30.201
