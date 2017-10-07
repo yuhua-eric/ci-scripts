@@ -203,15 +203,23 @@ function source_properties_file() {
 
 function config_dhcp() {
     # config dhcp
-    :
-    # sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 cp -f /etc/dhcp/examples/dhcpd.conf.linaro /etc/dhcp/dhcpd.conf
-    # sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 service isc-dhcp-server restart
+    if [ ${TREE_NAME} = 'linaro' ];then
+        sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 cp -f /etc/dhcp/examples/dhcpd.conf.linaro /etc/dhcp/dhcpd.conf
+    elif [ ${TREE_NAME} = 'open-estuary' ];then
+        sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 cp -f /etc/dhcp/examples/dhcpd.conf.estuary /etc/dhcp/dhcpd.conf
+    fi
+
+    sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 service isc-dhcp-server restart
 }
 
 function config_tftp() {
-    # config dhcp
-    :
-    # cp -f /tftp/linaro_install/CentOS/linaro_centos.grub.cfg /tftp/linaro_install
+    # config tftp
+    if [ ${TREE_NAME} = 'linaro' ];then
+        cp -f /tftp/linaro_install/CentOS/linaro_centos.grub.cfg /tftp/linaro_install/grub.cfg
+        #cp -f /tftp/linaro_install/Debian/linaro_debain.grub.cfg /tftp/linaro_install/grub.cfg
+    elif [ ${TREE_NAME} = 'open-estuary' ];then
+        cp -f /tftp/estuary_install/grub.cfg /tftp/grub.cfg
+    fi
 }
 
 function do_deploy() {
