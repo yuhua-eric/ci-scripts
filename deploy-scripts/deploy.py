@@ -47,7 +47,11 @@ def boot_device():
 
     # fix the root login sshd config
     connection.sendline('sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/" /etc/ssh/sshd_config')
+    connection.wait()
     connection.sendline("service sshd restart")
+    connection.wait()
+    connection.sendline("sleep 2")
+    connection.wait()
 
     connection.disconnect("close")
 
