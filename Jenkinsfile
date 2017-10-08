@@ -51,10 +51,8 @@ node ('compile'){
         }
     }
 
-    if ( BOOT_PLAN == "BOOT_PXE") {
-        stage('Deploy') {
-            sh "./local/ci-scripts/deploy-scripts/jenkins_deploy_start.sh -p env.properties 2>&1  | tee deploy.log"
-        }
+    stage('Deploy') {
+        sh "./local/ci-scripts/deploy-scripts/jenkins_deploy_start.sh -p env.properties 2>&1  | tee deploy.log"
     }
 
     stage('Test') {

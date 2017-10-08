@@ -267,9 +267,11 @@ function main() {
 
     config_dhcp
     config_tftp
-    do_deploy
 
-    copy_ssh_id
+    if [ ${BOOT_PLAN} = "BOOT_PXE" ];then
+        do_deploy
+        copy_ssh_id
+    fi
 
     save_to_properties
 }
