@@ -39,8 +39,9 @@ def update_uefi():
     operate(connection, 'up')
     operate(connection, 'enter')
 
-    connection.prompt_str = ['D05 >']
+    connection.prompt_str = ['D05 >', 'Please send feedback']
     connection.wait()
+    operate(connection, 'enter')
 
     connection.sendline(update_uefi_command)
 
