@@ -51,12 +51,15 @@ def update_uefi():
 
     operate(connection, 'enter')
 
-    connection.prompt_str = ['D05 >']
+    connection.prompt_str = ['D05 >', 'succ!', 'WriteFlashCmd']
     connection.wait()
+    operate(connection, 'enter')
+
     connection.sendline("spiwfmem 0x100000 0x0000000 0x300000")
     operate(connection, 'enter')
     connection.wait()
 
+    operate(connection, 'enter')
     connection.sendline("exit")
     connection.disconnect("close")
 
