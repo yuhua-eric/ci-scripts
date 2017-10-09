@@ -47,12 +47,14 @@ def update_uefi():
 
     connection.prompt_str = ['Input the index:']
     connection.wait()
-
     connection.sendline("3")
+
+    operate(connection, 'enter')
+
     connection.prompt_str = ['D05 >']
     connection.wait()
-
     connection.sendline("spiwfmem 0x100000 0x0000000 0x300000")
+    operate(connection, 'enter')
     connection.wait()
 
     connection.sendline("exit")
