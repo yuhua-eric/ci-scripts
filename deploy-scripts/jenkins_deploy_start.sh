@@ -215,8 +215,22 @@ function config_dhcp() {
 function config_tftp() {
     # config tftp
     if [ ${TREE_NAME} = 'linaro' ];then
+        # do deploy
+        pushd ${CI_SCRIPTS_DIR}/deploy-scripts
+        python update_uefi.py --uefi D05_linaro_16_12.fd
+        popd
+    elif [ ${TREE_NAME} = 'open-estuary' ];then
+        # do deploy
+        pushd ${CI_SCRIPTS_DIR}/deploy-scripts
+        python update_uefi.py --uefi D05-rp1708-1.fd
+        popd
+    fi
+}
+
+function config_uefi() {
+    # config uefi
+    if [ ${TREE_NAME} = 'linaro' ];then
         cp -f /tftp/linaro_install/CentOS/linaro_centos.grub.cfg /tftp/linaro_install/grub.cfg
-        #cp -f /tftp/linaro_install/Debian/linaro_debain.grub.cfg /tftp/linaro_install/grub.cfg
     elif [ ${TREE_NAME} = 'open-estuary' ];then
         cp -f /tftp/estuary_install/grub.cfg /tftp/grub.cfg
     fi
@@ -267,6 +281,7 @@ function main() {
 
     config_dhcp
     config_tftp
+    config_uefi
 
     if [ ${BOOT_PLAN} = "BOOT_PXE" ];then
         do_deploy

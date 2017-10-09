@@ -9,14 +9,21 @@ import re
 BMC_HOST = '192.168.3.169'
 BMC_USER = 'root'
 BMC_PASS = 'Huawei12#$'
-connection_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol activate' % (BMC_HOST, BMC_USER, BMC_PASS)
-disconnction_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol deactivate' % (BMC_HOST, BMC_USER, BMC_PASS)
-power_off_command = 'ipmitool -H %s -I lanplus -U %s -P %s power off' % (BMC_HOST, BMC_USER, BMC_PASS)
-power_on_command = 'ipmitool -H %s -I lanplus -U %s -P %s power on' % (BMC_HOST, BMC_USER, BMC_PASS)
 
-update_uefi_command = 'provision 192.168.30.101 -u yangyang -p yangyang12#$ -f D05-rp1708-1.fd -a 0x100000'
+FTP_IP = '192.168.30.101'
+FTP_USER = 'yangyang'
+FTP_PASS = 'yangyang12#$'
+UEFI_FILE = 'D05-rp1708-1.fd'
+
 
 def update_uefi():
+    connection_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol activate' % (BMC_HOST, BMC_USER, BMC_PASS)
+    disconnction_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol deactivate' % (BMC_HOST, BMC_USER, BMC_PASS)
+    power_off_command = 'ipmitool -H %s -I lanplus -U %s -P %s power off' % (BMC_HOST, BMC_USER, BMC_PASS)
+    power_on_command = 'ipmitool -H %s -I lanplus -U %s -P %s power on' % (BMC_HOST, BMC_USER, BMC_PASS)
+
+    update_uefi_command = 'provision %s -u %s -p %s -f %s -a 0x100000' % (FTP_IP, FTP_USER, FTP_PASS, UEFI_FILE)
+
     shell.run_command(disconnction_command.split(' '), allow_fail=True)
     shell.run_command(power_off_command.split(' '), allow_fail=True)
     time.sleep(1)
@@ -82,11 +89,13 @@ def operate(connection, selector):
 
 
 def main(args):
+    if args.get("uefi") != "" or args.get("uefi") != None:
+        UEFI_FILE = args.get("uefi")
     update_uefi()
     exit(0)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--host", help="target host")
+    parser.add_argument("--uefi", help="uefi file name")
     args = vars(parser.parse_args())
     main(args)
