@@ -33,12 +33,12 @@ def update_uefi():
     connection.wait()
     print "uefi entry !"
 
-    operate('down')
-    operate('down')
-    operate('down')
-    operate('enter')
-    operate('up')
-    operate('enter')
+    operate(connection, 'down')
+    operate(connection, 'down')
+    operate(connection, 'down')
+    operate(connection, 'enter')
+    operate(connection, 'up')
+    operate(connection, 'enter')
     connection.prompt_str = ['D05 >']
     connection.wait()
 
