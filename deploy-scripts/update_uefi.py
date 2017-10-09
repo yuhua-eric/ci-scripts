@@ -35,10 +35,10 @@ def update_uefi():
 
     operate(connection, 'down')
     operate(connection, 'down')
-    operate(connection, 'down')
     operate(connection, 'enter')
     operate(connection, 'up')
     operate(connection, 'enter')
+
     connection.prompt_str = ['D05 >']
     connection.wait()
 
