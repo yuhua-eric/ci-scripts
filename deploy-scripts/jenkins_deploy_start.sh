@@ -204,9 +204,9 @@ function source_properties_file() {
 
 function config_dhcp() {
     # config dhcp
-    if [ ${TREE_NAME} = 'linaro' ];then
+    if [ "${TREE_NAME}" = 'linaro' ];then
         sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 cp -f /etc/dhcp/examples/dhcpd.conf.linaro /etc/dhcp/dhcpd.conf
-    elif [ ${TREE_NAME} = 'open-estuary' ];then
+    elif [ "${TREE_NAME}" = 'open-estuary' ];then
         sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 cp -f /etc/dhcp/examples/dhcpd.conf.estuary /etc/dhcp/dhcpd.conf
     fi
 
@@ -215,15 +215,15 @@ function config_dhcp() {
 
 function config_uefi() {
     # config tftp
-    if [ x"${SKIP_UEFI}" = x"true"];then
+    if [ x"${SKIP_UEFI}" = x"true" ];then
         echo "skip update uefi!"
     else
-        if [ ${TREE_NAME} = 'linaro' ];then
+        if [ "${TREE_NAME}" = 'linaro' ];then
             # do deploy
             pushd ${CI_SCRIPTS_DIR}/deploy-scripts
             python update_uefi.py --uefi UEFI_D05_linaro_16_12.fd
             popd
-        elif [ ${TREE_NAME} = 'open-estuary' ];then
+        elif [ "${TREE_NAME}" = 'open-estuary' ];then
             # do deploy
             pushd ${CI_SCRIPTS_DIR}/deploy-scripts
             python update_uefi.py --uefi UEFI_D05_Estuary.fd
@@ -234,9 +234,9 @@ function config_uefi() {
 
 function config_tftp() {
     # config uefi
-    if [ ${TREE_NAME} = 'linaro' ];then
+    if [ "${TREE_NAME}" = 'linaro' ];then
         cp -f /tftp/linaro_install/CentOS/linaro_centos.grub.cfg /tftp/linaro_install/grub.cfg
-    elif [ ${TREE_NAME} = 'open-estuary' ];then
+    elif [ "${TREE_NAME}" = 'open-estuary' ];then
         cp -f /tftp/estuary_install/grub.cfg /tftp/grub.cfg
     fi
 }
@@ -289,7 +289,7 @@ function main() {
 
     config_uefi
 
-    if [ ${BOOT_PLAN} = "BOOT_PXE" ];then
+    if [ "${BOOT_PLAN}" = "BOOT_PXE" ];then
         do_deploy
         copy_ssh_id
     fi
