@@ -67,6 +67,10 @@ def update_uefi():
     connection.wait()
 
     operate(connection, 'enter')
+    connection.wait()
+    operate(connection, 'enter')
+
+    time.sleep(3)
     connection.sendline("exit")
     connection.disconnect("close")
 

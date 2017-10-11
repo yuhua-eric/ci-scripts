@@ -16,6 +16,7 @@ function prepare_tools() {
 # jenkins job debug variables
 function init_deploy_option() {
     SKIP_DEPLOY=${SKIP_DEPLOY:-"false"}
+    SKIP_UEFI=${SKIP_UEFI:-"true"}
 
     DHCP_CONFIG_DIR=/etc/dhcp
     DHCP_SERVER=192.168.30.2
@@ -212,22 +213,26 @@ function config_dhcp() {
     sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 service isc-dhcp-server restart
 }
 
-function config_tftp() {
+function config_uefi() {
     # config tftp
-    if [ ${TREE_NAME} = 'linaro' ];then
-        # do deploy
-        pushd ${CI_SCRIPTS_DIR}/deploy-scripts
-        python update_uefi.py --uefi D05_linaro_16_12.fd
-        popd
-    elif [ ${TREE_NAME} = 'open-estuary' ];then
-        # do deploy
-        pushd ${CI_SCRIPTS_DIR}/deploy-scripts
-        python update_uefi.py --uefi D05-rp1708-1.fd
-        popd
+    if [ x"${SKIP_UEFI}" = x"true"];then
+        echo "skip update uefi!"
+    else
+        if [ ${TREE_NAME} = 'linaro' ];then
+            # do deploy
+            pushd ${CI_SCRIPTS_DIR}/deploy-scripts
+            python update_uefi.py --uefi UEFI_D05_linaro_16_12.fd
+            popd
+        elif [ ${TREE_NAME} = 'open-estuary' ];then
+            # do deploy
+            pushd ${CI_SCRIPTS_DIR}/deploy-scripts
+            python update_uefi.py --uefi UEFI_D05_Estuary.fd
+            popd
+        fi
     fi
 }
 
-function config_uefi() {
+function config_tftp() {
     # config uefi
     if [ ${TREE_NAME} = 'linaro' ];then
         cp -f /tftp/linaro_install/CentOS/linaro_centos.grub.cfg /tftp/linaro_install/grub.cfg
@@ -238,7 +243,7 @@ function config_uefi() {
 
 function do_deploy() {
     if [ x"${SKIP_DEPLOY}" = x"true" ];then
-        echo "skip deploy"
+        echo "skip deploy!"
     else
         # do deploy
         pushd ${CI_SCRIPTS_DIR}/deploy-scripts
@@ -281,6 +286,7 @@ function main() {
 
     config_dhcp
     config_tftp
+
     config_uefi
 
     if [ ${BOOT_PLAN} = "BOOT_PXE" ];then
