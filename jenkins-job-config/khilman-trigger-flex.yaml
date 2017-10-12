@@ -30,12 +30,14 @@
             type: user-defined
             name: TREE_BRANCH
             values:
-                    - plinth#devm-
+                    - plinth#topic-base-
                     - plinth#topic-hns-
                     - plinth#topic-pcie-
                     - plinth#topic-sas-
                     - plinth#topic-roce-
                     - plinth#topic-edac-
+                    - plinth#topic-virt-
+                    - mainline#master
     execution-strategy:
         sequential: true
     wrappers:
@@ -54,6 +56,7 @@
             declare -A trees
             trees=(
             [plinth]="git@github.com:hisilicon/kernel-dev.git"
+            [mainline]="git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git"
             )
 
             OFS=${IFS}
@@ -152,6 +155,7 @@
               # ACPI currently depends on EXPERT on arm64
               DEFCONFIG_LIST+="defconfig+CONFIG_EXPERT=y+CONFIG_ACPI=y "
               DEFCONFIG_LIST+="allmodconfig "
+              DEFCONFIG_LIST+="plinth-defconfig "
             fi
 
             if [ ${ARCH} = "x86" ]; then

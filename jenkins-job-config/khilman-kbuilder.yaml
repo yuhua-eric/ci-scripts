@@ -138,7 +138,12 @@
             if [ $PUBLISH != true ]; then
                 build.py -i -c ${defconfig_translated}
             else
-                build.py -i -p production -c ${defconfig_translated}
+                if [ ${defconfig_translated} = "plinth-defconfig" ]; then
+                        ./build.sh d05
+                        build.py -i -p production
+                else
+                        build.py -i -p production -c ${defconfig_translated}
+                fi
             fi
             RC=$?
 
