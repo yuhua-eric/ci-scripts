@@ -2,33 +2,35 @@
     block-downstream: false
     block-upstream: false
     builders:
-    - shell: "#!/bin/bash\nset -x\n\n# local copy of build scripts\nif [ ! -d local\
-        \ ]; then\n  mkdir -p local\n  (cd local; git clone https://github.com/open-estuary/ci-scripts.git\
-        \ -b openlab2.0)\nfi\n\n(cd local/ci-scripts; git pull)\nexport PATH=${WORKSPACE}/local/ci-scripts/jenkins-helper-script/common/lava-ci:${PATH}\n\
-        \nexport IMAGEPATH=\"$(find /var/www/images/kernel-ci/plinth -printf '%T+\
-        \ %p\\n' | sort -r | grep -E \".*plinth-[0-9].[0-9]*.[0-9].{,5}.*/arm64-defconfig/Image\"\
-        \ |head -n1)\"\nURLPATH=${IMAGEPATH#*kernel-ci/plinth/}\nURLPATH=${URLPATH%I*}\n\
-        \ncd local/ci-scripts/jenkins-helper-script/common/lava-ci\nrm -rf jobs\n\
-        lava-kernel-ci-job-creator.py http://localhost:8083/plinth/$URLPATH --plans\
-        \ weekly-testing --targets hip06-d03 hip07-d05\ncd jobs\nlava-job-runner.py\
-        \ --username default --token g43y0wtyi0m2ua7in3xtfch1m2s1dd0k97ac1fqqhqd0qblimtehqkwk8mjimsyh0jczrnaibdlb23mtn17qca6i14tcl27h7md580za5p8w81fl035b6bk1ybw26lle\
-        \ --server http://localhost:8089/RPC2/ --stream /anonymous/plinth/ --poll\
-        \ POLL\ncd ..\n#lava-report.py --boot jobs/results/POLL --lab openlab2 --api\
-        \ http://localhost:8888/ --token db85d8fb-da63-4d77-950e-3dffcd8ce115\nrm\
-        \ -rf jobs\n#curl -X POST -H \"Authorization: db85d8fb-da63-4d77-950e-3dffcd8ce115\"\
-        \ -H \"Content-Type: application/json\" -d '{\"job\": \"'$TREE_NAME'\", \"\
-        kernel\": \"'$GIT_DESCRIBE'\", \"boot_report\": 1, \"send_to\": [\"gabriele.paoloni@huawei.com\"\
-        , \"charles.chenxin@huawei.com\", \"xavier.huwei@huawei.com\", \"majun258@huawei.com\"\
-        , \"wangzhou1@hisilicon.com\", \"xuwei5@hisilicon.com\", \"liwenchang@hisilicon.com\"\
-        , \"tangchaofei@huawei.com\", \"wanghuiqiang@huawei.com\", \"xuzaibo@huawei.com\"\
-        , \"yisen.zhuang@huawei.com\", \"zhangjukuo@huawei.com\", \"john.garry@huawei.com\"\
-        , \"shiju.jose@huawei.com\", \"dongyingjie@hisilicon.com\", \"salil.mehta@huawei.com\"\
-        ], \"send_cc\": [\"yimin@huawei.com\", \"liguozhu@hisilicon.com\", \"zhaojunhua@hisilicon.com\"\
-        , \"lixiaoping3@huawei.com\", \"zhangyi.ac@huawei.com\", \"kong.kongxinwei@hisilicon.com\"\
-        , \"shameerali.kolothum.thodi@huawei.com\", \"sanil.kumar@hisilicon.com\"\
-        , \"wangkefeng.wang@huawei.com\", \"guohanjun@huawei.com\", \"donald.liujie@huawei.com\"\
-        ], \"format\": [\"txt\", \"html\"], \"delay\": 10}' http://192.168.3.100:8888/send\
-        \  "
+        - shell: |
+            #!/bin/bash
+
+            set -x
+            #local copy of build scripts
+            if [ ! -d local ]; then
+                mkdir -p local
+                (cd local; git clone https://github.com/open-estuary/ci-scripts.git -b openlab2.0)
+            fi
+
+            (cd local/ci-scripts; git pull)
+            export PATH=${WORKSPACE}/local/ci-scripts/jenkins-helper-script/common/lava-ci:${PATH}
+            export IMAGEPATH="$(find /var/www/images/kernel-ci/plinth -printf '%T+ %p\n' | sort -r | grep -E ".*plinth-[0-9].[0-9]*.[0-9].{,5}.*/arm64-defconfig.*d05-config/Image" |head -n1)"
+
+            if [ ! -n "$IMAGEPATH" ]; then
+                exit 1
+            fi
+
+            URLPATH=${IMAGEPATH#*kernel-ci/plinth/}
+            URLPATH=${URLPATH%I*}
+
+            cd local/ci-scripts/jenkins-helper-script/common/lava-ci
+            rm -rf jobs
+            lava-kernel-ci-job-creator.py http://localhost:8083/plinth/$URLPATH --plans weekly-testing --targets hip06-d03 hip07-d05
+            cd jobs
+            lava-job-runner.py --username default --token g43y0wtyi0m2ua7in3xtfch1m2s1dd0k97ac1fqqhqd0qblimtehqkwk8mjimsyh0jczrnaibdlb23mtn17qca6i14tcl27h7md580za5p8w81fl035b6bk1ybw26lle --server http://localhost:8089/RPC2/ --stream /anonymous/plinth/ --poll POLL
+            cd ..
+            rm -rf jobs
+
     - shell: |
         wget https://raw.githubusercontent.com/ariya/phantomjs/master/examples/rasterize.js
         phantomjs rasterize.js http://localhost:8089/dashboard/image-charts/Plinth report.jpg 1920px
