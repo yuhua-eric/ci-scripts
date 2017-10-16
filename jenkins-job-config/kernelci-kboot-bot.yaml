@@ -45,7 +45,7 @@
           #PWD=$(pwd)
           cd local/ci-scripts/jenkins-helper-script/common/lava-ci
           rm -rf jobs
-          lava-kernel-ci-job-creator.py http://localhost:8083/${TREE_NAME}/${GIT_DESCRIBE}/${ARCH}-defconfig/ --plans boot --targets hip05-d02 hip06-d03
+          lava-kernel-ci-job-creator.py http://localhost:8083/${TREE_NAME}/${GIT_DESCRIBE}/${ARCH}-defconfig/ --plans boot --targets hip06-d03 hip07-d05
           cd jobs
           lava-job-runner.py --username default --token g43y0wtyi0m2ua7in3xtfch1m2s1dd0k97ac1fqqhqd0qblimtehqkwk8mjimsyh0jczrnaibdlb23mtn17qca6i14tcl27h7md580za5p8w81fl035b6bk1ybw26lle --server http://localhost:8089/RPC2/ --stream /anonymous/plinth/ --poll POLL
           cd ..
