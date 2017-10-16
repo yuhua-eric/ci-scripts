@@ -139,8 +139,8 @@
                 build.py -i -c ${defconfig_translated}
             else
                 if [ ${defconfig_translated} = "plinth-defconfig" ]; then
-                        ./build.sh d05
-                        build.py -i -p production
+                        defconfig_translated="defconfig -c arch/arm64/configs/common-config -c ./arch/arm64/configs/d05-config"
+                        build.py -i -p production -c ${defconfig_translated}
                 else
                         build.py -i -p production -c ${defconfig_translated}
                 fi
