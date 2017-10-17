@@ -19,6 +19,19 @@ base_url = None
 kernel = None
 platform_list = []
 
+lava_os = {
+    "Android" : "android",
+    "Ubuntu" : "ubuntu",
+    "Debian" : "debian",
+    "Lede" : "lede",
+    "Fedora" : "fedora",
+    "Centos" : "centos"
+    "debian_installer" : "debian_installer"
+    "centos_installer" : "centos_installer"
+    "oe" : "oe"
+}
+
+
 d03 = {'device_type': 'd03',
     'templates': ['d03-arm64-kernel-ci-boot-template.yaml',
                               'd03-arm64-kernel-ci-boot-sata-template.yaml',
