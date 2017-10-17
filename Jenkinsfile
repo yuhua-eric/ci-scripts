@@ -52,7 +52,17 @@ node ('compile'){
     }
 
     stage('Deploy') {
-        sh "./local/ci-scripts/deploy-scripts/jenkins_deploy_start.sh -p env.properties 2>&1  | tee deploy.log"
+        def SKIP_DEPLOY = false
+        def SKIP_UEFI = false
+        sh "./local/ci-scripts/deploy-scripts/prepare_tools.sh 2>&1  | tee deploy.log"
+        sh "./local/ci-scripts/deploy-scripts/config_dhcp.sh ${TREE_NAME} 2>&1  | tee -a deploy.log"
+        sh "./local/ci-scripts/deploy-scripts/config_tftp.sh ${TREE_NAME} 2>&1  | tee -a deploy.log"
+        if (! SKIP_UEFI) {
+            sh "./local/ci-scripts/deploy-scripts/config_uefi.sh ${TREE_NAME} 2>&1  | tee -a deploy.log"
+        }
+        if (! SKIP_DEPLOY) {
+            sh "./local/ci-scripts/deploy-scripts/do_deploy.sh 2>&1  | tee -a deploy.log"
+        }
     }
 
     stage('Test') {
