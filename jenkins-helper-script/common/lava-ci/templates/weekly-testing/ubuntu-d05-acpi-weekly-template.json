@@ -168,7 +168,7 @@
 		"parameters": {
 			"testdef_repos": [
 			{
-				"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
+				"git-repo": "https://github.com/joyxu/linaro-test-definitions.git",
 				"parameters": {
 					"PARTITION": "/dev/sda2"
 				},
