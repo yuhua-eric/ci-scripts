@@ -203,10 +203,11 @@ function source_properties_file() {
 }
 
 function config_dhcp() {
+    local tree_name="$1"
     # config dhcp
-    if [ "${TREE_NAME}" = 'linaro' ];then
+    if [ "${tree_name}" = 'linaro' ];then
         sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 cp -f /etc/dhcp/examples/dhcpd.conf.linaro /etc/dhcp/dhcpd.conf
-    elif [ "${TREE_NAME}" = 'open-estuary' ];then
+    elif [ "${tree_name}" = 'open-estuary' ];then
         sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 cp -f /etc/dhcp/examples/dhcpd.conf.estuary /etc/dhcp/dhcpd.conf
     fi
 
@@ -215,43 +216,38 @@ function config_dhcp() {
 
 function config_uefi() {
     # config tftp
-    if [ x"${SKIP_UEFI}" = x"true" ];then
-        echo "skip update uefi!"
-    else
-        if [ "${TREE_NAME}" = 'linaro' ];then
-            # do deploy
-            pushd ${CI_SCRIPTS_DIR}/deploy-scripts
-            python update_uefi.py --uefi UEFI_D05_linaro_16_12.fd
-            popd
-        elif [ "${TREE_NAME}" = 'open-estuary' ];then
-            # do deploy
-            pushd ${CI_SCRIPTS_DIR}/deploy-scripts
-            python update_uefi.py --uefi UEFI_D05_Estuary.fd
-            popd
-        fi
+    local tree_name="$1"
+    if [ "${tree_name}" = 'linaro' ];then
+        # do deploy
+        pushd ${CI_SCRIPTS_DIR}/deploy-scripts
+        python update_uefi.py --uefi UEFI_D05_linaro_16_12.fd
+        popd
+    elif [ "${tree_name}" = 'open-estuary' ];then
+        # do deploy
+        pushd ${CI_SCRIPTS_DIR}/deploy-scripts
+        python update_uefi.py --uefi UEFI_D05_Estuary.fd
+        popd
     fi
 }
 
 function config_tftp() {
+    local tree_name="$1"
     # config uefi
-    if [ "${TREE_NAME}" = 'linaro' ];then
+    if [ "${tree_name}" = 'linaro' ];then
         cp -f /tftp/linaro_install/CentOS/linaro_centos.grub.cfg /tftp/linaro_install/grub.cfg
-    elif [ "${TREE_NAME}" = 'open-estuary' ];then
+    elif [ "${tree_name}" = 'open-estuary' ];then
         cp -f /tftp/estuary_install/grub.cfg /tftp/grub.cfg
     fi
 }
 
 function do_deploy() {
-    if [ x"${SKIP_DEPLOY}" = x"true" ];then
-        echo "skip deploy!"
-    else
-        # do deploy
-        pushd ${CI_SCRIPTS_DIR}/deploy-scripts
-        python deploy.py
-        popd
-    fi
-}
+    # do deploy
+    pushd ${CI_SCRIPTS_DIR}/deploy-scripts
+    python deploy.py
+    popd
 
+    copy_ssh_id
+}
 
 function copy_ssh_id(){
     SSH_PASS=root
@@ -284,14 +280,20 @@ function main() {
     print_time "the begin time is "
     parse_arch_map
 
-    config_dhcp
-    config_tftp
-
-    config_uefi
+    config_dhcp "${TREE_NAME}"
+    config_tftp "${TREE_NAME}"
+    if [ x"${SKIP_UEFI}" = x"true" ];then
+        echo "skip update uefi!"
+    else
+        config_uefi "${TREE_NAME}"
+    fi
 
     if [ "${BOOT_PLAN}" = "BOOT_PXE" ];then
-        do_deploy
-        copy_ssh_id
+        if [ x"${SKIP_DEPLOY}" = x"true" ];then
+            echo "skip deploy!"
+        else
+            do_deploy
+        fi
     fi
 
     save_to_properties
