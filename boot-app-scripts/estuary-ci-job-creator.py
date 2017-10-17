@@ -330,7 +330,6 @@ def findAllTestCase(testDir):
     return test_case_yaml_file_list
 
 def main(args):
-    global test_kind
     global TEST_CASE_DEFINITION_DIR
     global TEST_CASE_DEFINITION_FILE_LIST
 
@@ -344,15 +343,13 @@ def main(args):
     distro = config.get("distro")
     if distro is None:
         distro = "Ubuntu"
-        test_kind = config.get("testClassify")
-    if test_kind is None:
-        test_kind = "BOTH"
-        walk_url(config.get("url"), config.get("url"), config.get("plans"),
-                 config.get("arch"), config.get("targets"), config.get("priority"),
-                 distro)
-        print 'Done scanning for kernel information'
-        print 'Done creating YAML jobs'
-        exit(0)
+
+    walk_url(config.get("url"), config.get("url"), config.get("plans"),
+             config.get("arch"), config.get("targets"), config.get("priority"),
+             distro)
+    print 'Done scanning for kernel information'
+    print 'Done creating YAML jobs'
+    exit(0)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -373,8 +370,5 @@ if __name__ == '__main__':
     parser.add_argument("--distro", choices=['Ubuntu', 'OpenSuse', 'Debian', \
                                              'Fedora', 'CentOS'],
                         help="distro for sata deploying")
-    # BOTH means the case are both UT and ST
-    parser.add_argument('--testClassify', help="the argument to distinguish \
-            which tests run", choices=['UT', "ST", "BOTH"])
     args = vars(parser.parse_args())
     main(args)
