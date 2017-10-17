@@ -25,46 +25,46 @@ lava_os = {
     "Debian" : "debian",
     "Lede" : "lede",
     "Fedora" : "fedora",
-    "Centos" : "centos"
-    "debian_installer" : "debian_installer"
-    "centos_installer" : "centos_installer"
+    "Centos" : "centos",
+    "debian_installer" : "debian_installer",
+    "centos_installer" : "centos_installer",
     "oe" : "oe"
 }
 
 
 d03 = {'device_type': 'd03',
-    'templates': ['d03-arm64-kernel-ci-boot-template.yaml',
-                              'd03-arm64-kernel-ci-boot-sata-template.yaml',
-                              'd03-arm64-kernel-ci-boot-nfs-template.yaml',
-                              'd03-arm64-kernel-ci-boot-pxe-template.yaml'],
-    'defconfig_blacklist': ['arm64-allnoconfig',
-                            'arm64-allmodconfig'],
-                            'kernel_blacklist': [],
-                            'nfs_blacklist': [],
-                            'lpae': False,
-                            'be': False
-                            }
+       'templates': ['d03-arm64-kernel-ci-boot-template.yaml',
+                     'd03-arm64-kernel-ci-boot-sata-template.yaml',
+                     'd03-arm64-kernel-ci-boot-nfs-template.yaml',
+                     'd03-arm64-kernel-ci-boot-pxe-template.yaml'],
+       'defconfig_blacklist': ['arm64-allnoconfig',
+                               'arm64-allmodconfig'],
+       'kernel_blacklist': [],
+       'nfs_blacklist': [],
+       'lpae': False,
+       'be': False
+}
 d05 = {'device_type': 'd05',
-    'templates': ['d05-arm64-kernel-ci-boot-template.yaml',
-                              'd05-arm64-kernel-ci-boot-sata-template.yaml',
-                              'd05-arm64-kernel-ci-boot-nfs-template.yaml',
-                              'd05-arm64-kernel-ci-boot-pxe-template.yaml'],
-    'defconfig_blacklist': ['arm64-allnoconfig',
-                            'arm64-allmodconfig'],
-                            'kernel_blacklist': [],
-                            'nfs_blacklist': [],
-                            'lpae': False,
-                            'be': False
-                            }
+       'templates': ['d05-arm64-kernel-ci-boot-template.yaml',
+                     'd05-arm64-kernel-ci-boot-sata-template.yaml',
+                     'd05-arm64-kernel-ci-boot-nfs-template.yaml',
+                     'd05-arm64-kernel-ci-boot-pxe-template.yaml'],
+       'defconfig_blacklist': ['arm64-allnoconfig',
+                               'arm64-allmodconfig'],
+       'kernel_blacklist': [],
+       'nfs_blacklist': [],
+       'lpae': False,
+       'be': False
+}
 
 
 dummy_ssh = {'device_type': 'dummy_ssh',
              'templates': [ 'dummy_ssh_template.yaml'],}
 
 device_map = {
-              'D03': [d03],
-              'D05': [d05],
-              }
+    'D03': [d03],
+    'D05': [d05],
+}
 
 parse_re = re.compile('href="([^./"?][^"?]*)"')
 
@@ -75,7 +75,7 @@ def setup_job_dir(directory):
     print 'Setting up YAML output directory at: jobs/'
     if not os.path.exists(directory):
         os.makedirs(directory)
-    print 'Done setting up YAML output directory'
+        print 'Done setting up YAML output directory'
 
 def get_nfs_url(distro_url, device_type):
     parse_re = re.compile('href="([^./"?][^"?]*)"')
@@ -89,8 +89,8 @@ def get_nfs_url(distro_url, device_type):
             distro_url += '/'
     else:
         html = distro_url
-    files= parse_re.findall(html)
-    dirs = []
+        files= parse_re.findall(html)
+        dirs = []
     for name in files:
         if not name.endswith('/'):
             dirs += [name]
@@ -185,12 +185,12 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
 
                     for template in total_templates:
                         job_name = tree + '-' + kernel_version + '-' + defconfig[:100] + \
-                                '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
+                                   '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
                         if template in dummy_ssh['templates']:
                             job_json = cwd + '/jobs/' + job_name + '-' + template
                         else:
                             job_json = cwd + '/jobs/' + job_name + '.yaml'
-                        template_file = cwd + '/templates/' + plan + '/' + str(template)
+                            template_file = cwd + '/templates/' + plan + '/' + str(template)
                         if os.path.exists(template_file):
                             with open(job_json, 'wt') as fout:
                                 with open(template_file, "rt") as fin:
@@ -206,7 +206,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                             tmp = tmp.replace('{device_type}', device_type)
 
                                         tmp = tmp.replace('{job_name}',\
-                                                job_json.split("/")[-1].split(".yaml")[0])
+                                                          job_json.split("/")[-1].split(".yaml")[0])
                                         tmp = tmp.replace('{distro}', distro.lower())
 
                                         # end by wuyanjun
@@ -215,7 +215,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
 
                                         if platform_name.endswith('.dtb'):
                                             tmp = tmp.replace('{device_tree}', platform_name)
-                                        tmp = tmp.replace('{kernel_version}', kernel_version)
+                                            tmp = tmp.replace('{kernel_version}', kernel_version)
 
                                         tmp = tmp.replace('{defconfig}', defconfig)
                                         tmp = tmp.replace('{distro_name}', distro)
@@ -240,7 +240,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                                 for distro_url in distro_list:
                                                     if distro in distro_url:
                                                         nfs_url = distro_url
-                                                tmp = line.replace('{nfs_url}', nfs_url)
+                                                        tmp = line.replace('{nfs_url}', nfs_url)
                                             else:
                                                 print 'error: need rootfs.tar.gz'
                                                 exit(1)
@@ -248,7 +248,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                         fout.write(tmp)
 
 def walk_url(url, distro_url, plans=None, arch=None, targets=None,
-            priority=None, distro="Ubuntu"):
+             priority=None, distro="Ubuntu"):
     global base_url
     global kernel
     global platform_list
@@ -260,8 +260,8 @@ def walk_url(url, distro_url, plans=None, arch=None, targets=None,
         exit(1)
     if not url.endswith('/'):
         url += '/'
-    files = parse_re.findall(html)
-    dirs = []
+        files = parse_re.findall(html)
+        dirs = []
     for name in files:
         if name.endswith('/'):
             dirs += [name]
@@ -307,7 +307,7 @@ def walk_url(url, distro_url, plans=None, arch=None, targets=None,
             if 'arm64' not in base_url:
                 base_url = None
                 kernel = None
-            platform_list = []
+                platform_list = []
 
     for dir in dirs:
         walk_url(url + dir, distro_url, plans, arch, targets, priority,\
@@ -344,15 +344,15 @@ def main(args):
     distro = config.get("distro")
     if distro is None:
         distro = "Ubuntu"
-    test_kind = config.get("testClassify")
+        test_kind = config.get("testClassify")
     if test_kind is None:
         test_kind = "BOTH"
-    walk_url(config.get("url"), config.get("url"), config.get("plans"),
-            config.get("arch"), config.get("targets"), config.get("priority"),
-            distro)
-    print 'Done scanning for kernel information'
-    print 'Done creating YAML jobs'
-    exit(0)
+        walk_url(config.get("url"), config.get("url"), config.get("plans"),
+                 config.get("arch"), config.get("targets"), config.get("priority"),
+                 distro)
+        print 'Done scanning for kernel information'
+        print 'Done creating YAML jobs'
+        exit(0)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -368,10 +368,10 @@ if __name__ == '__main__':
     parser.add_argument("--targets", nargs='+', help="specific targets to create\
             jobs for")
     parser.add_argument("--priority", choices=['high', 'medium', 'low', 'HIGH',\
-            'MEDIUM', 'LOW'],
+                                               'MEDIUM', 'LOW'],
                         help="priority for LAVA jobs")
     parser.add_argument("--distro", choices=['Ubuntu', 'OpenSuse', 'Debian', \
-            'Fedora', 'CentOS'],
+                                             'Fedora', 'CentOS'],
                         help="distro for sata deploying")
     # BOTH means the case are both UT and ST
     parser.add_argument('--testClassify', help="the argument to distinguish \
