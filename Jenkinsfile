@@ -52,8 +52,8 @@ node ('compile'){
     }
 
     stage('Deploy') {
-        def SKIP_DEPLOY = false
-        def SKIP_UEFI = false
+        def SKIP_DEPLOY = true
+        def SKIP_UEFI = true
         sh "./local/ci-scripts/deploy-scripts/prepare_tools.sh 2>&1  | tee deploy.log"
         sh "./local/ci-scripts/deploy-scripts/config_dhcp.sh ${TREE_NAME} 2>&1  | tee -a deploy.log"
         sh "./local/ci-scripts/deploy-scripts/config_tftp.sh ${TREE_NAME} 2>&1  | tee -a deploy.log"
