@@ -13,7 +13,7 @@ BMC_PASS = 'Huawei12#$'
 FTP_IP = '192.168.30.101'
 FTP_USER = 'yangyang'
 FTP_PASS = 'yangyang12#$'
-UEFI_FILE = 'D05-rp1708-1.fd'
+UEFI_FILE = 'UEFI_D05_Estuary.fd'
 
 
 def update_uefi():
