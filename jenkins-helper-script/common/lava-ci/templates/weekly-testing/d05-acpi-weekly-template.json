@@ -86,7 +86,7 @@
 		  {
 			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
 			"parameters": {
-				"SKIPFILE": "skipfile-lsk-juno"
+				"SKIPFILE": "skipfile-hip06"
 			},
 			"testdef": "ubuntu/ltp.yaml"
 		  }
@@ -263,18 +263,6 @@
             }
         },
 
-        {
-            "command": "lava_test_shell",
-            "parameters": {
-                "testdef_repos": [
-                    {
-			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
-                        "testdef": "ubuntu/exec-latency.yaml"
-                    }
-                ],
-                "timeout": 172800
-            }
-        },
         {
             "command": "lava_test_shell",
             "parameters": {
