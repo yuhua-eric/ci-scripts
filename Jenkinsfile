@@ -60,7 +60,7 @@ node ('compile'){
         if (! SKIP_UEFI) {
             sh "./local/ci-scripts/deploy-scripts/config_uefi.sh ${TREE_NAME} 2>&1  | tee -a deploy.log"
         }
-        if (! SKIP_DEPLOY) {
+        if (! SKIP_DEPLOY && BOOT_PLAN == "BOOT_PXE") {
             sh "./local/ci-scripts/deploy-scripts/do_deploy.sh 2>&1  | tee -a deploy.log"
         }
     }
