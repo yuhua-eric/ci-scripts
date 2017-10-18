@@ -55,16 +55,19 @@ node ('compile'){
         def SKIP_DEPLOY = false
         def SKIP_UEFI = true
 
-        sh "./local/ci-scripts/deploy-scripts/prepare_tools.sh 2>&1  | tee deploy.log"
-        sh "./local/ci-scripts/deploy-scripts/config_dhcp.sh ${TREE_NAME} 2>&1  | tee -a deploy.log"
-        sh "./local/ci-scripts/deploy-scripts/config_tftp.sh ${TREE_NAME} 2>&1  | tee -a deploy.log"
+        // sh "./local/ci-scripts/deploy-scripts/prepare_tools.sh 2>&1  | tee deploy.log"
+        // sh "./local/ci-scripts/deploy-scripts/config_dhcp.sh ${TREE_NAME} 2>&1  | tee -a deploy.log"
+        // sh "./local/ci-scripts/deploy-scripts/config_tftp.sh ${TREE_NAME} 2>&1  | tee -a deploy.log"
+        build job: 'config_dhcp_tftp', parameters: [[$class: 'StringParameterValue', name: 'TREE_NAME', value: TREE_NAME]]
 
         if (! SKIP_UEFI) {
-            sh "./local/ci-scripts/deploy-scripts/config_uefi.sh ${TREE_NAME} 2>&1  | tee -a deploy.log"
+            // sh "./local/ci-scripts/deploy-scripts/config_uefi.sh ${TREE_NAME} 2>&1  | tee -a deploy.log"
+            build job: 'config_uefi', parameters: [[$class: 'StringParameterValue', name: 'TREE_NAME', value: TREE_NAME]]
         }
 
         if (! SKIP_DEPLOY && BOOT_PLAN == "BOOT_PXE") {
-            sh "./local/ci-scripts/deploy-scripts/do_deploy.sh 2>&1  | tee -a deploy.log"
+            // sh "./local/ci-scripts/deploy-scripts/do_deploy.sh 2>&1  | tee -a deploy.log"
+            build job: 'do_deploy', parameters: [[$class: 'StringParameterValue', name: 'TREE_NAME', value: TREE_NAME]]
         }
     }
 
