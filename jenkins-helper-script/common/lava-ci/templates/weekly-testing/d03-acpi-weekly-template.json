@@ -256,23 +256,6 @@
                 "testdef_repos": [
                     {
 			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
-			"parameters": {
-					"ETH": "eth0",
-					"REMOTE_IP": "192.168.3.100"
-			},
-                        "testdef": "ubuntu/ltp-network.yaml"
-                    }
-                ],
-                "timeout": 172800
-            }
-        },
-
-        {
-            "command": "lava_test_shell",
-            "parameters": {
-                "testdef_repos": [
-                    {
-			"git-repo": "https://github.com/joyxu/lava-test-definitions.git",
                         "testdef": "common/cyclictest-basic.yaml"
                     }
                 ],
