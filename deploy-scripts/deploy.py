@@ -18,9 +18,11 @@ pxe_boot_command = 'ipmitool -H %s -I lanplus -U %s -P %s chassis bootdev pxe' %
 
 def boot_device():
     shell.run_command(pxe_boot_command.split(' '), allow_fail=True)
+    time.sleep(2)
     shell.run_command(disconnction_command.split(' '), allow_fail=True)
+    time.sleep(2)
     shell.run_command(power_off_command.split(' '), allow_fail=True)
-    time.sleep(1)
+    time.sleep(5)
     print "start ipmi connection !"
     shell.run_command(power_on_command.split(' '), allow_fail=True)
     connection = shell.ipmi_connection(connection_command, 9000)

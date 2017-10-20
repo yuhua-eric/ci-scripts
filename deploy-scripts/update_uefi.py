@@ -25,8 +25,10 @@ def update_uefi():
     update_uefi_command = 'provision %s -u %s -p %s -f %s -a 0x100000' % (FTP_IP, FTP_USER, FTP_PASS, UEFI_FILE)
 
     shell.run_command(disconnction_command.split(' '), allow_fail=True)
+    time.sleep(3)
     shell.run_command(power_off_command.split(' '), allow_fail=True)
-    time.sleep(1)
+    time.sleep(5)
+
     print "start ipmi connection !"
     shell.run_command(power_on_command.split(' '), allow_fail=True)
     connection = shell.ipmi_connection(connection_command, 9000)
