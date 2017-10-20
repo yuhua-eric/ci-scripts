@@ -34,15 +34,15 @@ def boot_device():
     print "grub interrupt prompt find !"
 
     # send enter to enter login
-    connection.prompt_str = ['login:', 'CentOS', 'Ubuntu']
+    connection.prompt_str = ['login:', 'CentOS', 'Ubuntu', 'on an aarch64']
     connection.wait()
     connection.sendline("")
     print "os login interrupt prompt find !"
-    connection.prompt_str = ['login:', 'CentOS', 'Ubuntu']
+    connection.prompt_str = ['login:', 'CentOS', 'Ubuntu', 'on an aarch64']
     connection.wait()
     connection.sendline("")
     print "os login interrupt prompt find !"
-    connection.prompt_str = ['login:', 'CentOS', 'Ubuntu']
+    connection.prompt_str = ['login:', 'CentOS', 'Ubuntu', 'on an aarch64']
     connection.wait()
     connection.sendline("")
     print "os login interrupt prompt find !"
