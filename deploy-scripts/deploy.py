@@ -29,9 +29,11 @@ def boot_device():
     connection.prompt_str = ['seconds to stop automatical booting']
     connection.wait()
     print "uefi interrupt prompt find !"
-    connection.prompt_str = ['GNU GRUB']
-    connection.wait()
-    print "grub interrupt prompt find !"
+
+    # don't wait grub. linaro install don't have grub
+    # connection.prompt_str = ['GNU GRUB']
+    # connection.wait()
+    # print "grub interrupt prompt find !"
 
     # send enter to enter login
     connection.prompt_str = ['login:', 'CentOS', 'Ubuntu', 'on an aarch64']
