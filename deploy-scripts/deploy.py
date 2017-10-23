@@ -54,7 +54,10 @@ def boot_device():
     connection.wait()
 
     # fix the root login sshd config
+    # ubuntu
     connection.sendline('sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/" /etc/ssh/sshd_config')
+    # centos
+    connection.sendline('sed -i "s/#PermitRootLogin yes/PermitRootLogin yes/" /etc/ssh/sshd_config')
     connection.wait()
     connection.sendline("service sshd restart")
     connection.wait()
