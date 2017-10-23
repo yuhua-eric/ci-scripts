@@ -25,7 +25,7 @@ def boot_device():
     time.sleep(5)
     print "start ipmi connection !"
     shell.run_command(power_on_command.split(' '), allow_fail=True)
-    connection = shell.ipmi_connection(connection_command, 9000)
+    connection = shell.ipmi_connection(connection_command, 6000)
     connection.prompt_str = ['seconds to stop automatical booting']
     connection.wait()
     print "uefi interrupt prompt find !"
