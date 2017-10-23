@@ -50,7 +50,7 @@ def boot_device():
     connection.sendline("")
     connection.sendline("")
     # TODO : change prompt as config
-    connection.prompt_str = ['root@debian:~#', 'root@centos ~', 'root@ubuntu:', '[root@localhost ~]#']
+    connection.prompt_str = ['root@debian:~#', 'root@centos ~', 'root@ubuntu:', 'root@localhost ~']
     connection.wait()
 
     # fix the root login sshd config
