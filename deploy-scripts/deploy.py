@@ -56,12 +56,12 @@ def boot_device():
 
     # TODO: test login
     # TODO : login the os and change sshd config to allow ssh root login
-    connection.prompt_str = ['Password:']
     connection.sendline("root")
+    connection.prompt_str = ['Password:']
     connection.wait()
 
-    connection.prompt_str = ['root@debian:~#', 'root@centos ~', 'root@ubuntu:']
     connection.sendline("root")
+    connection.prompt_str = ['root@debian:~#', 'root@centos ~', 'root@ubuntu:', '[root@localhost ~]#']
     connection.wait()
 
     # fix the root login sshd config
