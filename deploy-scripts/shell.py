@@ -315,6 +315,7 @@ class ShellSession(Connection):
             print("Invalid max_end_time value passed to wait()")
             exit(-1)
         try:
+            print("waiting: " + self.prompt_str + " ,timeout:" + timeout)
             return self.raw_connection.expect(self.prompt_str, timeout=timeout)
         except (pexpect.TIMEOUT):
             print "error: time out"

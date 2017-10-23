@@ -35,21 +35,6 @@ def boot_device():
     # connection.wait()
     # print "grub interrupt prompt find !"
 
-    # send enter to enter login
-    connection.prompt_str = ['login:', 'CentOS', 'Ubuntu', 'on an aarch64']
-    connection.wait()
-    connection.sendline("")
-    print "os login interrupt prompt find !"
-    connection.prompt_str = ['login:', 'CentOS', 'Ubuntu', 'on an aarch64']
-    connection.wait()
-    connection.sendline("")
-    print "os login interrupt prompt find !"
-    connection.prompt_str = ['login:', 'CentOS', 'Ubuntu', 'on an aarch64']
-    connection.wait()
-    connection.sendline("")
-    print "os login interrupt prompt find !"
-
-
     # TODO: retry login
     connection.prompt_str = ['login:']
     connection.wait()
@@ -60,15 +45,13 @@ def boot_device():
     connection.sendline("root")
     connection.prompt_str = ['Password:']
     connection.wait()
-
     connection.sendline("root")
+    connection.sendline("")
     connection.sendline("")
     connection.sendline("")
     # TODO : change prompt as config
     connection.prompt_str = ['root@debian:~#', 'root@centos ~', 'root@ubuntu:', '[root@localhost ~]#']
     connection.wait()
-
-
 
     # fix the root login sshd config
     connection.sendline('sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/" /etc/ssh/sshd_config')
