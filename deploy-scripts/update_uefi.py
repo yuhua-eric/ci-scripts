@@ -31,6 +31,8 @@ def update_uefi():
 
     print "start ipmi connection !"
     shell.run_command(power_on_command.split(' '), allow_fail=True)
+    time.sleep(3)
+
     connection = shell.ipmi_connection(connection_command, 9000)
     connection.prompt_str = ['seconds to stop automatical booting']
     connection.wait()
