@@ -25,7 +25,7 @@ def boot_device():
     time.sleep(5)
     print "start ipmi connection !"
     shell.run_command(power_on_command.split(' '), allow_fail=True)
-    connection = shell.ipmi_connection(connection_command, 9000)
+    connection = shell.ipmi_connection(connection_command, 6000)
     connection.prompt_str = ['seconds to stop automatical booting']
     connection.wait()
     print "uefi interrupt prompt find !"
@@ -54,7 +54,10 @@ def boot_device():
     connection.wait()
 
     # fix the root login sshd config
+    # ubuntu
     connection.sendline('sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/" /etc/ssh/sshd_config')
+    # centos
+    connection.sendline('sed -i "s/#PermitRootLogin yes/PermitRootLogin yes/" /etc/ssh/sshd_config')
     connection.wait()
     connection.sendline("service sshd restart")
     connection.wait()
