@@ -7,6 +7,9 @@ cd "${script_path}"
 function do_deploy() {
     # do deploy
     python deploy.py
+
+    # wait the sshd service restart
+    sleep 10
     copy_ssh_id
 }
 
