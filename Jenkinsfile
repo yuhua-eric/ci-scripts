@@ -66,11 +66,12 @@ node ('compile'){
             build job: 'do_deploy', parameters: [[$class: 'StringParameterValue', name: 'TREE_NAME', value: TREE_NAME]], wait: true
         }
     }
+     **/
 
     stage('Test') {
         sh "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log"
     }
-     **/
+
 
     stage('Result') {
         //get mail info
