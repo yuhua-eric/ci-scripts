@@ -51,6 +51,7 @@ node ('compile'){
         }
     }
 
+    /** move deploy action into lava side
     stage('Deploy') {
         def SKIP_DEPLOY = false
         def SKIP_UEFI = false
@@ -69,6 +70,7 @@ node ('compile'){
     stage('Test') {
         sh "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log"
     }
+     **/
 
     stage('Result') {
         //get mail info
