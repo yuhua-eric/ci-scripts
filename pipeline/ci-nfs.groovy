@@ -1,6 +1,3 @@
-node ('master'){
-    def functions = load "./local/ci-scripts/pipeline/functions.groovy"
-}
 def clone2local(giturl, localdir) {
     def exists = fileExists localdir
     if (!exists){
