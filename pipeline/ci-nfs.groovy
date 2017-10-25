@@ -57,7 +57,7 @@ node ('compile'){
 
     def test_result = false
     stage('Test') {
-        def test_result = sh "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log"
+        test_result = sh "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log"
     }
     if (test_result) {
         echo "Test success"
