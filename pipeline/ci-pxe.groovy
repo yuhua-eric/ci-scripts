@@ -47,7 +47,8 @@ node ('compile'){
         } else {
             echo "Test failed"
             functions.send_mail()
-            exit -1
+            currentBuild.result = 'SUCCESS'
+            return
         }
     }
 
