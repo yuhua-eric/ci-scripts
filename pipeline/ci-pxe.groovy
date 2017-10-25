@@ -1,6 +1,8 @@
-node ('compile'){
-    def functions = load "./local/pipeline/functions.groovy"
+node ('master'){
+    def functions = load "./local/ci-scripts/pipeline/functions.groovy"
+}
 
+node ('compile'){
     stage('Preparation') { // for display purposes
         functions.clone2local('https://github.com/qinshulei/ci-scripts.git', './local/ci-scripts')
         functions.clone2local('https://github.com/qinshulei/ci-test-cases.git', './local/ci-test-cases')
