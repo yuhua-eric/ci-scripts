@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/bin/bash -ex
+__ORIGIN_PATH__="$PWD"
+script_path="${0%/*}"  # remove the script name ,get the path
+script_path=${script_path/\./$(pwd)} # if path start with . , replace with $PWD
+cd "${script_path}"
 
 TFTP_DIR=/tftp
 

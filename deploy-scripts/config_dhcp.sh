@@ -1,18 +1,26 @@
 #!/bin/bash -ex
+__ORIGIN_PATH__="$PWD"
+script_path="${0%/*}"  # remove the script name ,get the path
+script_path=${script_path/\./$(pwd)} # if path start with . , replace with $PWD
+cd "${script_path}"
+
+# read config from config file
+DHCP_SERVER=${DHCP_SERVER:-`python parameter_parser.py -f config.yaml -s DHCP -k ip`}
+
+# config file
 DHCP_CONFIG_DIR=/etc/dhcp
-DHCP_SERVER=192.168.30.2
 DHCP_FILENAME=dhcpd.conf
 
 function config_dhcp() {
     local tree_name="$1"
     # config dhcp
     if [ "${tree_name}" = 'linaro' ];then
-        sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 cp -f /etc/dhcp/examples/dhcpd.conf.linaro /etc/dhcp/dhcpd.conf
+        sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${DHCP_SERVER} cp -f /etc/dhcp/examples/dhcpd.conf.linaro /etc/dhcp/dhcpd.conf
     elif [ "${tree_name}" = 'open-estuary' ];then
-        sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 cp -f /etc/dhcp/examples/dhcpd.conf.estuary /etc/dhcp/dhcpd.conf
+        sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${DHCP_SERVER} cp -f /etc/dhcp/examples/dhcpd.conf.estuary /etc/dhcp/dhcpd.conf
     fi
 
-    sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.30.2 service isc-dhcp-server restart
+    sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${DHCP_SERVER} service isc-dhcp-server restart
 }
 
 config_dhcp "$@"
