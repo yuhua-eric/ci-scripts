@@ -41,30 +41,33 @@ node ('compile'){
     // load functions
     def functions = load "./local/ci-scripts/pipeline/functions.groovy"
 
+    def build_result = false
     stage('Build') {
-        def build_result = sh "./local/ci-scripts/build-scripts/jenkins_build_start.sh -p env.properties 2>&1  | tee build.log"
-        if (build_result) {
-            echo "build success"
-        } else {
-            echo "build failed"
-            functions.send_mail()
-            currentBuild.result = 'SUCCESS'
-            return
-        }
+        build_result = sh "./local/ci-scripts/build-scripts/jenkins_build_start.sh -p env.properties 2>&1  | tee build.log"
+    }
+    if (build_result) {
+        echo "build success"
+    } else {
+        echo "build failed"
+        functions.send_mail()
+        currentBuild.result = 'SUCCESS'
+        return
     }
 
+
+    def test_result = false
     stage('Test') {
         def test_result = sh "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log"
-        if (test_result) {
-            echo "Test success"
-        } else {
-            echo "Test failed"
-            functions.send_mail()
-            currentBuild.result = 'SUCCESS'
-            return
-        }
-
     }
+    if (test_result) {
+        echo "Test success"
+    } else {
+        echo "Test failed"
+        functions.send_mail()
+        currentBuild.result = 'SUCCESS'
+        return
+    }
+
 
     stage('Result') {
         functions.send_mail()

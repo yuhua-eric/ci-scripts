@@ -39,15 +39,16 @@ node ('compile'){
     // load functions
     def functions = load "./local/ci-scripts/pipeline/functions.groovy"
 
+    def test_result = false
     stage('Test') {
-        def test_result = sh "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log"
-        if (test_result) {
-            echo "Test success"
-        } else {
-            echo "Test failed"
-            currentBuild.result = 'SUCCESS'
-            return
-        }
+        test_result = sh "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log"
+    }
+    if (test_result) {
+        echo "Test success"
+    } else {
+        echo "Test failed"
+        currentBuild.result = 'SUCCESS'
+        return
     }
 
     stage('Result') {
