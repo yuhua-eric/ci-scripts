@@ -1,6 +1,15 @@
 node ('master'){
     def functions = load "./local/ci-scripts/pipeline/functions.groovy"
 }
+def clone2local(giturl, localdir) {
+    def exists = fileExists localdir
+    if (!exists){
+        new File(localdir).mkdir()
+    }
+    dir (localdir) {
+        git url: giturl
+    }
+}
 
 node ('compile'){
     stage('Preparation') { // for display purposes
@@ -29,6 +38,9 @@ node ('compile'){
         sh "echo TEST_LEVEL=\\\"${TEST_LEVEL}\\\" >> env.properties"
         sh "echo VERSION=\\\"${VERSION}\\\" >> env.properties"
         sh "echo GIT_DESCRIBE=\\\"${GIT_DESCRIBE}\\\" >> env.properties"
+
+        // load functions
+        def functions = load "./local/ci-scripts/pipeline/functions.groovy"
     }
 
     stage('Build') {

@@ -1,11 +1,17 @@
-node ('master'){
-    def functions = load "./local/ci-scripts/pipeline/functions.groovy"
+def clone2local(giturl, localdir) {
+    def exists = fileExists localdir
+    if (!exists){
+        new File(localdir).mkdir()
+    }
+    dir (localdir) {
+        git url: giturl
+    }
 }
 
 node ('compile'){
     stage('Preparation') { // for display purposes
-        functions.clone2local('https://github.com/qinshulei/ci-scripts.git', './local/ci-scripts')
-        functions.clone2local('https://github.com/qinshulei/ci-test-cases.git', './local/ci-test-cases')
+        clone2local('https://github.com/qinshulei/ci-scripts.git', './local/ci-scripts')
+        clone2local('https://github.com/qinshulei/ci-test-cases.git', './local/ci-test-cases')
 
         // prepare variables.
         sh 'env'
@@ -28,6 +34,9 @@ node ('compile'){
         sh "echo TEST_PLAN=\\\"${TEST_PLAN}\\\" >> env.properties"
         sh "echo TEST_LEVEL=\\\"${TEST_LEVEL}\\\" >> env.properties"
         sh "echo GIT_DESCRIBE=\\\"${GIT_DESCRIBE}\\\" >> env.properties"
+
+        // load functions
+        def functions = load "./local/ci-scripts/pipeline/functions.groovy"
     }
 
     stage('Test') {

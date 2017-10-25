@@ -1,13 +1,3 @@
-def clone2local(giturl, localdir) {
-    def exists = fileExists localdir
-    if (!exists){
-        new File(localdir).mkdir()
-    }
-    dir (localdir) {
-        git url: giturl
-    }
-}
-
 def send_mail() {
     //get mail info
     mailTo = readFile 'MAIL_LIST.txt'
