@@ -20,7 +20,8 @@ function init_input_params() {
 
 
     BOOT_PLAN=${BOOT_PLAN:-"BOOT_NFS"}
-    APP_PLAN=${APP_PLAN:-"TEST"}
+    TEST_PLAN=${TEST_PLAN:-"*"}
+    TEST_LEVEL=${TEST_LEVEL:-"*"}
 
     # READ FROM config file
     ARCH_MAP=${ARCH_MAP:-""}
@@ -32,7 +33,7 @@ function parse_params() {
     : ${SHELL_DISTRO:=`python parameter_parser.py -f config.yaml -s Build -k Distro`}
 
     : ${BOOT_PLAN:=`python parameter_parser.py -f config.yaml -s Jenkins -k Boot`}
-    : ${APP_PLAN:=`python parameter_parser.py -f config.yaml -s Jenkins -k App`}
+    : ${TEST_PLAN:=`python parameter_parser.py -f config.yaml -s Jenkins -k App`}
 
     : ${LAVA_SERVER:=`python parameter_parser.py -f config.yaml -s LAVA -k lavaserver`}
     : ${LAVA_USER:=`python parameter_parser.py -f config.yaml -s LAVA -k lavauser`}
@@ -56,7 +57,8 @@ GIT_DESCRIBE="${GIT_DESCRIBE}"
 SHELL_PLATFORM="${SHELL_PLATFORM}"
 SHELL_DISTRO="${SHELL_DISTRO}"
 BOOT_PLAN="${BOOT_PLAN}"
-APP_PLAN="${APP_PLAN}"
+TEST_PLAN="${TEST_PLAN}"
+TEST_LEVEL="${TEST_LEVEL}"
 ARCH_MAP="${ARCH_MAP}"
 EOF
     # EXECUTE_STATUS="Failure"x
