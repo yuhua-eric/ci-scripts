@@ -36,9 +36,10 @@ node ('compile'){
         sh "echo VERSION=\\\"${VERSION}\\\" >> env.properties"
         sh "echo GIT_DESCRIBE=\\\"${GIT_DESCRIBE}\\\" >> env.properties"
 
-        // load functions
-        def functions = load "./local/ci-scripts/pipeline/functions.groovy"
     }
+
+    // load functions
+    def functions = load "./local/ci-scripts/pipeline/functions.groovy"
 
     stage('Build') {
         def build_result = sh "./local/ci-scripts/build-scripts/jenkins_build_start.sh -p env.properties 2>&1  | tee build.log"

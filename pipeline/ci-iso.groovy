@@ -34,10 +34,10 @@ node ('compile'){
         sh "echo TEST_PLAN=\\\"${TEST_PLAN}\\\" >> env.properties"
         sh "echo TEST_LEVEL=\\\"${TEST_LEVEL}\\\" >> env.properties"
         sh "echo GIT_DESCRIBE=\\\"${GIT_DESCRIBE}\\\" >> env.properties"
-
-        // load functions
-        def functions = load "./local/ci-scripts/pipeline/functions.groovy"
     }
+
+    // load functions
+    def functions = load "./local/ci-scripts/pipeline/functions.groovy"
 
     stage('Test') {
         def test_result = sh "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log"
