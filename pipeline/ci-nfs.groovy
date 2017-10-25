@@ -43,7 +43,7 @@ node ('compile'){
 
     def build_result = 0
     stage('Build') {
-        build_result = sh "./local/ci-scripts/build-scripts/jenkins_build_start.sh -p env.properties 2>&1  | tee build.log", returnStatus: true
+        build_result = sh script: "./local/ci-scripts/build-scripts/jenkins_build_start.sh -p env.properties 2>&1  | tee build.log", returnStatus: true
     }
     if (build_result == 0) {
         echo "build success"
@@ -57,7 +57,7 @@ node ('compile'){
 
     def test_result = 0
     stage('Test') {
-        test_result = sh "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log" , returnStatus: true
+        test_result = sh script: "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1  | tee test.log" , returnStatus: true
     }
     if (test_result == 0) {
         echo "Test success"
