@@ -137,9 +137,10 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                 distro_url, distro="Ubuntu"):
     print 'Creating YAML Job Files...'
     cwd = os.getcwd()
-    url = urlparse.urlparse(kernel)
-    build_info = url.path.split('/')
     image_url = base_url
+    url = urlparse.urlparse(kernel)
+
+    build_info = url.path.split('/')
     tree = build_info[1]
     kernel_version = build_info[2]
     defconfig = build_info[3]
@@ -359,7 +360,7 @@ def main(args):
                  config.get("arch"), config.get("targets"), config.get("priority"),
                  distro)
     elif config.get("tree") == "linaro":
-        create_jobs("", "", config.get("plans"), "arm64", config.get("targets"), config.get("priority"),
+        create_jobs("", "linaro//", config.get("plans"), "arm64", config.get("targets"), config.get("priority"),
                 "", distro)
 
     print 'Done scanning for kernel information'
