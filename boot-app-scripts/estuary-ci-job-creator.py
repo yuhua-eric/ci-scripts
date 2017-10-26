@@ -360,7 +360,7 @@ def main(args):
                  config.get("arch"), config.get("targets"), config.get("priority"),
                  distro)
     elif config.get("tree") == "linaro":
-        create_jobs("", "linaro//", config.get("plans"), "arm64", config.get("targets"), config.get("priority"),
+        create_jobs("", "/linaro//", config.get("plans"), "arm64", config.get("targets"), config.get("priority"),
                 "", distro)
 
     print 'Done scanning for kernel information'
