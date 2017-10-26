@@ -358,7 +358,7 @@ def main(args):
         walk_url(config.get("url"), config.get("url"), config.get("plans"),
                  config.get("arch"), config.get("targets"), config.get("priority"),
                  distro)
-    else if config.get("tree") == "linaro":
+    elif config.get("tree") == "linaro":
         create_jobs("", "", config.get("plans"), "arm64", config.get("targets"), config.get("priority"),
                 "", distro)
 
