@@ -360,6 +360,8 @@ def main(args):
                  config.get("arch"), config.get("targets"), config.get("priority"),
                  distro)
     elif config.get("tree") == "linaro":
+        platform_list.append("/d05/arm64")
+        platform_list.append("/d03/arm64")
         create_jobs("", "/linaro//", config.get("plans"), "arm64", config.get("targets"), config.get("priority"),
                 "", distro)
 
