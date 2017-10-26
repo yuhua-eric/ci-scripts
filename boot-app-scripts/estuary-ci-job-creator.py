@@ -353,9 +353,15 @@ def main(args):
     test_kind = config.get("testClassify")
     if test_kind is None:
         test_kind = "BOTH"
-    walk_url(config.get("url"), config.get("url"), config.get("plans"),
-            config.get("arch"), config.get("targets"), config.get("priority"),
-            distro)
+
+    if config.get("tree") == None || config.get("open-estuary"):
+        walk_url(config.get("url"), config.get("url"), config.get("plans"),
+                 config.get("arch"), config.get("targets"), config.get("priority"),
+                 distro)
+    else if config.get("linaro"):
+        create_jobs("", "", config.get("plans"), "arm64", config.get("targets"), config.get("priority"),
+                "", distro)
+
     print 'Done scanning for kernel information'
     print 'Done creating YAML jobs'
     exit(0)
@@ -363,6 +369,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("url", help="url to build artifacts")
+    parser.add_argument("--tree", help="tree name")
     parser.add_argument("--config", help="configuration for the LAVA server")
     parser.add_argument("--section", default="default", help="section in the\
             LAVA config file")

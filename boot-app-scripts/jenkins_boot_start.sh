@@ -93,9 +93,9 @@ function generate_jobs() {
     for PLAT in $SHELL_PLATFORM; do
         board_arch=${dict[$PLAT]}
         if [ x"$distro" != x"" ]; then
-            python estuary-ci-job-creator.py $FTP_SERVER/${TREE_NAME}/${GIT_DESCRIBE}/${PLAT}-${board_arch}/ --plans $test_name --distro $distro $harddisk_flag --arch ${board_arch} --testDir ${TEST_CASE_DIR}
+            python estuary-ci-job-creator.py $FTP_SERVER/${TREE_NAME}/${GIT_DESCRIBE}/${PLAT}-${board_arch}/ --tree ${TREE_NAME} --plans $test_name --distro $distro $harddisk_flag --arch ${board_arch} --testDir ${TEST_CASE_DIR}
         else
-            python estuary-ci-job-creator.py $FTP_SERVER/${TREE_NAME}/${GIT_DESCRIBE}/${PLAT}-${board_arch}/ --plans $test_name --arch ${board_arch} --testDir ${TEST_CASE_DIR}
+            python estuary-ci-job-creator.py $FTP_SERVER/${TREE_NAME}/${GIT_DESCRIBE}/${PLAT}-${board_arch}/ --tree ${TREE_NAME} --plans $test_name --arch ${board_arch} --testDir ${TEST_CASE_DIR}
         fi
     done
 }
