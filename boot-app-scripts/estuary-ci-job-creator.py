@@ -153,6 +153,8 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
             test_type = None
             defconfigs = []
             for plan in plans:
+
+                # TODO: don't have boot plan, fix it
                 if 'boot' in plan or 'BOOT' in plan:
                     config = ConfigParser.ConfigParser()
                     try:
@@ -162,6 +164,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                     except:
                         print "Unable to load test configuration"
                         exit(1)
+
                 if targets is not None and device_type not in targets:
                     print '%s device type has been omitted. Skipping JSON creation.' % device_type
                 else:
@@ -201,7 +204,10 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                         if 'boot' not in plan and 'BOOT' not in plan:
                                             tmp = tmp.replace('{device_type}', 'dummy_ssh'+'_'+device_type)
                                         else:
-                                            tmp = tmp.replace('{device_type}', device_type)
+                                            if plan == 'BOOT_NFS':
+                                                tmp = tmp.replace('{device_type}', device_type)
+                                            else:
+                                                tmp = tmp.replace('{device_type}', device_type + "ssh")
 
                                         tmp = tmp.replace('{job_name}',\
                                                 job_json.split("/")[-1].split(".yaml")[0])
@@ -222,6 +228,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
 
                                         if plan:
                                             tmp = tmp.replace('{test_plan}', plan)
+
                                         if test_type:
                                             tmp = tmp.replace('{test_type}', test_type)
                                         if priority:

@@ -1,11 +1,11 @@
-device_type: ssh
+device_type: '{device_type}'
 job_name: '{job_name}'
 priority: medium
 visibility: public
 
 metadata:
   # please change these fields when modifying this job for your own tests.
-  docs-source: https://github.com/zwx168238/ci-scripts/tree/dev/boot-app-scripts/templates/BOOT_PXE
+  docs-source: https://github.com/qinshulei/ci-scripts/tree/master/boot-app-scripts/templates/BOOT_PXE
   docs-filename: d05-arm64-kernel-ci-boot-pxe-template.yaml
   kernel_defconfig : {defconfig}
   kernel_version : {kernel_version}
@@ -13,6 +13,7 @@ metadata:
   kernel_endian : {endian}
   platform.fastboot : {fastboot}
   device_tree : {device_type}
+  os: {distro}
 
 timeouts:
   job:
