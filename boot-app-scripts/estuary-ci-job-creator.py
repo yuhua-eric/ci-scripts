@@ -354,11 +354,11 @@ def main(args):
     if test_kind is None:
         test_kind = "BOTH"
 
-    if config.get("tree") == None || config.get("open-estuary"):
+    if config.get("tree") == "open-estuary":
         walk_url(config.get("url"), config.get("url"), config.get("plans"),
                  config.get("arch"), config.get("targets"), config.get("priority"),
                  distro)
-    else if config.get("linaro"):
+    else if config.get("tree") == "linaro":
         create_jobs("", "", config.get("plans"), "arm64", config.get("targets"), config.get("priority"),
                 "", distro)
 
