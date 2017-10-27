@@ -17,6 +17,7 @@ from lib import utils
 
 base_url = None
 kernel = None
+tree_name = None
 platform_list = []
 
 # os:
@@ -147,7 +148,7 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
     return all_definitions
 
 def create_new_jobs(tree_name, plans, platform_name, targets, priority,
-                    distro_url, distro="Ubuntu", scope="*", level="1"):
+                    distro_url, distro="Ubuntu", scope="*", level="5"):
     print 'Creating YAML Job Files...'
     cwd = os.getcwd()
     tree = tree_name
@@ -235,7 +236,7 @@ def create_new_jobs(tree_name, plans, platform_name, targets, priority,
 
 
 def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
-                distro_url, distro="Ubuntu", scope="*", level="1"):
+                distro_url, distro="Ubuntu", scope="*", level="5"):
     print 'Creating YAML Job Files...'
     cwd = os.getcwd()
     image_url = base_url
@@ -328,7 +329,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
 
                                         tmp = tmp.replace('{device_type_upper}', str(device_type).upper())
 
-                                        tmp = tmp.replace('{tree_name}', platform_name)
+                                        tmp = tmp.replace('{tree_name}', tree_name)
 
                                         if plan:
                                             tmp = tmp.replace('{test_plan}', plan)
@@ -446,6 +447,8 @@ def main(args):
     global TEST_CASE_DEFINITION_FILE_LIST
 
     config = configuration.get_config(args)
+
+    tree_name = config.get("tree")
 
     TEST_CASE_DEFINITION_DIR = config.get("testDir")
     TEST_CASE_DEFINITION_FILE_LIST = findAllTestCase(TEST_CASE_DEFINITION_DIR)
