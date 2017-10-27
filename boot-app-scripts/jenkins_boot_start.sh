@@ -20,8 +20,9 @@ function init_input_params() {
 
 
     BOOT_PLAN=${BOOT_PLAN:-"BOOT_NFS"}
+
     TEST_PLAN=${TEST_PLAN:-"*"}
-    TEST_LEVEL=${TEST_LEVEL:-"*"}
+    TEST_LEVEL=${TEST_LEVEL:-"5"}
 
     # READ FROM config file
     ARCH_MAP=${ARCH_MAP:-""}
@@ -93,9 +94,9 @@ function generate_jobs() {
     for PLAT in $SHELL_PLATFORM; do
         board_arch=${dict[$PLAT]}
         if [ x"$distro" != x"" ]; then
-            python estuary-ci-job-creator.py $FTP_SERVER/${TREE_NAME}/${GIT_DESCRIBE}/${PLAT}-${board_arch}/ --tree ${TREE_NAME} --plans $test_name --distro $distro $harddisk_flag --arch ${board_arch} --testDir ${TEST_CASE_DIR}
+            python estuary-ci-job-creator.py $FTP_SERVER/${TREE_NAME}/${GIT_DESCRIBE}/${PLAT}-${board_arch}/ --tree ${TREE_NAME} --plans $test_name --distro $distro $harddisk_flag --arch ${board_arch} --testDir ${TEST_CASE_DIR} --scope ${TEST_PLAN} --level ${TEST_LEVEL}
         else
-            python estuary-ci-job-creator.py $FTP_SERVER/${TREE_NAME}/${GIT_DESCRIBE}/${PLAT}-${board_arch}/ --tree ${TREE_NAME} --plans $test_name --arch ${board_arch} --testDir ${TEST_CASE_DIR}
+            python estuary-ci-job-creator.py $FTP_SERVER/${TREE_NAME}/${GIT_DESCRIBE}/${PLAT}-${board_arch}/ --tree ${TREE_NAME} --plans $test_name --arch ${board_arch} --testDir ${TEST_CASE_DIR}  --scope ${TEST_PLAN} --level ${TEST_LEVEL}
         fi
     done
 }
