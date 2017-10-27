@@ -182,6 +182,7 @@ def create_new_jobs(tree_name, plans, platform_name, targets, priority,
                         with open(job_json, 'wt') as fout:
                             with open(template_file, "rt") as fin:
                                 for line in fin:
+                                    tmp = line.replace('{dtb_url}', platform_name)
                                     # add by wuyanjun
                                     # if the jobs are not the boot jobs of LAVA, try to use the
                                     # dummy_ssh as the board device, or use the ${board_type} itself.
