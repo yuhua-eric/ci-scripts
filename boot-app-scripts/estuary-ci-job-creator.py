@@ -127,7 +127,7 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
         else:
             continue
 
-        if int(test_level) <= 5 and int(test_level) >= int(level) :
+        if int(level) <= 5 and int(test_level) >= int(level) :
             continue
 
         if ready == True and device_type.lower() in test_yaml['metadata']['devices'] and distro.lower() in test_yaml['metadata']['os']:
