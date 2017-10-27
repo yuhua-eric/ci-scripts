@@ -178,7 +178,7 @@ def create_new_jobs(tree_name, plans, platform_name, targets, priority,
                     else:
                         job_json = cwd + '/jobs/' + job_name + '.yaml'
                     template_file = cwd + '/templates/' + plan + '/' + str(template)
-                        if os.path.exists(template_file):
+                    if os.path.exists(template_file):
                         with open(job_json, 'wt') as fout:
                             with open(template_file, "rt") as fin:
                                 for line in fin:
