@@ -204,6 +204,7 @@ def create_new_jobs(tree_name, plans, platform_name, targets, priority,
                                     tmp = tmp.replace('{defconfig}', defconfig)
                                     tmp = tmp.replace('{distro_name}', distro)
                                     tmp = tmp.replace('{device_type_upper}', str(device_type).upper())
+                                    tmp = tmp.replace('{tree_name}', tree_name)
                                     if plan:
                                         tmp = tmp.replace('{test_plan}', plan)
                                     if test_type:
@@ -311,6 +312,8 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                         tmp = tmp.replace('{distro_name}', distro)
 
                                         tmp = tmp.replace('{device_type_upper}', str(device_type).upper())
+
+                                        tmp = tmp.replace('{tree_name}', platform_name)
 
                                         if plan:
                                             tmp = tmp.replace('{test_plan}', plan)

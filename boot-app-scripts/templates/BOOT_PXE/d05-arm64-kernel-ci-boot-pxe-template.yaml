@@ -13,6 +13,7 @@ metadata:
   kernel_endian : {endian}
   platform.fastboot : {fastboot}
   device_tree : {device_type}
+  tree_name: {tree_name}
   os: {distro}
 
 timeouts:

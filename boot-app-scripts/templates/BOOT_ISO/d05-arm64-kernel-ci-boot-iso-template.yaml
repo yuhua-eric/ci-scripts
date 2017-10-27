@@ -12,6 +12,7 @@ metadata:
   kernel_tree : {tree}
   platform.fastboot : {fastboot}
   device_tree : {device_type}
+  tree_name: {tree_name}
 
 timeouts:
   job:
