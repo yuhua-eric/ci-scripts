@@ -444,8 +444,7 @@ def main(args):
 
     global TEST_CASE_DEFINITION_DIR
     global TEST_CASE_DEFINITION_FILE_LIST
-
-    CONFIG = configuration.get_config(args)
+    global CONFIG = configuration.get_config(args)
 
     TEST_CASE_DEFINITION_DIR = CONFIG.get("testDir")
     TEST_CASE_DEFINITION_FILE_LIST = findAllTestCase(TEST_CASE_DEFINITION_DIR)
