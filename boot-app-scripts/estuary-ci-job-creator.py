@@ -17,7 +17,7 @@ from lib import utils
 
 base_url = None
 kernel = None
-tree_name = None
+CONFIG = None
 platform_list = []
 
 # os:
@@ -147,11 +147,10 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
 
     return all_definitions
 
-def create_new_jobs(tree_name, plans, platform_name, targets, priority,
+def create_new_jobs(plans, platform_name, targets, priority,
                     distro_url, distro="Ubuntu", scope="*", level="5"):
     print 'Creating YAML Job Files...'
     cwd = os.getcwd()
-    tree = tree_name
     kernel_version = ""
     defconfig = ""
     for device in device_map[platform_name]:
@@ -185,7 +184,7 @@ def create_new_jobs(tree_name, plans, platform_name, targets, priority,
                 # TODO : think filter the test job by platform, distro, device type, level, scope
                 test_definitions=generate_test_definitions(distro, device_type, scope , level)
                 for template in total_templates:
-                    job_name = tree + '-' + kernel_version + '-' + defconfig[:100] + \
+                    job_name = CONFIG.get("tree") + '-' + kernel_version + '-' + defconfig[:100] + \
                             '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
                     if template in dummy_ssh['templates']:
                         job_json = cwd + '/jobs/' + job_name + '-' + template
@@ -211,14 +210,14 @@ def create_new_jobs(tree_name, plans, platform_name, targets, priority,
                                         job_json.split("/")[-1].split(".yaml")[0])
                                     tmp = tmp.replace('{distro}', distro.lower())
                                      # end by wuyanjun
-                                    tmp = tmp.replace('{tree}', tree)
+                                    tmp = tmp.replace('{tree}', CONFIG.get("tree"))
                                     if platform_name.endswith('.dtb'):
                                         tmp = tmp.replace('{device_tree}', platform_name)
                                     tmp = tmp.replace('{kernel_version}', kernel_version)
                                     tmp = tmp.replace('{defconfig}', defconfig)
                                     tmp = tmp.replace('{distro_name}', distro)
                                     tmp = tmp.replace('{device_type_upper}', str(device_type).upper())
-                                    tmp = tmp.replace('{tree_name}', tree_name)
+                                    tmp = tmp.replace('{tree_name}', CONFIG.get("tree"))
                                     if plan:
                                         tmp = tmp.replace('{test_plan}', plan)
                                     if test_type:
@@ -329,7 +328,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
 
                                         tmp = tmp.replace('{device_type_upper}', str(device_type).upper())
 
-                                        tmp = tmp.replace('{tree_name}', tree_name)
+                                        tmp = tmp.replace('{tree_name}', CONFIG.get("tree"))
 
                                         if plan:
                                             tmp = tmp.replace('{test_plan}', plan)
@@ -446,29 +445,27 @@ def main(args):
     global TEST_CASE_DEFINITION_DIR
     global TEST_CASE_DEFINITION_FILE_LIST
 
-    config = configuration.get_config(args)
+    CONFIG = configuration.get_config(args)
 
-    tree_name = config.get("tree")
-
-    TEST_CASE_DEFINITION_DIR = config.get("testDir")
+    TEST_CASE_DEFINITION_DIR = CONFIG.get("testDir")
     TEST_CASE_DEFINITION_FILE_LIST = findAllTestCase(TEST_CASE_DEFINITION_DIR)
 
     setup_job_dir(os.getcwd() + '/jobs')
-    print 'Scanning %s for kernel information...' % config.get("url")
-    distro = config.get("distro")
+    print 'Scanning %s for kernel information...' % CONFIG.get("url")
+    distro = CONFIG.get("distro")
     if distro is None:
         distro = "Ubuntu"
-    test_kind = config.get("testClassify")
+    test_kind = CONFIG.get("testClassify")
     if test_kind is None:
         test_kind = "BOTH"
 
-    if config.get("tree") == "open-estuary":
-        walk_url(config.get("url"), config.get("url"), config.get("plans"),
-                 config.get("arch"), config.get("targets"), config.get("priority"),
-                 distro, config.get("scope"), config.get("level"))
-    elif config.get("tree") == "linaro":
-        create_new_jobs("linaro", config.get("plans"), "D05", config.get("targets"), config.get("priority"),
-                "", distro , config.get("scope"), config.get("level") )
+    if CONFIG.get("tree") == "open-estuary":
+        walk_url(CONFIG.get("url"), CONFIG.get("url"), CONFIG.get("plans"),
+                 CONFIG.get("arch"), CONFIG.get("targets"), CONFIG.get("priority"),
+                 distro, CONFIG.get("scope"), CONFIG.get("level"))
+    elif CONFIG.get("tree") == "linaro":
+        create_new_jobs("linaro", CONFIG.get("plans"), "D05", CONFIG.get("targets"), CONFIG.get("priority"),
+                "", distro , CONFIG.get("scope"), CONFIG.get("level") )
     print 'Done scanning for kernel information'
     print 'Done creating YAML jobs'
     exit(0)
