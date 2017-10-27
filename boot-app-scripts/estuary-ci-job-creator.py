@@ -137,11 +137,9 @@ def create_new_jobs(tree_name, plans, platform_name, targets, priority,
                 distro_url, distro="Ubuntu"):
     print 'Creating YAML Job Files...'
     cwd = os.getcwd()
-
     tree = tree_name
     kernel_version = ""
     defconfig = ""
-
     for device in device_map[platform_name]:
         device_type = device['device_type']
         device_templates = device['templates']
@@ -150,72 +148,72 @@ def create_new_jobs(tree_name, plans, platform_name, targets, priority,
         defconfigs = []
         for plan in plans:
         # TODO: don't have boot plan, fix it
-        if 'boot' in plan or 'BOOT' in plan:
-            config = ConfigParser.ConfigParser()
-            try:
-                config.read(cwd + '/templates/' + plan + '/' + plan + '.ini')
-                test_type = config.get(plan, 'type')
-                defconfigs = config.get(plan, 'defconfigs').split(',')
-            except:
-                print "Unable to load test configuration"
-                exit(1)
-        if targets is not None and device_type not in targets:
-            print '%s device type has been omitted. Skipping JSON creation.' % device_type
-        else:
-            # add by wuyanjun in 2016/5/28
-            # add the profile of test cases, so only UT test case can be
-            # executed or ST can be executed.
-            for json in dummy_ssh['templates']:
-                device_templates.append(json)
-            total_templates = [x for x in device_templates]
-            config_plan = ConfigParser.ConfigParser()
-            config_plan.read(cwd + '/templates/' + plan + '/' + plan + '.ini')
-            # TODO : think filter the test job by platform, distro, device type, level, scope
-            test_definitions=generate_test_definitions(distro, device_type)
-            for template in total_templates:
-                job_name = tree + '-' + kernel_version + '-' + defconfig[:100] + \
-                        '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
-                if template in dummy_ssh['templates']:
-                    job_json = cwd + '/jobs/' + job_name + '-' + template
-                else:
-                    job_json = cwd + '/jobs/' + job_name + '.yaml'
-                template_file = cwd + '/templates/' + plan + '/' + str(template)
-                if os.path.exists(template_file):
-                    with open(job_json, 'wt') as fout:
-                        with open(template_file, "rt") as fin:
-                            for line in fin:
-                                # add by wuyanjun
-                                # if the jobs are not the boot jobs of LAVA, try to use the
-                                # dummy_ssh as the board device, or use the ${board_type} itself.
-                                if 'boot' not in plan and 'BOOT' not in plan:
-                                    tmp = tmp.replace('{device_type}', 'dummy_ssh'+'_'+device_type)
-                                else:
-                                    if plan == 'BOOT_NFS':
-                                        tmp = tmp.replace('{device_type}', device_type)
+            if 'boot' in plan or 'BOOT' in plan:
+                config = ConfigParser.ConfigParser()
+                try:
+                    config.read(cwd + '/templates/' + plan + '/' + plan + '.ini')
+                    test_type = config.get(plan, 'type')
+                    defconfigs = config.get(plan, 'defconfigs').split(',')
+                except:
+                    print "Unable to load test configuration"
+                    exit(1)
+            if targets is not None and device_type not in targets:
+                print '%s device type has been omitted. Skipping JSON creation.' % device_type
+            else:
+                # add by wuyanjun in 2016/5/28
+                # add the profile of test cases, so only UT test case can be
+                # executed or ST can be executed.
+                for json in dummy_ssh['templates']:
+                    device_templates.append(json)
+                total_templates = [x for x in device_templates]
+                config_plan = ConfigParser.ConfigParser()
+                config_plan.read(cwd + '/templates/' + plan + '/' + plan + '.ini')
+                # TODO : think filter the test job by platform, distro, device type, level, scope
+                test_definitions=generate_test_definitions(distro, device_type)
+                for template in total_templates:
+                    job_name = tree + '-' + kernel_version + '-' + defconfig[:100] + \
+                            '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
+                    if template in dummy_ssh['templates']:
+                        job_json = cwd + '/jobs/' + job_name + '-' + template
+                    else:
+                        job_json = cwd + '/jobs/' + job_name + '.yaml'
+                    template_file = cwd + '/templates/' + plan + '/' + str(template)
+                        if os.path.exists(template_file):
+                        with open(job_json, 'wt') as fout:
+                            with open(template_file, "rt") as fin:
+                                for line in fin:
+                                    # add by wuyanjun
+                                    # if the jobs are not the boot jobs of LAVA, try to use the
+                                    # dummy_ssh as the board device, or use the ${board_type} itself.
+                                    if 'boot' not in plan and 'BOOT' not in plan:
+                                        tmp = tmp.replace('{device_type}', 'dummy_ssh'+'_'+device_type)
                                     else:
-                                        tmp = tmp.replace('{device_type}', device_type + "ssh")
-                                tmp = tmp.replace('{job_name}',\
-                                    job_json.split("/")[-1].split(".yaml")[0])
-                                tmp = tmp.replace('{distro}', distro.lower())
-                                 # end by wuyanjun
-                                tmp = tmp.replace('{tree}', tree)
-                                if platform_name.endswith('.dtb'):
-                                    tmp = tmp.replace('{device_tree}', platform_name)
-                                tmp = tmp.replace('{kernel_version}', kernel_version)
-                                tmp = tmp.replace('{defconfig}', defconfig)
-                                tmp = tmp.replace('{distro_name}', distro)
-                                tmp = tmp.replace('{device_type_upper}', str(device_type).upper())
-                                if plan:
-                                    tmp = tmp.replace('{test_plan}', plan)
-                                if test_type:
-                                    tmp = tmp.replace('{test_type}', test_type)
-                                if priority:
-                                    tmp = tmp.replace('{priority}', priority.lower())
-                                else:
-                                    tmp = tmp.replace('{priority}', 'high')
-                                if test_definitions:
-                                    tmp = tmp.replace('{test_definitions}', test_definitions)
-                                fout.write(tmp)
+                                        if plan == 'BOOT_NFS':
+                                            tmp = tmp.replace('{device_type}', device_type)
+                                        else:
+                                            tmp = tmp.replace('{device_type}', device_type + "ssh")
+                                    tmp = tmp.replace('{job_name}',\
+                                        job_json.split("/")[-1].split(".yaml")[0])
+                                    tmp = tmp.replace('{distro}', distro.lower())
+                                     # end by wuyanjun
+                                    tmp = tmp.replace('{tree}', tree)
+                                    if platform_name.endswith('.dtb'):
+                                        tmp = tmp.replace('{device_tree}', platform_name)
+                                    tmp = tmp.replace('{kernel_version}', kernel_version)
+                                    tmp = tmp.replace('{defconfig}', defconfig)
+                                    tmp = tmp.replace('{distro_name}', distro)
+                                    tmp = tmp.replace('{device_type_upper}', str(device_type).upper())
+                                    if plan:
+                                        tmp = tmp.replace('{test_plan}', plan)
+                                    if test_type:
+                                        tmp = tmp.replace('{test_type}', test_type)
+                                    if priority:
+                                        tmp = tmp.replace('{priority}', priority.lower())
+                                    else:
+                                        tmp = tmp.replace('{priority}', 'high')
+                                    if test_definitions:
+                                        tmp = tmp.replace('{test_definitions}', test_definitions)
+                                    fout.write(tmp)
 
 
 
