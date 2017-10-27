@@ -12,7 +12,7 @@ metadata:
   kernel_tree : {tree}
   platform.fastboot : {fastboot}
   device_tree : {device_type}
-  tree_name: {tree_name}
+
 
 timeouts:
   job:
@@ -26,7 +26,7 @@ actions:
       to: iso
       url: '{iso_url}'
       os: {distro}
-
+      tree_name: {tree_name}
 - boot:
     timeout:
       minutes: 10

@@ -13,7 +13,6 @@ metadata:
   kernel_endian : {endian}
   platform.fastboot : {fastboot}
   device_tree : {device_type}
-  tree_name: {tree_name}
   os: {distro}
 
 timeouts:
@@ -27,6 +26,7 @@ actions:
 - deploy:
     to: ssh
     os: {distro}
+    tree_name: {tree_name}
 - boot:
     method: ssh
     connection: ssh
