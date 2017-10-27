@@ -122,12 +122,14 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
             "level = " + str(level) + " " \
             "scope = " + str(scope) + " "
 
-        if test_scope.lower() == "*" or test_scope.lower() in scope:
+        if test_scope.lower().strip() == "*" or test_scope.lower() in scope:
             pass
         else:
             continue
 
-        if int(level) <= 5 and int(level) > int(test_level) :
+        if int(level) > 5 or (int(level) <= 5 and int(level) <= int(test_level)):
+            pass
+        else:
             continue
 
         if ready == True and device_type.lower() in test_yaml['metadata']['devices'] and distro.lower() in test_yaml['metadata']['os']:
