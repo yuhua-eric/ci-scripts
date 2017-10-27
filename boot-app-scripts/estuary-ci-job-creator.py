@@ -104,7 +104,7 @@ def generate_test_definition(github_url, test_path, name):
     test_definition += "        name: " + name + "\n"
     return test_definition
 
-def generate_test_definitions(distro, device_type):
+def generate_test_definitions(distro, device_type,test_scope, test_level):
     # TODO : put it into parameters
     github_url = "https://github.com/qinshulei/ci-test-cases"
     # filter the test
@@ -116,9 +116,20 @@ def generate_test_definitions(distro, device_type):
         name = test_yaml['metadata']['name']
         ready = test_yaml['metadata']['ready']
         level = test_yaml['metadata']['level']
+        scope = test_yaml['metadata']['scope']
         print "name = " + str(name) + " " \
             "ready = " + str(ready) + " " \
-            "level = " + str(level) + " "
+            "level = " + str(level) + " " \
+            "scope = " + str(scope) + " "
+
+        if test_scope.lower() == "*" or test_scope.lower() in scope:
+            pass
+        else:
+            continue
+
+        if int(test_level) >= int(level) :
+            continue
+
         if ready == True and device_type.lower() in test_yaml['metadata']['devices'] and distro.lower() in test_yaml['metadata']['os']:
             test_path = file[start_point:]
             test_yaml['metadata']['test_path'] = test_path
@@ -134,7 +145,7 @@ def generate_test_definitions(distro, device_type):
     return all_definitions
 
 def create_new_jobs(tree_name, plans, platform_name, targets, priority,
-                distro_url, distro="Ubuntu"):
+                distro_url, distro="Ubuntu",scope="*", level="1"):
     print 'Creating YAML Job Files...'
     cwd = os.getcwd()
     tree = tree_name
@@ -169,7 +180,7 @@ def create_new_jobs(tree_name, plans, platform_name, targets, priority,
                 config_plan = ConfigParser.ConfigParser()
                 config_plan.read(cwd + '/templates/' + plan + '/' + plan + '.ini')
                 # TODO : think filter the test job by platform, distro, device type, level, scope
-                test_definitions=generate_test_definitions(distro, device_type)
+                test_definitions=generate_test_definitions(distro, device_type, scope , level)
                 for template in total_templates:
                     job_name = tree + '-' + kernel_version + '-' + defconfig[:100] + \
                             '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
@@ -220,7 +231,7 @@ def create_new_jobs(tree_name, plans, platform_name, targets, priority,
 
 
 def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
-                distro_url, distro="Ubuntu"):
+                distro_url, distro="Ubuntu",scope="*", level="1"):
     print 'Creating YAML Job Files...'
     cwd = os.getcwd()
     image_url = base_url
@@ -269,8 +280,7 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                     get_nfs_url(distro_url, device_type)
 
                     # TODO : think filter the test job by platform, distro, device type, level, scope
-                    test_definitions=generate_test_definitions(distro, device_type)
-
+                    test_definitions=generate_test_definitions(distro, device_type, scope , level)
                     for template in total_templates:
                         job_name = tree + '-' + kernel_version + '-' + defconfig[:100] + \
                                 '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
@@ -342,11 +352,10 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                         fout.write(tmp)
 
 def walk_url(url, distro_url, plans=None, arch=None, targets=None,
-            priority=None, distro="Ubuntu"):
+            priority=None, distro="Ubuntu",scope="*", level="1"):
     global base_url
     global kernel
     global platform_list
-
     try:
         html = urllib2.urlopen(url, timeout=30).read()
     except IOError, e:
@@ -396,7 +405,7 @@ def walk_url(url, distro_url, plans=None, arch=None, targets=None,
         if platform_list:
             print 'Found artifacts at: %s' % base_url
             create_jobs(base_url, kernel, plans, platform_list, targets,
-                        priority, distro_url, distro)
+                        priority, distro_url, distro,scope, level)
             # Hack for subdirectories with arm64 dtbs
             if 'arm64' not in base_url:
                 base_url = None
@@ -405,7 +414,7 @@ def walk_url(url, distro_url, plans=None, arch=None, targets=None,
 
     for dir in dirs:
         walk_url(url + dir, distro_url, plans, arch, targets, priority,\
-                 distro)
+                 distro, scope, level)
 
 def findAllTestCase(testDir):
     test_case_yaml_file_list=[]
@@ -446,11 +455,10 @@ def main(args):
     if config.get("tree") == "open-estuary":
         walk_url(config.get("url"), config.get("url"), config.get("plans"),
                  config.get("arch"), config.get("targets"), config.get("priority"),
-                 distro)
+                 distro,config.get("scope"), config.get("level"))
     elif config.get("tree") == "linaro":
         create_new_jobs("linaro", config.get("plans"), "D05", config.get("targets"), config.get("priority"),
-                "", distro)
-
+                "", distro , config.get("scope"), config.get("level") )
     print 'Done scanning for kernel information'
     print 'Done creating YAML jobs'
     exit(0)
@@ -467,6 +475,8 @@ if __name__ == '__main__':
     parser.add_argument("--arch", help="specific the architecture to create jobs\
             for")
     parser.add_argument("--testDir", help="specific test case dir")
+    parser.add_argument("--scope", help="test case group", default="*")
+    parser.add_argument("--level", help="test case level", default="1")
     parser.add_argument("--targets", nargs='+', help="specific targets to create\
             jobs for")
     parser.add_argument("--priority", choices=['high', 'medium', 'low', 'HIGH',\
