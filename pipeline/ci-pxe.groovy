@@ -18,6 +18,10 @@ node ('compile'){
 
         BOOT_PLAN = "BOOT_PXE"
 
+        if (GIT_DESCRIBE == "" ) {
+            GIT_DESCRIBE = TREE_NAME
+        }
+
         // save the properties
         //sh "echo SKIP_BUILD=true > env.properties"
         sh 'echo "" > env.properties'
