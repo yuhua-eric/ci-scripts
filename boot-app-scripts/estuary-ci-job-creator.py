@@ -145,7 +145,7 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
     return all_definitions
 
 def create_new_jobs(tree_name, plans, platform_name, targets, priority,
-                distro_url, distro="Ubuntu",scope="*", level="1"):
+                    distro_url, distro="Ubuntu", scope="*", level="1"):
     print 'Creating YAML Job Files...'
     cwd = os.getcwd()
     tree = tree_name
@@ -226,12 +226,14 @@ def create_new_jobs(tree_name, plans, platform_name, targets, priority,
                                         tmp = tmp.replace('{priority}', 'high')
                                     if test_definitions:
                                         tmp = tmp.replace('{test_definitions}', test_definitions)
+                                    else:
+                                        tmp = tmp.replace('{test_definitions}', "# no test definitions")
                                     fout.write(tmp)
 
 
 
 def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
-                distro_url, distro="Ubuntu",scope="*", level="1"):
+                distro_url, distro="Ubuntu", scope="*", level="1"):
     print 'Creating YAML Job Files...'
     cwd = os.getcwd()
     image_url = base_url
@@ -280,7 +282,8 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                     get_nfs_url(distro_url, device_type)
 
                     # TODO : think filter the test job by platform, distro, device type, level, scope
-                    test_definitions=generate_test_definitions(distro, device_type, scope , level)
+                    test_definitions = generate_test_definitions(distro, device_type, scope , level)
+
                     for template in total_templates:
                         job_name = tree + '-' + kernel_version + '-' + defconfig[:100] + \
                                 '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
@@ -337,6 +340,8 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
 
                                         if test_definitions:
                                             tmp = tmp.replace('{test_definitions}', test_definitions)
+                                        else:
+                                            tmp = tmp.replace('{test_definitions}', "# no test definitions")
 
                                         if re.findall('nfs_url', tmp):
                                             if len(distro_list):
@@ -405,7 +410,7 @@ def walk_url(url, distro_url, plans=None, arch=None, targets=None,
         if platform_list:
             print 'Found artifacts at: %s' % base_url
             create_jobs(base_url, kernel, plans, platform_list, targets,
-                        priority, distro_url, distro,scope, level)
+                        priority, distro_url, distro, scope, level)
             # Hack for subdirectories with arm64 dtbs
             if 'arm64' not in base_url:
                 base_url = None
@@ -455,7 +460,7 @@ def main(args):
     if config.get("tree") == "open-estuary":
         walk_url(config.get("url"), config.get("url"), config.get("plans"),
                  config.get("arch"), config.get("targets"), config.get("priority"),
-                 distro,config.get("scope"), config.get("level"))
+                 distro, config.get("scope"), config.get("level"))
     elif config.get("tree") == "linaro":
         create_new_jobs("linaro", config.get("plans"), "D05", config.get("targets"), config.get("priority"),
                 "", distro , config.get("scope"), config.get("level") )
