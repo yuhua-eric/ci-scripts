@@ -18,7 +18,7 @@ node ('compile'){
 
         BOOT_PLAN = "BOOT_PXE"
 
-        if (GIT_DESCRIBE == "" ) {
+        if (GIT_DESCRIBE == null || GIT_DESCRIBE == "" ) {
             GIT_DESCRIBE = TREE_NAME
         }
 

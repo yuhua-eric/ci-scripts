@@ -16,7 +16,7 @@ node ('compile'){
         // prepare variables.
         sh 'env'
 
-        if (GIT_DESCRIBE == "" ) {
+        if (GIT_DESCRIBE == null || GIT_DESCRIBE == "" ) {
             GIT_DESCRIBE = TREE_NAME + "-" + VERSION
         }
 
