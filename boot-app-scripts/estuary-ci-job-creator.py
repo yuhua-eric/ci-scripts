@@ -151,7 +151,7 @@ def create_new_jobs(plans, platform_name, targets, priority,
                     distro_url, distro="Ubuntu", scope="*", level="5"):
     print 'Creating YAML Job Files...'
     cwd = os.getcwd()
-    kernel_version = ""
+    kernel_version = "16.12"
     defconfig = ""
     for device in device_map[platform_name]:
         device_type = device['device_type']
@@ -464,7 +464,7 @@ def main(args):
                  CONFIG.get("arch"), CONFIG.get("targets"), CONFIG.get("priority"),
                  distro, CONFIG.get("scope"), CONFIG.get("level"))
     elif CONFIG.get("tree") == "linaro":
-        create_new_jobs("linaro", CONFIG.get("plans"), "D05", CONFIG.get("targets"), CONFIG.get("priority"),
+        create_new_jobs(CONFIG.get("plans"), "D05", CONFIG.get("targets"), CONFIG.get("priority"),
                 "", distro , CONFIG.get("scope"), CONFIG.get("level") )
     print 'Done scanning for kernel information'
     print 'Done creating YAML jobs'
