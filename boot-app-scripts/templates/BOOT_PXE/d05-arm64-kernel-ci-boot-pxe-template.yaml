@@ -19,11 +19,13 @@ timeouts:
   job:
     minutes: 120
   action:
-    minutes: 20
+    minutes: 60
   connection:
     minutes: 10
 actions:
 - deploy:
+    timeout:
+      minutes: 60
     to: ssh
     os: {distro}
     tree_name: {tree_name}
