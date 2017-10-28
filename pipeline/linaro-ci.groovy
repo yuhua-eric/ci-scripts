@@ -16,9 +16,7 @@ node ('compile'){
         // prepare variables.
         sh 'env'
 
-        if (GIT_DESCRIBE == null || GIT_DESCRIBE == "" ) {
-            GIT_DESCRIBE = TREE_NAME + "-" + VERSION
-        }
+        GIT_DESCRIBE = TREE_NAME + "-" + VERSION
 
         // save the properties
         //sh "echo SKIP_BUILD=true > env.properties"
