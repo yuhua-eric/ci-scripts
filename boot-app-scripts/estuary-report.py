@@ -25,9 +25,9 @@ fail_str = "Failed number of test cases: "
 suc_str = "Success number of test cases: "
 
 device_map = {'d03': ['hip06-d03', 'hisi'],
-              'd03ssh': ['d03ssh01'],
+              'd03ssh': ['d03ssh01','hisi'],
               'd05': ['d05_01', 'hisi'],
-              'd05ssh': ['d05ssh01'],
+              'd05ssh': ['d05ssh01','hisi'],
               'ssh': ['ssh01', None],
               #'dummy_ssh': ['hip05-d02', 'hisi'],
               'x86': ['x86', None],
