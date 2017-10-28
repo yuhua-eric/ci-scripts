@@ -6,6 +6,7 @@ cd "${script_path}"
 
 function do_deploy() {
     # do deploy
+    sleep 10
     python deploy.py
 
     # wait the sshd service restart
