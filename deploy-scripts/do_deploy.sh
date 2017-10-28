@@ -20,6 +20,7 @@ function copy_ssh_id(){
 
     sshpass -p ${SSH_PASS} ssh-copy-id -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP}
 
+    sleep 5
 }
 
 do_deploy "$@"

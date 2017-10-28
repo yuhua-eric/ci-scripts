@@ -5,7 +5,9 @@ script_path=${script_path/\./$(pwd)} # if path start with . , replace with $PWD
 cd "${script_path}"
 
 # read config from config file
+cd ../
 DHCP_SERVER=${DHCP_SERVER:-`python parameter_parser.py -f config.yaml -s DHCP -k ip`}
+cd -
 
 # config file
 DHCP_CONFIG_DIR=/etc/dhcp
