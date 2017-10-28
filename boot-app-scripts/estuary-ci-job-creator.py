@@ -481,7 +481,7 @@ if __name__ == '__main__':
             to create jobs for")
     parser.add_argument("--arch", help="specific the architecture to create jobs\
             for")
-    parser.add_argument("--testDir", help="specific test case dir")
+    parser.add_argument("--testDir", required=True, help="specific test case dir")
     parser.add_argument("--scope", help="test case group", default="*")
     parser.add_argument("--level", help="test case level", default="1")
     parser.add_argument("--targets", nargs='+', help="specific targets to create\
