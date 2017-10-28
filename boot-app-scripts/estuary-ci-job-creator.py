@@ -152,7 +152,7 @@ def create_new_jobs(plans, platform_name, targets, priority,
     print 'Creating YAML Job Files...'
     cwd = os.getcwd()
     kernel_version = "16.12"
-    defconfig = ""
+    defconfig = "d05-arm64"
     for device in device_map[platform_name]:
         device_type = device['device_type']
         device_templates = device['templates']
