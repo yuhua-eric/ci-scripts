@@ -57,8 +57,8 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if args.filename and args.section:
+        filename = ci_env + args.filename
         if not args.key and not args.value:
-            filename = ci_env + args.filename
             value = read_value_of_section(filename, args.section)
             if type(value)==dict:
                 for val in value.keys():
