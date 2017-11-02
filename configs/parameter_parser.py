@@ -45,7 +45,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     ci_env = os.environ['CI_ENV']
-    print "CI_ENV : " + str(ci_env)
     if ci_env == None or ci_env == "":
         ci_env = "configs/dev/"
     elif ci_env == "dev":
@@ -53,7 +52,6 @@ if __name__ == "__main__":
     elif ci_env == "test":
         ci_env = "configs/test/"
     else:
-        print "Error: don't support this env"
         sys.exit(1)
 
     if args.filename and args.section:
