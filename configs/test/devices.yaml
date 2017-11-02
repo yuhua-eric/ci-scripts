@@ -1,0 +1,21 @@
+devices:
+  d0501:
+    sshname: sshd0501
+    type: d05
+    bmc: 192.168.3.169
+    ip: 192.168.30.201
+  d0301:
+    sshname: sshd0301
+    type: d03
+    bmc: 192.168.2.210
+    ip: 192.168.30.201
+
+support:
+  d05:
+    - open-estuary
+    - linaro
+    - ubuntu
+    - centos
+  d03:
+    - open-estuary
+    - linaro

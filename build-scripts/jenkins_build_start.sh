@@ -83,21 +83,21 @@ function init_input_params() {
 
 function parse_params() {
     pushd ${CI_SCRIPTS_DIR}
-    : ${SHELL_PLATFORM:=`python parameter_parser.py -f config.yaml -s Build -k Platform`}
-    : ${SHELL_DISTRO:=`python parameter_parser.py -f config.yaml -s Build -k Distro`}
+    : ${SHELL_PLATFORM:=`python configs/parameter_parser.py -f config.yaml -s Build -k Platform`}
+    : ${SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
 
-    : ${BOOT_PLAN:=`python parameter_parser.py -f config.yaml -s Jenkins -k Boot`}
-    : ${TEST_PLAN:=`python parameter_parser.py -f config.yaml -s Jenkins -k App`}
+    : ${BOOT_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Jenkins -k Boot`}
+    : ${TEST_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Jenkins -k App`}
 
-    : ${LAVA_SERVER:=`python parameter_parser.py -f config.yaml -s LAVA -k lavaserver`}
-    : ${LAVA_USER:=`python parameter_parser.py -f config.yaml -s LAVA -k lavauser`}
-    : ${LAVA_STREAM:=`python parameter_parser.py -f config.yaml -s LAVA -k lavastream`}
-    : ${LAVA_TOKEN:=`python parameter_parser.py -f config.yaml -s LAVA -k TOKEN`}
+    : ${LAVA_SERVER:=`python configs/parameter_parser.py -f config.yaml -s LAVA -k lavaserver`}
+    : ${LAVA_USER:=`python configs/parameter_parser.py -f config.yaml -s LAVA -k lavauser`}
+    : ${LAVA_STREAM:=`python configs/parameter_parser.py -f config.yaml -s LAVA -k lavastream`}
+    : ${LAVA_TOKEN:=`python configs/parameter_parser.py -f config.yaml -s LAVA -k TOKEN`}
 
-    : ${FTP_SERVER:=`python parameter_parser.py -f config.yaml -s Ftpinfo -k ftpserver`}
-    : ${FTP_DIR:=`python parameter_parser.py -f config.yaml -s Ftpinfo -k FTP_DIR`}
+    : ${FTP_SERVER:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k ftpserver`}
+    : ${FTP_DIR:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k FTP_DIR`}
 
-    : ${ARCH_MAP:=`python parameter_parser.py -f config.yaml -s Arch`}
+    : ${ARCH_MAP:=`python configs/parameter_parser.py -f config.yaml -s Arch`}
 
     popd    # restore current work directory
 }
@@ -414,7 +414,7 @@ function cp_image() {
             echo $DISTRO
 
             pushd ${CI_SCRIPTS_DIR}
-            distro_tar_name=`python parameter_parser.py -f config.yaml -s DISTRO -k $PLATFORM_U -v $DISTRO`
+            distro_tar_name=`python configs/parameter_parser.py -f config.yaml -s DISTRO -k $PLATFORM_U -v $DISTRO`
             popd
 
             if [ x"$distro_tar_name" = x"" ]; then

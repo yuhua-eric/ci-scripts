@@ -1,0 +1,58 @@
+Build:
+    # parameters for the build
+    Distro:
+        - Ubuntu
+        - CentOS
+        #- Debian
+        #- Fedora
+        #- OpenSuse
+        #- Rancher
+        #- OpenEmbedded
+
+    Platform:
+        - D03
+        - D05
+        - D06
+
+DISTRO:
+    D03:
+        - Ubuntu: Ubuntu_ARM64.tar.gz
+        - CentOS: CentOS_ARM64.tar.gz
+    D05:
+        - CentOS: CentOS_ARM64.tar.gz
+        - Ubuntu: Ubuntu_ARM64.tar.gz
+
+
+# the dictionary for the board and arch mapping
+Arch:
+    d03: arm64
+    d05: arm64
+    d06: arm64
+
+# for lava connection
+LAVA:
+    TOKEN: 0p9a29zs4rq15xyaaw9eza9sa1hsdb8axx4p9fankh6j0304wrla08w9n7s9qghn2m8bnofcolbrng0sy0zzef7awwt6hjnajhmnoq5aj0ufxm4mqt7629d3fskcnm75
+    lavaserver: http://192.168.50.122/RPC2/
+    lavastream: /anonymous/admin/
+    lavauser: admin
+    lavaurl: http://192.168.50.122
+
+# for lava job parameter
+Jenkins:
+    url: http://192.168.50.122:8080
+    Boot: boot
+    App:
+        - WEEKLY_TESTING
+        - TEST
+
+# for kernelci access
+Ftpinfo:
+    ftpserver: http://192.168.50.122:8083
+    FTP_DIR : /fileserver
+
+# mail list
+Mail:
+  SUCCESS_LIST: zhangbp0704@thundersoft.com,qinsl0106@thundersoft.com,zhaojunhua@hisilicon.com,xuxj@thundersoft.com,lixiaoping3@huawei.com,peiqiang@huawei.com,z.liuxinliang@hisilicon.com,zhangfeng56@huawei.com,fengliang12@huawei.com,liucaili2@huawei.com
+
+DHCP:
+  ip: 192.168.50.122

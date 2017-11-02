@@ -6,7 +6,7 @@ cd "${script_path}"
 
 # read config from config file
 cd ../
-DHCP_SERVER=${DHCP_SERVER:-`python parameter_parser.py -f config.yaml -s DHCP -k ip`}
+DHCP_SERVER=${DHCP_SERVER:-`python configs/parameter_parser.py -f config.yaml -s DHCP -k ip`}
 cd -
 
 # config file

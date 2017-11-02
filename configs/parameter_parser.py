@@ -5,6 +5,7 @@
 #    Data      :    2016-03-02 11:44:33
 #    Desc      :
 import yaml
+import os
 from argparse import ArgumentParser
 
 def read_value_of_array(filename, section, key, value):
@@ -42,9 +43,22 @@ if __name__ == "__main__":
     parser.add_argument("-v", "--value", action="store", dest="value",
             help="which value to be read")
     args = parser.parse_args()
+
+    ci_env = os.environ['CI_ENV']
+    if ci_env == "":
+        ci_env = "configs/dev/"
+    elif ci_env == "dev":
+        ci_env = "configs/dev/"
+    elif ci_env == "test":
+        ci_env = "configs/test/"
+    else:
+        echo "Error: don't support this env"
+        sys.exit(1)
+
     if args.filename and args.section:
         if not args.key and not args.value:
-            value = read_value_of_section(args.filename, args.section)
+            filename = ci_env + args.filename
+            value = read_value_of_section(filename, args.section)
             if type(value)==dict:
                 for val in value.keys():
                     print val
@@ -52,11 +66,11 @@ if __name__ == "__main__":
             else:
                 print value
         if args.key and not args.value:
-            value = read_value_of_key(args.filename, args.section, args.key)
+            value = read_value_of_key(filename, args.section, args.key)
             if type(value)==list:
                 for val in value:
                     print val
             else:
                 print value
         if args.key and args.value:
-            value = read_value_of_array(args.filename, args.section, args.key, args.value)
+            value = read_value_of_array(filename, args.section, args.key, args.value)
