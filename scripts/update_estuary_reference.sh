@@ -7,15 +7,11 @@ REFERENCE_PATH=${REFERENCE_PATH:-~/estuary_reference}
 
 cd ${WORKSPACE}
 ###################### prepare repo tool ######################
-if [ ! -d bin ]; then
-    mkdir -p bin;
-    curl https://mirrors.tuna.tsinghua.edu.cn/git/git-repo -o bin/repo
-    # wget -c http://www.open-estuary.com/EstuaryDownloads/tools/repo -O bin/repo
-fi
+mkdir -p bin;
+curl https://mirrors.tuna.tsinghua.edu.cn/git/git-repo -o bin/repo || true
+chmod a+x bin/repo || true
 
-chmod a+x bin/repo;
 export REPO_URL='https://mirrors.tuna.tsinghua.edu.cn/git/git-repo/'
-
 export PATH=${WORKSPACE}/bin:$PATH;
 
 # sync
