@@ -44,7 +44,10 @@ if __name__ == "__main__":
             help="which value to be read")
     args = parser.parse_args()
 
-    ci_env = os.environ['CI_ENV']
+    ci_env = 'dev'
+    if 'CI_ENV' in os.environ:
+        ci_env = os.environ['CI_ENV']
+
     if ci_env == None or ci_env == "":
         ci_env = "configs/dev/"
     elif ci_env == "dev":
