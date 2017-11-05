@@ -3,22 +3,46 @@
 # d05(DUT): 192.168.2.174
 # d03(DUT): 192.168.2.223
 # d03(DUT): 192.168.2.233
+# export CI_ENV=test
+
+# 包含所有CI服务
 dhcp:
   type: D03
   bmc: 192.168.2.224
-  ip: 192.168.50.120
+  ip: 192.168.50.122
+  mac: c0:a8:02:e0:00:04
+  next-server: 192.168.50.122
+  open-estuary: "estuary_install/grubaa64.efi"
+  sailing: "sailing_install/grubaa64.efi"
+  linaro: "./linaro_install/grubaa64.efi"
 
 d05ssh01:
   type: D05
   bmc: 192.168.3.174
-  ip: 192.168.50.201
+  ip: 192.168.50.125
+  mac: c0:a8:02:ae:00:04
+  next-server: 192.168.50.122
+  open-estuary: "estuary_install/grubaa64.efi"
+  sailing: "sailing_install/grubaa64.efi"
+  linaro: "./linaro_install/grubaa64.efi"
 
 d03ssh01:
   type: D03
   bmc: 192.168.2.223
-  ip: 192.168.30.202
+  ip: 192.168.50.120
+  mac: c0:a8:02:df:00:04
+  next-server: 192.168.50.122
+  open-estuary: "estuary_install/grubaa64.efi"
+  sailing: "sailing_install/grubaa64.efi"
+  linaro: "./linaro_install/grubaa64.efi"
 
+# 当前sol连不上,mac 地址不明
 d03ssh02:
   type: D03
   bmc: 192.168.3.233
-  ip: 192.168.30.203
+  ip: 192.168.50.124
+  mac: c0:a8:02:e9:00:04
+  next-server: 192.168.50.122
+  open-estuary: "estuary_install/grubaa64.efi"
+  sailing: "sailing_install/grubaa64.efi"
+  linaro: "./linaro_install/grubaa64.efi"

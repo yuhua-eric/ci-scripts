@@ -1,0 +1,7 @@
+# ipmitool -H 192.168.2.224 -I lanplus -U root -P Huawei12#$ sol activate
+# ipmitool -H 192.168.3.174 -I lanplus -U root -P Huawei12#$ sol activate
+# ipmitool -H 192.168.2.223 -I lanplus -U root -P Huawei12#$ sol activate
+# ipmitool -H 192.168.3.233 -I lanplus -U root -P Huawei12#$ sol activate
+# ipmitool -H 192.168.2.246 -I lanplus -U root -P Huawei12#$ sol activate
+# ipmitool -H 192.168.3.169 -I lanplus -U root -P Huawei12#$ sol activate
+# ipmitool -H 192.168.2.210 -I lanplus -U root -P Huawei12#$ sol activate
