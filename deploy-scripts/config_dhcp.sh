@@ -17,8 +17,8 @@ function config_dhcp() {
     local tree_name="$1"
     # config dhcp
     if [[ "${CI_ENV}" == "test" ]];then
-        # TODO : config dhcp for test env
-        :
+        scripts/gen_dhcpd_conf.sh > /etc/dhcp/dhcpd.conf
+        service isc-dhcp-server restart
     else
         if [ "${tree_name}" = 'linaro' ];then
             sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${DHCP_SERVER} cp -f /etc/dhcp/examples/dhcpd.conf.linaro /etc/dhcp/dhcpd.conf
