@@ -69,8 +69,9 @@ def boot_device():
 
 
 def main(args):
-    if args.host and args.host != "":
-        BMC_HOST = args.host
+    if args.get("host") != "" or args.get("host") != None:
+        BMC_HOST = args.get("host")
+
     boot_device()
     exit(0)
 
