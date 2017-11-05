@@ -4,7 +4,7 @@
 device_type: d05
 {% set console_device = console_device | default('ttyS0') %}
 {% set baud_rate = baud_rate | default(115200) %}
-{% set OUR_SERVER_IP = "192.168.3.108" %}
+{% set OUR_SERVER_IP = "192.168.30.101" %}
 
 actions:
   deploy:
@@ -22,33 +22,7 @@ actions:
       serial:
       ssh:
     methods:
-      uefi-menu:
-        parameters:
-          interrupt_prompt: 'seconds to stop automatical booting'
-          interrupt_string: '             '
-          bootloader_prompt: 'Move Highlight'
-          item_markup:
-{{ base_item_markup_list }}
-          item_class: '{{ base_item_class }}'
-          separator: '{{ base_item_separator }}'
-        nfs-grub:
-        - select:
-            items:
-              - down
-              - down
-              - enter
-              - down
-              - down
-              - down
-              - down
-              - down
-              - down
-              - down
-              - down
-              - enter
-
-      grub-efi:
-        menu_options: nfs-grub
+      grub:
         parameters:
           interrupt_prompt: "GNU GRUB"
           interrupt_char: 'c'
