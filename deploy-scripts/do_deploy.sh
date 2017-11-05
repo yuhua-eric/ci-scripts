@@ -8,13 +8,14 @@ TREE_NAME=${1:-"open-estuary"}
 HOST_NAME=${2:-"d05ssh01"}
 
 cd ../
+BMC_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k bmc)
 TARGET_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k ip)
 cd -
 
 function do_deploy() {
     # do deploy
     sleep 10
-    python deploy.py
+    python deploy.py --host ${BMC_IP}
 
     # wait the sshd service restart
     sleep 10
