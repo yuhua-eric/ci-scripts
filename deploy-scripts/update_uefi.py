@@ -5,18 +5,7 @@ import argparse
 import time
 import re
 
-# COMMAND
-BMC_HOST = '192.168.3.169'
-BMC_USER = 'root'
-BMC_PASS = 'Huawei12#$'
-
-FTP_IP = '192.168.30.101'
-FTP_USER = 'yangyang'
-FTP_PASS = 'yangyang12#$'
-UEFI_FILE = 'UEFI_D05_Estuary.fd'
-
-
-def update_uefi():
+def update_uefi(BMC_HOST, BMC_USER, BMC_PASS, FTP_IP, FTP_USER, FTP_PASS, UEFI_FILE):
     connection_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol activate' % (BMC_HOST, BMC_USER, BMC_PASS)
     disconnction_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol deactivate' % (BMC_HOST, BMC_USER, BMC_PASS)
     power_off_command = 'ipmitool -H %s -I lanplus -U %s -P %s power off' % (BMC_HOST, BMC_USER, BMC_PASS)
@@ -97,13 +86,23 @@ def operate(connection, selector):
 
 
 def main(args):
+    # COMMAND
+    BMC_HOST = '192.168.3.169'
+    BMC_USER = 'root'
+    BMC_PASS = 'Huawei12#$'
+
+    FTP_IP = '192.168.30.101'
+    FTP_USER = 'yangyang'
+    FTP_PASS = 'yangyang12#$'
+    UEFI_FILE = 'UEFI_D05_Estuary.fd'
+
     if args.get("uefi") != "" or args.get("uefi") != None:
         UEFI_FILE = args.get("uefi")
     if args.get("host") != "" or args.get("host") != None:
         BMC_HOST = args.get("host")
     if args.get("ftp") != "" or args.get("ftp") != None:
         FTP_IP =  args.get("ftp")
-    update_uefi()
+    update_uefi(BMC_HOST,BMC_USER,BMC_PASS,FTP_IP,FTP_USER,FTP_PASS,UEFI_FILE)
     exit(0)
 
 if __name__ == '__main__':

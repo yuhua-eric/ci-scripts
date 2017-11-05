@@ -5,12 +5,7 @@ import argparse
 import time
 import re
 
-# COMMAND
-BMC_HOST = '192.168.3.169'
-BMC_USER = 'root'
-BMC_PASS = 'Huawei12#$'
-
-def boot_device():
+def boot_device(BMC_HOST, BMC_USER, BMC_PASS):
     connection_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol activate' % (BMC_HOST, BMC_USER, BMC_PASS)
     disconnction_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol deactivate' % (BMC_HOST, BMC_USER, BMC_PASS)
     power_off_command = 'ipmitool -H %s -I lanplus -U %s -P %s power off' % (BMC_HOST, BMC_USER, BMC_PASS)
@@ -69,10 +64,14 @@ def boot_device():
 
 
 def main(args):
+    # COMMAND
+    BMC_HOST = '192.168.3.169'
+    BMC_USER = 'root'
+    BMC_PASS = 'Huawei12#$'
     if args.get("host") != "" or args.get("host") != None:
         BMC_HOST = args.get("host")
 
-    boot_device()
+    boot_device(BMC_HOST, BMC_USER, BMC_PASS)
     exit(0)
 
 if __name__ == '__main__':
