@@ -32,6 +32,11 @@ def read_value_of_section(filename, section):
     else:
         return dictionary[section]
 
+def read_keys(filename):
+    with open(filename, 'r') as fp:
+        dictionary = yaml.load(fp)
+    return dictionary.keys()
+
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-f", "--file", action="store",dest="filename",
@@ -57,22 +62,27 @@ if __name__ == "__main__":
     else:
         sys.exit(1)
 
-    if args.filename and args.section:
+    if args.filename:
         filename = ci_env + args.filename
-        if not args.key and not args.value:
-            value = read_value_of_section(filename, args.section)
-            if type(value)==dict:
-                for val in value.keys():
-                    print val
-                    print value[val]
-            else:
-                print value
-        if args.key and not args.value:
-            value = read_value_of_key(filename, args.section, args.key)
-            if type(value)==list:
-                for val in value:
-                    print val
-            else:
-                print value
-        if args.key and args.value:
-            value = read_value_of_array(filename, args.section, args.key, args.value)
+        if args.section:
+            if not args.key and not args.value:
+                value = read_value_of_section(filename, args.section)
+                if type(value)==dict:
+                    for val in value.keys():
+                        print val
+                        print value[val]
+                else:
+                    print value
+            if args.key and not args.value:
+                value = read_value_of_key(filename, args.section, args.key)
+                if type(value)==list:
+                    for val in value:
+                        print val
+                else:
+                    print value
+            if args.key and args.value:
+                value = read_value_of_array(filename, args.section, args.key, args.value)
+        else:
+            keys = read_keys(filename)
+            for key in keys:
+                print key

@@ -17,16 +17,9 @@ subnet 192.168.30.0  netmask 255.255.255.0 {
   max-lease-time 7200;
 }
 
-host d05ssh01 {
-  hardware ethernet c0:a8:02:a9:00:04;
-  fixed-address 192.168.30.201;
-  next-server 192.168.30.101;
-  filename "estuary_install/grubaa64.efi";
-}
-
-host d03ssh01 {
-  hardware ethernet c0:a8:02:d2:00:04;
-  fixed-address 192.168.30.202;
-  next-server 192.168.30.101;
-  filename "sailing_install/grubaa64.efi";
-}
+# host d05ssh01 {
+#   hardware ethernet c0:a8:02:a9:00:04;
+#   fixed-address 192.168.30.201;
+#   next-server 192.168.30.101;
+#   filename "estuary_install/grubaa64.efi";
+# }

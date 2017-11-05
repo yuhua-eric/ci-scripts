@@ -13,6 +13,7 @@ dhcp:
   bmc: 192.168.2.246
   ip: 192.168.30.2
   mac: c0:a8:02:f6:00:04
+  filename: open-estuary
   next-server: 192.168.30.101
   open-estuary: "estuary_install/grubaa64.efi"
   sailing: "sailing_install/grubaa64.efi"
@@ -24,6 +25,7 @@ d05ssh01:
   bmc: 192.168.3.169
   ip: 192.168.30.201
   mac: c0:a8:02:a9:00:04
+  filename: open-estuary
   next-server: 192.168.30.101
   open-estuary: "estuary_install/grubaa64.efi"
   sailing: "sailing_install/grubaa64.efi"
@@ -36,6 +38,7 @@ d03ssh01:
   bmc: 192.168.2.210
   ip: 192.168.30.202
   mac: c0:a8:02:d2:00:04
+  filename: open-estuary
   next-server: 192.168.30.101
   open-estuary: "estuary_install/grubaa64.efi"
   sailing: "sailing_install/grubaa64.efi"
