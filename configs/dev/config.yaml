@@ -49,6 +49,7 @@ Jenkins:
 Ftpinfo:
     ftpserver: http://192.168.1.108:8083
     FTP_DIR : /fileserver
+    ip: 192.168.1.108
 
 # mail list
 Mail:

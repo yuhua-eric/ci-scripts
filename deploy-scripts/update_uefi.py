@@ -99,11 +99,17 @@ def operate(connection, selector):
 def main(args):
     if args.get("uefi") != "" or args.get("uefi") != None:
         UEFI_FILE = args.get("uefi")
+    if args.host and args.host != "":
+        BMC_HOST = args.host
+    if args.ftp and args.ftp != "":
+        BMC_HOST = args.ftp
     update_uefi()
     exit(0)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--uefi", help="uefi file name")
+    parser.add_argument("--host", help="target host")
+    parser.add_argument("--ftp", help="ftp ip")
     args = vars(parser.parse_args())
     main(args)
