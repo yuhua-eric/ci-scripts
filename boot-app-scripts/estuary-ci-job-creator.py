@@ -157,7 +157,7 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
             test_yaml['metadata']['test_path'] = test_path
             work_test_list.append(test_yaml)
 
-    work_test_list = sorted(work_test_list, key = lambda x: x['metadata']['level'], reverse=True)
+    work_test_list = sorted(work_test_list, key = lambda x: x['metadata']['level'] if 'level' in x['metadata'] else 5, reverse=True)
 
     all_definitions = ""
     for test in work_test_list:
