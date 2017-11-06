@@ -114,7 +114,14 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
     start_point = len(TEST_CASE_DEFINITION_DIR) + 1
     for file in TEST_CASE_DEFINITION_FILE_LIST:
         test_yaml = load_yaml(file)
-        name = test_yaml['metadata']['name']
+        if not 'metadata' in test_yaml:
+            print "warning : don't have metadata : " + str(file)
+            continue
+
+        if 'name' in test_yaml['metadata']:
+            name = test_yaml['metadata']['name']
+        else:
+            name = "unknown"
         if 'ready' in test_yaml['metadata']:
             ready = test_yaml['metadata']['ready']
         else:
