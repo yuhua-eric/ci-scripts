@@ -49,7 +49,7 @@ function clean_build() {
     if [ x"$SKIP_BUILD" = x"true" ];then
         :
     else
-        rm -fr $BUILD_DIR
+        sudo rm -fr $BUILD_DIR
     fi
 }
 

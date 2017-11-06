@@ -1,0 +1,47 @@
+device_type: '{device_type}'
+job_name: '{job_name}'
+priority: medium
+visibility: public
+
+metadata:
+  # please change these fields when modifying this job for your own tests.
+  docs-source: https://github.com/zwx168238/ci-scripts/tree/dev/boot-app-scripts/templates/BOOT_NFS
+  docs-filename: d05-arm64-kernel-ci-boot-iso-template.yaml
+  kernel_defconfig : {defconfig}
+  kernel_version : {kernel_version}
+  kernel_tree : {tree}
+  platform.fastboot : {fastboot}
+  device_tree : {device_type}
+
+
+timeouts:
+  job:
+    minutes: 80
+  action:
+    minutes: 20
+  connection:
+    minutes: 10
+actions:
+- deploy:
+      to: iso
+      url: '{iso_url}'
+      os: {distro}
+      tree_name: {tree_name}
+- boot:
+    timeout:
+      minutes: 10
+    method: grub
+    commands: nfs
+    auto_login:
+      login_prompt: "login:"
+      username: root
+      password_prompt: "Password:"
+      password: root
+    prompts:
+    - 'root@ubuntu:'
+    - 'root@centos ~'
+- test:
+    timeout:
+      minutes: 60
+    definitions:
+{test_definitions}
