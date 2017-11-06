@@ -118,6 +118,13 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
         ready = test_yaml['metadata']['ready']
         level = test_yaml['metadata']['level']
         scope = test_yaml['metadata']['scope']
+
+        if ready == None:
+            ready = True
+
+        if level = None:
+            level = 5
+
         print "name = " + str(name) + " " \
             "ready = " + str(ready) + " " \
             "level = " + str(level) + " " \
