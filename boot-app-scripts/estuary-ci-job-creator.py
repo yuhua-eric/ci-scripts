@@ -115,15 +115,20 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
     for file in TEST_CASE_DEFINITION_FILE_LIST:
         test_yaml = load_yaml(file)
         name = test_yaml['metadata']['name']
-        ready = test_yaml['metadata']['ready']
-        level = test_yaml['metadata']['level']
-        scope = test_yaml['metadata']['scope']
-
-        if ready == None:
+        if 'ready' in test_yaml['metadata']:
+            ready = test_yaml['metadata']['ready']
+        else:
             ready = True
 
-        if level == None:
+        if 'level' in test_yaml['metadata']:
+            level = test_yaml['metadata']['level']
+        else:
             level = 5
+
+        if 'scope' in test_yaml['metadata']:
+            scope = test_yaml['metadata']['scope']
+        else:
+            scope = "*"
 
         print "name = " + str(name) + " " \
             "ready = " + str(ready) + " " \
