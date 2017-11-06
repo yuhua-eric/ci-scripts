@@ -17,7 +17,7 @@ function config_dhcp() {
     local tree_name="$1"
     # config dhcp
     if [[ "${CI_ENV}" == "test" ]];then
-        ../scripts/gen_dhcpd_conf.sh > /etc/dhcp/dhcpd.conf
+        cd ..; ./scripts/gen_dhcpd_conf.sh > /etc/dhcp/dhcpd.conf;cd -
         service isc-dhcp-server restart
     else
         if [ "${tree_name}" = 'linaro' ];then
