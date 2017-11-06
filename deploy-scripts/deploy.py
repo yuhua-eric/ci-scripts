@@ -65,7 +65,7 @@ def boot_device(BMC_HOST, BMC_USER, BMC_PASS):
 
 def main(args):
     # COMMAND
-    BMC_HOST = '192.168.3.169'
+    BMC_HOST = '192.168.2.169'
     BMC_USER = 'root'
     BMC_PASS = 'Huawei12#$'
     if args.get("host") != "" or args.get("host") != None:

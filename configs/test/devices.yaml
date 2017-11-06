@@ -19,7 +19,7 @@ dhcp:
 
 d05ssh01:
   type: D05
-  bmc: 192.168.3.174
+  bmc: 192.168.2.174
   ip: 192.168.50.125
   mac: c0:a8:02:ae:00:04
   filename: open-estuary
@@ -42,7 +42,7 @@ d03ssh01:
 # 当前sol连不上,mac 地址不明
 d03ssh02:
   type: D03
-  bmc: 192.168.3.233
+  bmc: 192.168.2.233
   ip: 192.168.50.124
   mac: c0:a8:02:e9:00:04
   filename: open-estuary

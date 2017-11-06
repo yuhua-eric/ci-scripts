@@ -87,7 +87,7 @@ def operate(connection, selector):
 
 def main(args):
     # COMMAND
-    BMC_HOST = '192.168.3.169'
+    BMC_HOST = '192.168.2.169'
     BMC_USER = 'root'
     BMC_PASS = 'Huawei12#$'
 
