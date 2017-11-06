@@ -122,7 +122,7 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
         if ready == None:
             ready = True
 
-        if level = None:
+        if level == None:
             level = 5
 
         print "name = " + str(name) + " " \
