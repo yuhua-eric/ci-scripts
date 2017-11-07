@@ -147,7 +147,7 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
             print "warning: duplicate test definition name"
             continue
         else:
-            test_definitions.add(name)
+            test_definitions.append(name)
 
 
         if test_scope.lower().strip() == "*" or test_scope.lower() in scope:
