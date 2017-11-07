@@ -99,10 +99,10 @@ def get_nfs_url(distro_url, device_type):
             get_nfs_url(distro_url+direc, device_type)
 
 def generate_test_definition(github_url, test_path, name):
-    test_definition =  "      - repository: " + github_url +"\n"
+    test_definition =  "      - repository: \"" + github_url +"\"\n"
     test_definition += "        from: git\n"
-    test_definition += "        path: " + test_path + "\n"
-    test_definition += "        name: " + name + "\n"
+    test_definition += "        path: \"" + test_path + "\"\n"
+    test_definition += "        name: \"" + name + "\"\n"
     return test_definition
 
 def generate_test_definitions(distro, device_type,test_scope, test_level):
