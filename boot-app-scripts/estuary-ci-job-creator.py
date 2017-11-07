@@ -112,6 +112,7 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
     work_test_list=[]
     load_yaml = utils.load_yaml
     start_point = len(TEST_CASE_DEFINITION_DIR) + 1
+    test_definitions = []
     for file in TEST_CASE_DEFINITION_FILE_LIST:
         test_yaml = load_yaml(file)
         if not 'metadata' in test_yaml:
@@ -141,6 +142,13 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
             "ready = " + str(ready) + " " \
             "level = " + str(level) + " " \
             "scope = " + str(scope) + " "
+
+        if name in test_definitions:
+            print "warning: duplicate test definition name"
+            continue
+        else:
+            test_definitions.add(name)
+
 
         if test_scope.lower().strip() == "*" or test_scope.lower() in scope:
             pass
