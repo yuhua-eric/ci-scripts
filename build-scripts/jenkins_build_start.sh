@@ -69,7 +69,10 @@ function init_input_params() {
 
     # test plan
     BOOT_PLAN=${BOOT_PLAN:-"BOOT_NFS"}
-    TEST_PLAN=${TEST_PLAN:-"TEST"}
+
+    TEST_REPO=${TEST_PLAN:-"https://github.com/qinshulei/ci-test-cases"}
+    TEST_PLAN=${TEST_PLAN:-"*"}
+    TEST_LEVEL=${TEST_LEVEL:-"4"}
 
     # preinstall packages
     PACKAGES=${PACKAGES:-""}
@@ -130,6 +133,7 @@ GIT_DESCRIBE="${GIT_DESCRIBE}"
 SHELL_PLATFORM="${SHELL_PLATFORM}"
 SHELL_DISTRO="${SHELL_DISTRO}"
 BOOT_PLAN="${BOOT_PLAN}"
+TEST_REPO="${TEST_REPO}"
 TEST_PLAN="${TEST_PLAN}"
 TEST_LEVEL="${TEST_LEVEL}"
 ARCH_MAP="${ARCH_MAP}"

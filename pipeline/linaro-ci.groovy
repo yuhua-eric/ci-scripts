@@ -11,7 +11,15 @@ def clone2local(giturl, localdir) {
 node ('compile'){
     stage('Preparation') { // for display purposes
         clone2local('https://github.com/qinshulei/ci-scripts.git', './local/ci-scripts')
-        clone2local('https://github.com/qinshulei/ci-test-cases.git', './local/ci-test-cases')
+
+        dir('./local/ci-test-cases') {
+            deleteDir()
+        }
+        if (TEST_REPO == "" || TEST_REPO == null) {
+            TEST_REPO = https://github.com/qinshulei/ci-test-cases.git
+        }
+        clone2local(TEST_REPO, './local/ci-test-cases')
+
 
         // prepare variables.
         sh 'env'
@@ -31,8 +39,11 @@ node ('compile'){
 
         sh "echo SHELL_PLATFORM=\\\"${SHELL_PLATFORM}\\\" >> env.properties"
         sh "echo SHELL_DISTRO=\\\"${SHELL_DISTRO}\\\" >> env.properties"
+
+        sh "echo TEST_REPO=\\\"${TEST_REPO}\\\" >> env.properties"
         sh "echo TEST_PLAN=\\\"${TEST_PLAN}\\\" >> env.properties"
         sh "echo TEST_LEVEL=\\\"${TEST_LEVEL}\\\" >> env.properties"
+
         sh "echo GIT_DESCRIBE=\\\"${GIT_DESCRIBE}\\\" >> env.properties"
     }
 

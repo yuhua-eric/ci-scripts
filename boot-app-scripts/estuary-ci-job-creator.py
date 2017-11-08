@@ -98,8 +98,8 @@ def get_nfs_url(distro_url, device_type):
         for direc in dirs:
             get_nfs_url(distro_url+direc, device_type)
 
-def generate_test_definition(github_url, test_path, name):
-    test_definition =  "      - repository: \"" + github_url +"\"\n"
+def generate_test_definition(test_path, name):
+    test_definition =  "      - repository: \"" + TEST_CASE_DEFINITION_URL +"\"\n"
     test_definition += "        from: git\n"
     test_definition += "        path: \"" + test_path + "\"\n"
     test_definition += "        name: \"" + name + "\"\n"
@@ -107,7 +107,6 @@ def generate_test_definition(github_url, test_path, name):
 
 def generate_test_definitions(distro, device_type,test_scope, test_level):
     # TODO : put it into parameters
-    github_url = "https://github.com/qinshulei/ci-test-cases"
     # filter the test
     work_test_list=[]
     load_yaml = utils.load_yaml
@@ -169,7 +168,7 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
 
     all_definitions = ""
     for test in work_test_list:
-        definition = generate_test_definition(github_url, test['metadata']['test_path'], test['metadata']['name'])
+        definition = generate_test_definition(test['metadata']['test_path'], test['metadata']['name'])
         all_definitions += definition
 
     return all_definitions
@@ -471,11 +470,18 @@ def main(args):
 
     global TEST_CASE_DEFINITION_DIR
     global TEST_CASE_DEFINITION_FILE_LIST
+    global TEST_CASE_DEFINITION_URL
+
     global CONFIG
+
     CONFIG = configuration.get_config(args)
 
     TEST_CASE_DEFINITION_DIR = CONFIG.get("testDir")
     TEST_CASE_DEFINITION_FILE_LIST = findAllTestCase(TEST_CASE_DEFINITION_DIR)
+
+    TEST_CASE_DEFINITION_URL = "https://github.com/qinshulei/ci-test-cases"
+    if CONFIG.get("testDir") != None && CONFIG.get("testDir") != "":
+        TEST_CASE_DEFINITION_URL = CONFIG.get("testDir")
 
     setup_job_dir(os.getcwd() + '/jobs')
     print 'Scanning %s for kernel information...' % CONFIG.get("url")
@@ -508,7 +514,10 @@ if __name__ == '__main__':
             to create jobs for")
     parser.add_argument("--arch", help="specific the architecture to create jobs\
             for")
+
     parser.add_argument("--testDir", required=True, help="specific test case dir")
+    parser.add_argument("--testUrl", help="specific test case dir")
+
     parser.add_argument("--scope", help="test case group", default="*")
     parser.add_argument("--level", help="test case level", default="1")
     parser.add_argument("--targets", nargs='+', help="specific targets to create\
