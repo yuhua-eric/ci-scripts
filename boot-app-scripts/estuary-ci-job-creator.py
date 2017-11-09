@@ -480,7 +480,7 @@ def main(args):
     TEST_CASE_DEFINITION_FILE_LIST = findAllTestCase(TEST_CASE_DEFINITION_DIR)
 
     TEST_CASE_DEFINITION_URL = "https://github.com/qinshulei/ci-test-cases"
-    if CONFIG.get("testDir") != None && CONFIG.get("testDir") != "":
+    if CONFIG.get("testDir") != None and CONFIG.get("testDir") != "":
         TEST_CASE_DEFINITION_URL = CONFIG.get("testDir")
 
     setup_job_dir(os.getcwd() + '/jobs')
