@@ -16,7 +16,7 @@ node ('compile'){
             deleteDir()
         }
         if (TEST_REPO == "" || TEST_REPO == null) {
-            TEST_REPO = https://github.com/qinshulei/ci-test-cases.git
+            TEST_REPO = "https://github.com/qinshulei/ci-test-cases.git"
         }
         clone2local(TEST_REPO, './local/ci-test-cases')
 
