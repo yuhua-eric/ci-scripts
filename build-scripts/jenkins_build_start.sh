@@ -70,7 +70,7 @@ function init_input_params() {
     # test plan
     BOOT_PLAN=${BOOT_PLAN:-"BOOT_NFS"}
 
-    TEST_REPO=${TEST_PLAN:-"https://github.com/qinshulei/ci-test-cases"}
+    TEST_REPO=${TEST_REPO:-"https://github.com/qinshulei/ci-test-cases"}
     TEST_PLAN=${TEST_PLAN:-"*"}
     TEST_LEVEL=${TEST_LEVEL:-"4"}
 
