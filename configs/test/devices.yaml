@@ -28,8 +28,8 @@ d05ssh01:
   sailing: "sailing_install/grubaa64.efi"
   linaro: "./linaro_install/grubaa64.efi"
 
-d03ssh01:
-  type: D03
+d05ssh02:
+  type: D05
   bmc: 192.168.2.223
   ip: 192.168.50.120
   mac: c0:a8:02:df:00:04
