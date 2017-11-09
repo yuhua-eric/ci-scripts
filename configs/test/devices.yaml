@@ -40,7 +40,7 @@ d05ssh02:
   linaro: "./linaro_install/grubaa64.efi"
 
 # 当前sol连不上,mac 地址不明
-d03ssh02:
+d03ssh01:
   type: D03
   bmc: 192.168.2.233
   ip: 192.168.50.124
