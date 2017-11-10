@@ -1,0 +1,15 @@
+# NOTE: Please remove the unused boot items according to your real condition.
+# Sample GRUB configuration file
+#
+
+# Boot automatically after 5 secs.
+set timeout=30
+
+# By default, boot the Linux
+set default=d05_minilinux_console
+
+# Booting initrd for D05/D03 (Console)
+menuentry "Install Estuary (Console)" --id d05_minilinux_console {
+    linux /pxe_install/arm64/estuary/v3.1/centos/d05/Image pcie_aspm=off pci=pcie_bus_perf nfsroot=192.168.50.122:/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/v3.1/centos/d05 ip=dhcp console=ttyAMA0,115200
+    initrd /pxe_install/arm64/estuary/v3.1/centos/d05/initrd.gz
+}
