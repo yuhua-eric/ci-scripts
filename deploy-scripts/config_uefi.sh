@@ -14,7 +14,11 @@ cd -
 
 function config_uefi() {
     # config tftp
-    local tree_name="$1"
+    local tree_name=${1:-"open-estuary"}
+    local host_name=${2:"d05ssh01"}
+    local distro_name=${3:-"centos"}
+    local version_name=${4:-"v3.1"}
+
     if [ "${tree_name}" = 'linaro' ];then
         # do deploy
         python update_uefi.py --uefi UEFI_D05_linaro_16_12.fd --host ${TARGET_IP} --ftp ${FTP_IP}

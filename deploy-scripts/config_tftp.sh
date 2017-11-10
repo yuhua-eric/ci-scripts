@@ -10,8 +10,10 @@ TFTP_ESTUARY_GRUB=grub.cfg
 TFTP_LINARO_GRUB=linaro_install/grub.cfg
 
 function config_tftp() {
-    local tree_name="$1"
-    local distro_name=${2:-"Centos"}
+    local tree_name=${1:-"open-estuary"}
+    local host_name=${2:"d05ssh01"}
+    local distro_name=${3:-"centos"}
+    local version_name=${4:-"v3.1"}
     # config uefi
     if [ "${tree_name}" = 'linaro' ];then
         cp -f /tftp/linaro_install/CentOS/linaro_centos.grub.cfg /tftp/linaro_install/grub.cfg

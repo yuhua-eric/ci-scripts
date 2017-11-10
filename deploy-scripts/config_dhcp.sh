@@ -14,7 +14,10 @@ DHCP_CONFIG_DIR=/etc/dhcp
 DHCP_FILENAME=dhcpd.conf
 
 function config_dhcp() {
-    local tree_name="$1"
+    local tree_name=${1:-"open-estuary"}
+    local host_name=${2:"d05ssh01"}
+    local distro_name=${3:-"centos"}
+    local version_name=${4:-"v3.1"}
     # config dhcp
 
     cd ..; ./scripts/gen_dhcpd_conf.sh > dhcpd.conf;cd -

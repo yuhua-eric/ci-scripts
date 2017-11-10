@@ -6,6 +6,8 @@ cd "${script_path}"
 
 TREE_NAME=${1:-"open-estuary"}
 HOST_NAME=${2:-"d05ssh01"}
+distro_name=${3:-"centos"}
+version_name=${4:-"v3.1"}
 
 cd ../
 BMC_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k bmc)
