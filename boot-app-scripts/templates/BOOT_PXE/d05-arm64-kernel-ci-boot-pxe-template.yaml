@@ -29,6 +29,7 @@ actions:
     to: ssh
     os: {distro}
     tree_name: {tree_name}
+    os_version: v3.1
 - boot:
     method: ssh
     connection: ssh
