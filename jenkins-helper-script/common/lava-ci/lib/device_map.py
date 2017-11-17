@@ -1166,6 +1166,7 @@ hip06_d03 = {'device_type': 'hip06-d03',
 
 hip07_d05 = {'device_type': 'hip07-d05',
        'templates': ['d05-acpi-boot-template.json',
+                     'd05-acpi-virt-template.json',
                      'd05-acpi-weekly-template.json'],
        'kernel_defconfig_blacklist': [],
        'defconfig_blacklist': ['arm64-allnoconfig',
