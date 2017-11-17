@@ -127,6 +127,7 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
             name = test_yaml['metadata']['name']
         else:
             name = "unknown"
+
         if 'ready' in test_yaml['metadata']:
             ready = test_yaml['metadata']['ready']
         else:
@@ -148,7 +149,10 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
             "scope = " + str(scope) + " "
 
         if name in test_definitions:
-            print "warning: duplicate test definition name"
+            print "warning: duplicate test definition name. skip it."
+            continue
+        elif " " in name:
+            print "warning: test definition name contains space. skip it."
             continue
         else:
             test_definitions.append(name)
