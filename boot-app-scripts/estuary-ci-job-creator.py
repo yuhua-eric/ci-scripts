@@ -113,7 +113,12 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
     start_point = len(TEST_CASE_DEFINITION_DIR) + 1
     test_definitions = []
     for file in TEST_CASE_DEFINITION_FILE_LIST:
-        test_yaml = load_yaml(file)
+        try:
+            test_yaml = load_yaml(file)
+        except(yaml.parser.ParserError, yaml.scanner.ScannerError) as e:
+            print "warnings: wrong yaml syntax :\n %s" % e
+            continue
+
         if not 'metadata' in test_yaml:
             print "warning : don't have metadata : " + str(file)
             continue
