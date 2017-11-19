@@ -49,7 +49,7 @@
 					"testdef": "ubuntu/qemu-kvm-memory.yaml"
 					}
 					],
-				timeout": 172800
+				"timeout": 172800
 			}
 		},
 		{
