@@ -41,8 +41,7 @@ node ('ci-v500-compile'){
         sh "echo TEST_LEVEL=\\\"${TEST_LEVEL}\\\" >> env.properties"
 
         sh "echo VERSION=\\\"${VERSION}\\\" >> env.properties"
-        sh "echo GIT_DESCRIBE=\\\"${GIT_DESCRIBE}\\\" >> env.properties"
-
+        // sh "echo GIT_DESCRIBE=\\\"${GIT_DESCRIBE}\\\" >> env.properties"
     }
 
     // load functions
