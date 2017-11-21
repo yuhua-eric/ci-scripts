@@ -57,7 +57,7 @@ node ('compile'){
         echo "Test success"
     } else {
         echo "Test failed"
-        currentBuild.result = 'SUCCESS'
+        currentBuild.result = 'FAILURE'
         return
     }
 

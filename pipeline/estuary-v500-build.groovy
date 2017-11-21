@@ -43,7 +43,7 @@ node ('ci-v500-compile'){
     } else {
         echo "build failed"
         functions.send_mail()
-        currentBuild.result = 'SUCCESS'
+        currentBuild.result = 'FAILURE'
         return
     }
 

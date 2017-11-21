@@ -59,7 +59,7 @@ node ('compile'){
     } else {
         echo "Test failed"
         functions.send_mail()
-        currentBuild.result = 'SUCCESS'
+        currentBuild.result = 'FAILURE'
         return
     }
 
