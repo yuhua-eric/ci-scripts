@@ -161,6 +161,8 @@ function sync_code() {
     mkdir -p $OPEN_ESTUARY_DIR;
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
+    # remove old estuary repo
+    rm -rf estuary
     if [ "$VERSION"x != ""x ]; then
         git clone "https://github.com/open-estuary/estuary.git" -b refs/tags/${VERSION}
     else
