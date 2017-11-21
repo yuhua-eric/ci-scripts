@@ -40,10 +40,12 @@ LAVA:
 # for lava job parameter
 Jenkins:
     url: http://192.168.50.122:8080
-    Boot: boot
-    App:
-        - WEEKLY_TESTING
-        - TEST
+    Boot: BOOT_NFS
+
+Test:
+    Plan: *
+    Repo: https://github.com/qinshulei/ci-test-cases
+    Level: 4
 
 # for kernelci access
 Ftpinfo:

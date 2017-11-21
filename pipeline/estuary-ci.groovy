@@ -43,6 +43,8 @@ node ('compile'){
         sh "echo VERSION=\\\"${VERSION}\\\" >> env.properties"
         sh "echo GIT_DESCRIBE=\\\"${GIT_DESCRIBE}\\\" >> env.properties"
 
+        sh "echo SUCCESS_MAIL_LIST=\\\"${SUCCESS_MAIL_LIST}\\\" >> env.properties"
+        sh "echo FAILED_MAIL_LIST=\\\"${FAILED_MAIL_LIST}\\\" >> env.properties"
     }
 
     // load functions

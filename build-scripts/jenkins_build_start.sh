@@ -62,26 +62,12 @@ function init_input_params() {
 
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
 
-    # select borad
-    SHELL_PLATFORM=${SHELL_PLATFORM:-"d05"}
-    SHELL_DISTRO=${SHELL_DISTRO:-""}
 
-
-    # test plan
-    BOOT_PLAN=${BOOT_PLAN:-"BOOT_NFS"}
-
-    TEST_REPO=${TEST_REPO:-"https://github.com/qinshulei/ci-test-cases"}
-    TEST_PLAN=${TEST_PLAN:-"*"}
-    TEST_LEVEL=${TEST_LEVEL:-"4"}
-
+    # TODO : no use
     # preinstall packages
     PACKAGES=${PACKAGES:-""}
-
     # all setup types
     SETUP_TYPE=${SETUP_TYPE:-""}
-
-    # only read from config file
-    ARCH_MAP=${ARCH_MAP:-""}
 }
 
 function parse_params() {
@@ -90,7 +76,10 @@ function parse_params() {
     : ${SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
 
     : ${BOOT_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Jenkins -k Boot`}
-    : ${TEST_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Jenkins -k App`}
+
+    : ${TEST_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Test -k Plan`}
+    : ${TEST_REPO:=`python configs/parameter_parser.py -f config.yaml -s Test -k Repo`}
+    : ${TEST_LEVEL:=`python configs/parameter_parser.py -f config.yaml -s Test -k Level`}
 
     : ${LAVA_SERVER:=`python configs/parameter_parser.py -f config.yaml -s LAVA -k lavaserver`}
     : ${LAVA_USER:=`python configs/parameter_parser.py -f config.yaml -s LAVA -k lavauser`}
