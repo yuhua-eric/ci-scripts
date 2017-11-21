@@ -23,14 +23,9 @@ node ('compile'){
 
         // save jenkins parameters.
         sh "echo TREE_NAME=\\\"${TREE_NAME}\\\" >> env.properties"
-        sh "echo BOOT_PLAN=\\\"${BOOT_PLAN}\\\" >> env.properties"
 
         sh "echo SHELL_PLATFORM=\\\"${SHELL_PLATFORM}\\\" >> env.properties"
         sh "echo SHELL_DISTRO=\\\"${SHELL_DISTRO}\\\" >> env.properties"
-
-        sh "echo TEST_REPO=\\\"${TEST_REPO}\\\" >> env.properties"
-        sh "echo TEST_PLAN=\\\"${TEST_PLAN}\\\" >> env.properties"
-        sh "echo TEST_LEVEL=\\\"${TEST_LEVEL}\\\" >> env.properties"
 
         sh "echo VERSION=\\\"${VERSION}\\\" >> env.properties"
         sh "echo GIT_DESCRIBE=\\\"${GIT_DESCRIBE}\\\" >> env.properties"
