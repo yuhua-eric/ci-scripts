@@ -182,7 +182,7 @@ function do_build() {
 
     # remove all containers
     containers=$(docker ps -a -q)
-    if [ -n ${containers} ];then
+    if [ -n "${containers}" ];then
         docker rm ${containers}
     fi
 
