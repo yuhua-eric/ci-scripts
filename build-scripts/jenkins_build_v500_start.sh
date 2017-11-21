@@ -180,6 +180,9 @@ function do_build() {
     # TODO : config cfg files.
     cat $BUILD_CFG_FILE
 
+    # remove all containers
+    docker rm $(docker ps -a -q)
+
     if [ x"$SKIP_BUILD" = x"true" ];then
         echo "skip build"
     else
