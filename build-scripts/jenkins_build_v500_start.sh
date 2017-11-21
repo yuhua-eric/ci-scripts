@@ -181,7 +181,10 @@ function do_build() {
     cat $BUILD_CFG_FILE
 
     # remove all containers
-    docker rm $(docker ps -a -q)
+    containers=$(docker ps -a -q)
+    if [ -n ${containers} ];then
+        docker rm ${containers}
+    fi
 
     if [ x"$SKIP_BUILD" = x"true" ];then
         echo "skip build"
