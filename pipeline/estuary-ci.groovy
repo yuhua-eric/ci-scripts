@@ -4,7 +4,7 @@ def clone2local(giturl, localdir) {
         new File(localdir).mkdir()
     }
     dir (localdir) {
-        git url: giturl
+        git url: giturl, depth: 1
     }
 }
 
