@@ -30,7 +30,11 @@ function init_build_env() {
     PATH=${CI_SCRIPTS_DIR}/build-scripts:$PATH
 
     CPU_NUM=$(cat /proc/cpuinfo | grep processor | wc -l)
-    OPEN_ESTUARY_DIR=${WORK_DIR}/open-estuary
+
+    # TODO : workaround for v500 build
+    # OPEN_ESTUARY_DIR=${WORK_DIR}/open-estuary
+    OPEN_ESTUARY_DIR=/root
+
     BUILD_DIR=${OPEN_ESTUARY_DIR}/build
     ESTUARY_CFG_FILE=${OPEN_ESTUARY_DIR}/estuary/estuarycfg.json
 }
