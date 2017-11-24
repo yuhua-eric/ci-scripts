@@ -4,7 +4,10 @@ def clone2local(giturl, localdir) {
         new File(localdir).mkdir()
     }
     dir (localdir) {
-        git url: giturl, depth: 1, timeout: 20
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']],
+                extensions: [[$class: 'CloneOption', timeout: 120]], gitTool: 'Default',
+                userRemoteConfigs: [[url: giturl]]
+            ])
     }
 }
 
