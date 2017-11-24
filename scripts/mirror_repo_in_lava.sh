@@ -16,7 +16,7 @@ if [ -d "${DIR_NAME}" ];then
     cd -
 else
     git clone ${TEST_REPO} --mirror
-    echo "[url ${MIRROR_ROOT}/${DIR_NAME}/]" >> ~/.gitconfig.edit
+    echo "[url \"${MIRROR_ROOT}/${DIR_NAME}\"]" >> ~/.gitconfig.edit
     echo "    insteadOf = ${TEST_REPO}" >> ~/.gitconfig.edit
 fi
 mv ~/.gitconfig.edit ~/.gitconfig
