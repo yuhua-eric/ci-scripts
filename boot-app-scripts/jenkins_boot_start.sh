@@ -15,7 +15,7 @@ function init_input_params() {
 
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
 
-    JENKINS_JOB_INFO=$(expr "${BUILD_URL}" : 'http.*/job/(.*)/' | sed "s#/#-#g")
+    JENKINS_JOB_INFO=$(expr "${BUILD_URL}" : '^http.*/job/\(.*\)/$' | sed "s#/#-#g")
 }
 
 function parse_params() {
