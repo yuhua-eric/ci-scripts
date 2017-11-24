@@ -166,11 +166,21 @@ function sync_code() {
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
     # remove old estuary repo
-    rm -rf estuary
+    # rm -rf estuary
     if [ "$VERSION"x != ""x ]; then
-        git clone "https://github.com/open-estuary/estuary.git" -b refs/tags/${VERSION}
+        if [ -d "estuary" ];then
+            git clone "https://github.com/open-estuary/estuary.git" -b refs/tags/${VERSION}
+        else
+            git fetch
+            git checkout refs/tags/${VERSION}
+        fi
     else
-        git clone "https://github.com/open-estuary/estuary.git" -b master
+        if [ -d "estuary" ];then
+            git fetch
+            git checkout origin/master
+        else
+            git clone "https://github.com/open-estuary/estuary.git" -b master
+        fi
     fi
 
     # TODO : import gpg file
