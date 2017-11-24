@@ -242,7 +242,7 @@ def create_new_jobs(plans, platform_name, targets, priority,
                                         else:
                                             tmp = tmp.replace('{device_type}', device_type + "ssh")
                                     tmp = tmp.replace('{job_name}',\
-                                        job_json.split("/")[-1].split(".yaml")[0])
+                                        CONFIG.get("jenkinsJob") + "-" + job_json.split("/")[-1].split(".yaml")[0])
                                     tmp = tmp.replace('{distro}', distro.lower())
                                      # end by wuyanjun
                                     tmp = tmp.replace('{tree}', CONFIG.get("tree"))
@@ -347,7 +347,8 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                                                 tmp = tmp.replace('{device_type}', device_type + "ssh")
 
                                         tmp = tmp.replace('{job_name}',\
-                                                job_json.split("/")[-1].split(".yaml")[0])
+                                                CONFIG.get("jenkinsJob") + "-" + job_json.split("/")[-1].split(".yaml")[0])
+
                                         tmp = tmp.replace('{distro}', distro.lower())
 
                                         # end by wuyanjun
@@ -515,6 +516,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("url", help="url to build artifacts")
+    parser.add_argument("--jenkinsJob", help="jenkins job info")
     parser.add_argument("--tree", help="tree name")
     parser.add_argument("--config", help="configuration for the LAVA server")
     parser.add_argument("--section", default="default", help="section in the\

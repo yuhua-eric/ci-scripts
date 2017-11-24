@@ -14,6 +14,8 @@ function init_input_params() {
     VERSION=${VERSION:-""}
 
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
+
+    JENKINS_JOB_INFO=$(expr "${BUILD_URL}" : 'http.*/job/(.*)/' | sed "s#/#-#g")
 }
 
 function parse_params() {
@@ -88,11 +90,13 @@ function generate_jobs() {
         if [ x"$distro" != x"" ]; then
             python estuary-ci-job-creator.py "$FTP_SERVER/${TREE_NAME}/${GIT_DESCRIBE}/${PLAT}-${board_arch}/" \
                    --tree "${TREE_NAME}" --plans "$test_name" --distro "$distro" --arch "${board_arch}" \
-                   --testUrl "${TEST_REPO}" --testDir "${TEST_CASE_DIR}" --scope "${TEST_PLAN}" --level "${TEST_LEVEL}"
+                   --testUrl "${TEST_REPO}" --testDir "${TEST_CASE_DIR}" --scope "${TEST_PLAN}" --level "${TEST_LEVEL}" \
+                   --jenkinsJob "${JENKINS_JOB_INFO}"
         else
             python estuary-ci-job-creator.py "$FTP_SERVER/${TREE_NAME}/${GIT_DESCRIBE}/${PLAT}-${board_arch}/" \
                    --tree "${TREE_NAME}" --plans "$test_name" --arch "${board_arch}" \
-                   --testUrl "${TEST_REPO}" --testDir "${TEST_CASE_DIR}"  --scope "${TEST_PLAN}" --level "${TEST_LEVEL}"
+                   --testUrl "${TEST_REPO}" --testDir "${TEST_CASE_DIR}"  --scope "${TEST_PLAN}" --level "${TEST_LEVEL}" \
+                   --jekinsJob "${JENKINS_JOB_INFO}"
         fi
     done
 }
