@@ -5,8 +5,11 @@ mkdir -p ${MIRROR_ROOT}
 
 cd ${MIRROR_ROOT}
 
+if [[ ! "${TEST_REPO}" =~ .git ]];then
+    TEST_REPO=${TEST_REPO}".git"
+fi
 
-DIR_NAME=${TEST_REPO##*/}
+dir_NAME=${TEST_REPO##*/}
 touch ~/.gitconfig
 
 mv ~/.gitconfig ~/.gitconfig.edit
