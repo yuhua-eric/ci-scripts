@@ -35,7 +35,7 @@ function init_build_env() {
     # OPEN_ESTUARY_DIR=${WORK_DIR}/open-estuary
     OPEN_ESTUARY_DIR=/root
 
-    BUILD_DIR=${OPEN_ESTUARY_DIR}/build
+    BUILD_DIR=${OPEN_ESTUARY_DIR}/estuary/build
     ESTUARY_CFG_FILE=${OPEN_ESTUARY_DIR}/estuary/estuarycfg.json
 }
 
