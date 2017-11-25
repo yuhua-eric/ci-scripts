@@ -5,7 +5,7 @@ mkdir -p ${MIRROR_ROOT}
 
 cd ${MIRROR_ROOT}
 
-if [[ ! "${TEST_REPO}" =~ .git ]];then
+if [[ ! "${TEST_REPO}" =~ .git$ ]];then
     TEST_REPO=${TEST_REPO}".git"
 fi
 
