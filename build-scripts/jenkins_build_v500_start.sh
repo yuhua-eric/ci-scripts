@@ -171,13 +171,17 @@ function sync_code() {
         if [ -d "estuary" ];then
             git clone "https://github.com/open-estuary/estuary.git" -b refs/tags/${VERSION}
         else
+            cd estuary
             git fetch
             git checkout refs/tags/${VERSION}
+            cd -
         fi
     else
         if [ -d "estuary" ];then
+            cd estuary
             git fetch
             git checkout origin/master
+            cd -
         else
             git clone "https://github.com/open-estuary/estuary.git" -b master
         fi
