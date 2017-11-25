@@ -22,4 +22,4 @@ else
     echo "[url \"${MIRROR_ROOT}/${DIR_NAME}\"]" >> ~/.gitconfig.edit
     echo "    insteadOf = ${TEST_REPO}" >> ~/.gitconfig.edit
 fi
-mv ~/.gitconfig.edit ~/.gitconfig
+mv -f ~/.gitconfig.edit ~/.gitconfig
