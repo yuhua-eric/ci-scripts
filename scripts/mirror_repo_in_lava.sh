@@ -9,7 +9,7 @@ if [[ ! "${TEST_REPO}" =~ .git$ ]];then
     TEST_REPO=${TEST_REPO}".git"
 fi
 
-dir_NAME=${TEST_REPO##*/}
+DIR_NAME=${TEST_REPO##*/}
 touch ~/.gitconfig
 
 mv -f ~/.gitconfig ~/.gitconfig.edit
