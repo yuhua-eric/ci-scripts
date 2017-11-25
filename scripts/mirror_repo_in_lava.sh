@@ -12,7 +12,7 @@ fi
 dir_NAME=${TEST_REPO##*/}
 touch ~/.gitconfig
 
-mv ~/.gitconfig ~/.gitconfig.edit
+mv -f ~/.gitconfig ~/.gitconfig.edit
 if [ -d "${DIR_NAME}" ];then
     cd ${DIR_NAME}
     git fetch
