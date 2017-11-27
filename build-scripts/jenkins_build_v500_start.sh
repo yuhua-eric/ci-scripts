@@ -230,10 +230,11 @@ function get_version_info() {
     if [ "$VERSION"x != ""x ]; then
         GIT_DESCRIBE=$VERSION
     else
-
+        cd estuary
         ESTUARY_GIT_DESCRIBE=$(git log --oneline | head -1 | awk '{print $1}')
         ESTUARY_GIT_DESCRIBE=estuary_${ESTUARY_GIT_DESCRIBE:0:7}
         GIT_DESCRIBE=${ESTUARY_GIT_DESCRIBE}
+        cd -
     fi
 
     echo $GIT_DESCRIBE
