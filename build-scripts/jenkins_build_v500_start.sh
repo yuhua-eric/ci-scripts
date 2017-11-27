@@ -203,7 +203,7 @@ function do_build() {
     # remove all containers
     containers=$(docker ps -a -q)
     if [ -n "${containers}" ];then
-        docker rm ${containers}
+        docker rm -f ${containers}
     fi
 
     if [ x"$SKIP_BUILD" = x"true" ];then
