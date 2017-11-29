@@ -79,6 +79,8 @@ function init_boot_env() {
 
     WHOLE_SUM='whole_summary.txt'
     DETAILS_SUM='details_summary.txt'
+
+    PDF_FILE='resultfile.pdf'
 }
 
 function generate_jobs() {
@@ -112,7 +114,7 @@ function run_and_report_jobs() {
             return -1
         fi
 
-        python estuary-report.py --boot ${JOBS_DIR}/${RESULTS_DIR}/POLL --lab $LAVA_USER
+        python estuary-report_bak.py --boot ${JOBS_DIR}/${RESULTS_DIR}/POLL --lab $LAVA_USER
         if [ ! -d ${RESULTS_DIR} ]; then
             echo "running jobs error! Aborting"
             return -1
@@ -154,6 +156,7 @@ function run_and_move_result() {
 
     [ -e ${WHOLE_SUM} ] && mv ${WHOLE_SUM} ${dest_dir}/
     [ -e ${DETAILS_SUM} ] && mv ${DETAILS_SUM} ${dest_dir}/
+    [ -e ${PDF_FILE} ] && mv ${PDF_FILE} ${dest_dir}/
 
     [ -d ${JOBS_DIR} ] && mv ${JOBS_DIR} ${dest_dir}/${JOBS_DIR}_${test_name}
     [ -d ${RESULTS_DIR} ] && mv ${RESULTS_DIR} ${dest_dir}/${RESULTS_DIR}_${test_name}
@@ -293,6 +296,10 @@ function collect_result() {
         rm -rf  ${WORKSPACE}/${DETAILS_SUM}
     fi
 
+    if [  -e  ${WORKSPACE}/${PDF_FILE} ]; then
+        rm -rf  ${WORKSPACE}/${PDF_FILE}
+    fi
+
     if [  -e  ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} ]; then
         rm -rf  ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
     fi
@@ -307,10 +314,15 @@ function collect_result() {
         echo "##### distro : ${distro_name} ######" | tee -a ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} | tee -a ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
         cat ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${WHOLE_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
         cat ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
+
+        cp -f ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${PDF_FILE} ${GIT_DESCRIBE}/${RESULTS_DIR}/${PDF_FILE}
     done
 
+    # apt-get install pdftk
+    # pdftk file1.pdf file2.pdf cat output output.pdf
     cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} ${WORKSPACE}/${WHOLE_SUM}
     cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} ${WORKSPACE}/${DETAILS_SUM}
+    cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${PDF_FILE} ${WORKSPACE}/${PDF_FILE}
 
     cp -rf ${timefile} ${WORKSPACE} || true
 

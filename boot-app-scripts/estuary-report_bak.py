@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # <variable> = required
 # Usage ./lava-report.py <option> [json]
+# pip install matplotlib
+# pip install numpy
+# pip install reportlab
 import os
 import urlparse
 import xmlrpclib
@@ -21,10 +24,10 @@ import numpy as np
 from lib import configuration
 from lib import utils
 
-from reportlab.pdfgen.canvas import Canvas  
-from reportlab.pdfbase import pdfmetrics  
-from reportlab.pdfbase.cidfonts import UnicodeCIDFont  
-from reportlab.pdfbase.ttfonts import TTFont 
+from reportlab.pdfgen.canvas import Canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer,Image,Table,TableStyle
@@ -165,7 +168,7 @@ def generate_test_report(job_id, connection):
     # print testsuite_results
     test = yaml.load(testjob_results)
     if job_id not in job_result_dict:
-          job_result_dict[job_id] = test  
+          job_result_dict[job_id] = test
     suite_list = [] #all test suite list
     case_dict = {} #testcast dict value like 'smoke-test':[test-case1,test-case2,test-case3]
     boot_total = 0
@@ -271,7 +274,7 @@ def print_base_info_pie_chart(result_dict,description):
 def print_scope_info_bar_chart(result_dict,description):
     scope_list=[]
     scope_list=result_dict.keys()
-    
+
     pass_number_list = []
     for key in result_dict.keys():
         pass_number_list.append(result_dict[key])
@@ -288,7 +291,7 @@ def print_scope_info_bar_chart(result_dict,description):
 
 
 def create_test_report_pdf(job_result_dict):
-#    print job_result_dict 
+#    print job_result_dict
     story=[]
     stylesheet=getSampleStyleSheet()
     normalStyle=stylesheet['Normal']
@@ -296,7 +299,7 @@ def create_test_report_pdf(job_result_dict):
     reportfilename="Estuary-Test_Report-%s.pdf"%(curr_date)
     rpt_title = '<para autoLeading="off" fontSize=15 align=center><b>[ Estuary ] Test Report %s</b><br/><br/><br/></para>' %(curr_date)
     story.append(Paragraph(rpt_title,normalStyle))
-    
+
     rpt_ps = '<para autoLeading="off" fontSize=8 align=center>( This mail is send by Jenkins automatically, don\'t reply )</para>'
     story.append(Paragraph(rpt_ps,normalStyle))
 
@@ -456,7 +459,7 @@ def count_scope_pass_number(test_suite_scope_dict,path,result):
                 test_suite_scope_dict[scope] = value
 
 
-def generate_history_test_report():    
+def generate_history_test_report():
     print "generate_history_test_report"
 
 def boot_report(config):
