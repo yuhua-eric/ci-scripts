@@ -315,14 +315,14 @@ function collect_result() {
         cat ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${WHOLE_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
         cat ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
 
-        cp -f ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${PDF_FILE} ${GIT_DESCRIBE}/${RESULTS_DIR}/${PDF_FILE}
+        # cp -f ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${PDF_FILE} ${GIT_DESCRIBE}/${RESULTS_DIR}/${PDF_FILE}
     done
 
     # apt-get install pdftk
     # pdftk file1.pdf file2.pdf cat output output.pdf
     cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} ${WORKSPACE}/${WHOLE_SUM}
     cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} ${WORKSPACE}/${DETAILS_SUM}
-    cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${PDF_FILE} ${WORKSPACE}/${PDF_FILE}
+    #cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${PDF_FILE} ${WORKSPACE}/${PDF_FILE}
 
     cp -rf ${timefile} ${WORKSPACE} || true
 
