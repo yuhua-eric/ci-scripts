@@ -185,10 +185,10 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
 
 
 def generate_job_file2(cwd, defconfig, device_type, distro, kernel_version, plan, platform_name, priority, test_type,
-                       total_templates, test_definitions):
+                       total_templates, test_definitions, number):
     for template in total_templates:
         job_name = CONFIG.get("tree") + '-' + kernel_version + '-' + defconfig[:100] + \
-                   '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
+                   '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro + '-' + number
         if template in dummy_ssh['templates']:
             job_json = cwd + '/jobs/' + job_name + '-' + template
         else:
@@ -271,9 +271,11 @@ def create_new_jobs(plans, platform_name, targets, priority, distro="Ubuntu", sc
                 # TODO : think filter the test job by platform, distro, device type, level, scope
                 test_definitions = generate_test_definitions(distro, device_type, scope, level)
 
+                number = 1
                 for definitions in test_definitions:
                     generate_job_file2(cwd, defconfig, device_type, distro, kernel_version, plan, platform_name,
-                                       priority, test_type, total_templates, definitions)
+                                       priority, test_type, total_templates, definitions, number)
+                    number += 1
 
 
 def generate_job_file(cwd,
@@ -291,10 +293,11 @@ def generate_job_file(cwd,
                       test_definitions,
                       test_type,
                       total_templates,
-                      tree):
+                      tree,
+                      number):
     for template in total_templates:
         job_name = tree + '-' + kernel_version + '-' + defconfig[:100] + \
-                   '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
+                   '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro + '-' + number
         if template in dummy_ssh['templates']:
             job_json = cwd + '/jobs/' + job_name + '-' + template
         else:
@@ -418,11 +421,13 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                     # TODO : think filter the test job by platform, distro, device type, level, scope
                     test_definitions = generate_test_definitions(distro, device_type, scope , level)
 
+                    number = 1
                     for definitions in test_definitions:
                         generate_job_file(cwd, defconfig, device_type,
                                           distro, distro_url, image_url, kernel,
                                           kernel_version, plan, platform, platform_name, priority,
-                                          definitions, test_type, total_templates, tree)
+                                          definitions, test_type, total_templates, tree, number)
+                        number += 1
 
 
 def walk_url(url, distro_url, plans=None, arch=None, targets=None,
