@@ -1,13 +1,9 @@
 #!/usr/bin/python
 import ConfigParser
 import argparse
-import fnmatch
-import httplib
 import os
 import os.path
 import re
-import shutil
-import subprocess
 import urllib2
 import urlparse
 import yaml
@@ -32,30 +28,15 @@ platform_list = []
 # - oe
 
 d03 = {'device_type': 'd03',
-    'templates': ['d03-arm64-kernel-ci-boot-template.yaml',
-                              'd03-arm64-kernel-ci-boot-sata-template.yaml',
-                              'd03-arm64-kernel-ci-boot-nfs-template.yaml',
-                              'd03-arm64-kernel-ci-boot-pxe-template.yaml'],
-    'defconfig_blacklist': ['arm64-allnoconfig',
-                            'arm64-allmodconfig'],
-                            'kernel_blacklist': [],
-                            'nfs_blacklist': [],
-                            'lpae': False,
-                            'be': False
-                            }
+       'templates': ['d03-arm64-kernel-ci-boot-nfs-template.yaml',
+                     'd03-arm64-kernel-ci-boot-iso-template.yaml',
+                     'd03-arm64-kernel-ci-boot-pxe-template.yaml']
+}
 d05 = {'device_type': 'd05',
-    'templates': ['d05-arm64-kernel-ci-boot-template.yaml',
-                              'd05-arm64-kernel-ci-boot-sata-template.yaml',
-                              'd05-arm64-kernel-ci-boot-nfs-template.yaml',
-                              'd05-arm64-kernel-ci-boot-pxe-template.yaml'],
-    'defconfig_blacklist': ['arm64-allnoconfig',
-                            'arm64-allmodconfig'],
-                            'kernel_blacklist': [],
-                            'nfs_blacklist': [],
-                            'lpae': False,
-                            'be': False
-                            }
-
+    'templates': ['d05-arm64-kernel-ci-boot-nfs-template.yaml',
+                  'd05-arm64-kernel-ci-boot-iso-template.yaml',
+                  'd05-arm64-kernel-ci-boot-pxe-template.yaml']
+}
 
 dummy_ssh = {'device_type': 'dummy_ssh',
              'templates': [ 'dummy_ssh_template.yaml'],}
@@ -76,13 +57,14 @@ def setup_job_dir(directory):
         os.makedirs(directory)
     print 'Done setting up YAML output directory'
 
+
 def get_nfs_url(distro_url, device_type):
     parse_re = re.compile('href="([^./"?][^"?]*)"')
     if not distro_url.endswith('.tar.gz') or not distro_url.endswith('.gz'):
         try:
             html = urllib2.urlopen(distro_url, timeout=30).read()
         except IOError, e:
-            print 'error reading %s: %s' % (url, e)
+            print 'error reading %s: %s' % (distro_url, e)
             exit(1)
         if not distro_url.endswith('/'):
             distro_url += '/'
@@ -98,12 +80,14 @@ def get_nfs_url(distro_url, device_type):
         for direc in dirs:
             get_nfs_url(distro_url+direc, device_type)
 
+
 def generate_test_definition(test_path, name):
     test_definition =  "      - repository: \"" + TEST_CASE_DEFINITION_URL +"\"\n"
     test_definition += "        from: git\n"
     test_definition += "        path: \"" + test_path + "\"\n"
     test_definition += "        name: \"" + name + "\"\n"
     return test_definition
+
 
 def generate_test_definitions(distro, device_type,test_scope, test_level):
     # TODO : put it into parameters
@@ -112,6 +96,8 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
     load_yaml = utils.load_yaml
     start_point = len(TEST_CASE_DEFINITION_DIR) + 1
     test_definitions = []
+
+    ## check all test
     for file in TEST_CASE_DEFINITION_FILE_LIST:
         try:
             test_yaml = load_yaml(file)
@@ -157,7 +143,6 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
         else:
             test_definitions.append(name)
 
-
         if test_scope.lower().strip() == "*" or test_scope.lower() in scope:
             pass
         else:
@@ -168,22 +153,90 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
         else:
             continue
 
-        if ready == True and device_type.lower() in test_yaml['metadata']['devices'] and distro.lower() in test_yaml['metadata']['os']:
+        if ready \
+                and device_type.lower() in test_yaml['metadata']['devices'] \
+                and distro.lower() in test_yaml['metadata']['os']:
             test_path = file[start_point:]
             test_yaml['metadata']['test_path'] = test_path
             work_test_list.append(test_yaml)
 
-    work_test_list = sorted(work_test_list, key = lambda x: x['metadata']['level'] if 'level' in x['metadata'] else 5, reverse=True)
+    work_test_list = sorted(work_test_list,
+                            key=lambda x: x['metadata']['level'] if 'level' in x['metadata'] else 5,
+                            reverse=True)
 
-    all_definitions = ""
+    all_definitions = []
+
+    # put 5 test definition in one lava job.
+    i = 0
+    current_definition = ""
     for test in work_test_list:
         definition = generate_test_definition(test['metadata']['test_path'], test['metadata']['name'])
-        all_definitions += definition
+        current_definition += definition
+        if i == 5:
+            all_definitions.append(current_definition)
+            current_definition = ""
+            i = 0
+        else:
+            i += 1
+    if current_definition != "":
+        all_definitions.append(current_definition)
 
     return all_definitions
 
-def create_new_jobs(plans, platform_name, targets, priority,
-                    distro_url, distro="Ubuntu", scope="*", level="5"):
+
+def generate_job_file2(cwd, defconfig, device_type, distro, kernel_version, plan, platform_name, priority, test_type,
+                       total_templates, test_definitions):
+    for template in total_templates:
+        job_name = CONFIG.get("tree") + '-' + kernel_version + '-' + defconfig[:100] + \
+                   '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
+        if template in dummy_ssh['templates']:
+            job_json = cwd + '/jobs/' + job_name + '-' + template
+        else:
+            job_json = cwd + '/jobs/' + job_name + '.yaml'
+        template_file = cwd + '/templates/' + plan + '/' + str(template)
+        if os.path.exists(template_file):
+            with open(job_json, 'wt') as fout:
+                with open(template_file, "rt") as fin:
+                    for line in fin:
+                        tmp = line.replace('{dtb_url}', platform_name)
+                        # add by wuyanjun
+                        # if the jobs are not the boot jobs of LAVA, try to use the
+                        # dummy_ssh as the board device, or use the ${board_type} itself.
+                        if 'boot' not in plan and 'BOOT' not in plan:
+                            tmp = tmp.replace('{device_type}', 'dummy_ssh' + '_' + device_type)
+                        else:
+                            if plan == 'BOOT_NFS':
+                                tmp = tmp.replace('{device_type}', device_type)
+                            else:
+                                tmp = tmp.replace('{device_type}', device_type + "ssh")
+                        tmp = tmp.replace('{job_name}', \
+                                          CONFIG.get("jenkinsJob") + "-" + job_json.split("/")[-1].split(".yaml")[0])
+                        tmp = tmp.replace('{distro}', distro.lower())
+                        # end by wuyanjun
+                        tmp = tmp.replace('{tree}', CONFIG.get("tree"))
+                        if platform_name.endswith('.dtb'):
+                            tmp = tmp.replace('{device_tree}', platform_name)
+                        tmp = tmp.replace('{kernel_version}', kernel_version)
+                        tmp = tmp.replace('{defconfig}', defconfig)
+                        tmp = tmp.replace('{distro_name}', distro)
+                        tmp = tmp.replace('{device_type_upper}', str(device_type).upper())
+                        tmp = tmp.replace('{tree_name}', CONFIG.get("tree"))
+                        if plan:
+                            tmp = tmp.replace('{test_plan}', plan)
+                        if test_type:
+                            tmp = tmp.replace('{test_type}', test_type)
+                        if priority:
+                            tmp = tmp.replace('{priority}', priority.lower())
+                        else:
+                            tmp = tmp.replace('{priority}', 'high')
+                        if test_definitions:
+                            tmp = tmp.replace('{test_definitions}', test_definitions)
+                        else:
+                            tmp = tmp.replace('{test_definitions}', "# no test definitions")
+                        fout.write(tmp)
+
+
+def create_new_jobs(plans, platform_name, targets, priority, distro="Ubuntu", scope="*", level="5"):
     print 'Creating YAML Job Files...'
     cwd = os.getcwd()
     kernel_version = "16.12"
@@ -191,7 +244,6 @@ def create_new_jobs(plans, platform_name, targets, priority,
     for device in device_map[platform_name]:
         device_type = device['device_type']
         device_templates = device['templates']
-        lpae = device['lpae']
         test_type = None
         defconfigs = []
         for plan in plans:
@@ -217,56 +269,102 @@ def create_new_jobs(plans, platform_name, targets, priority,
                 config_plan = ConfigParser.ConfigParser()
                 config_plan.read(cwd + '/templates/' + plan + '/' + plan + '.ini')
                 # TODO : think filter the test job by platform, distro, device type, level, scope
-                test_definitions=generate_test_definitions(distro, device_type, scope , level)
-                for template in total_templates:
-                    job_name = CONFIG.get("tree") + '-' + kernel_version + '-' + defconfig[:100] + \
-                            '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
-                    if template in dummy_ssh['templates']:
-                        job_json = cwd + '/jobs/' + job_name + '-' + template
-                    else:
-                        job_json = cwd + '/jobs/' + job_name + '.yaml'
-                    template_file = cwd + '/templates/' + plan + '/' + str(template)
-                    if os.path.exists(template_file):
-                        with open(job_json, 'wt') as fout:
-                            with open(template_file, "rt") as fin:
-                                for line in fin:
-                                    tmp = line.replace('{dtb_url}', platform_name)
-                                    # add by wuyanjun
-                                    # if the jobs are not the boot jobs of LAVA, try to use the
-                                    # dummy_ssh as the board device, or use the ${board_type} itself.
-                                    if 'boot' not in plan and 'BOOT' not in plan:
-                                        tmp = tmp.replace('{device_type}', 'dummy_ssh'+'_'+device_type)
-                                    else:
-                                        if plan == 'BOOT_NFS':
-                                            tmp = tmp.replace('{device_type}', device_type)
-                                        else:
-                                            tmp = tmp.replace('{device_type}', device_type + "ssh")
-                                    tmp = tmp.replace('{job_name}',\
-                                        CONFIG.get("jenkinsJob") + "-" + job_json.split("/")[-1].split(".yaml")[0])
-                                    tmp = tmp.replace('{distro}', distro.lower())
-                                     # end by wuyanjun
-                                    tmp = tmp.replace('{tree}', CONFIG.get("tree"))
-                                    if platform_name.endswith('.dtb'):
-                                        tmp = tmp.replace('{device_tree}', platform_name)
-                                    tmp = tmp.replace('{kernel_version}', kernel_version)
-                                    tmp = tmp.replace('{defconfig}', defconfig)
-                                    tmp = tmp.replace('{distro_name}', distro)
-                                    tmp = tmp.replace('{device_type_upper}', str(device_type).upper())
-                                    tmp = tmp.replace('{tree_name}', CONFIG.get("tree"))
-                                    if plan:
-                                        tmp = tmp.replace('{test_plan}', plan)
-                                    if test_type:
-                                        tmp = tmp.replace('{test_type}', test_type)
-                                    if priority:
-                                        tmp = tmp.replace('{priority}', priority.lower())
-                                    else:
-                                        tmp = tmp.replace('{priority}', 'high')
-                                    if test_definitions:
-                                        tmp = tmp.replace('{test_definitions}', test_definitions)
-                                    else:
-                                        tmp = tmp.replace('{test_definitions}', "# no test definitions")
-                                    fout.write(tmp)
+                test_definitions = generate_test_definitions(distro, device_type, scope, level)
 
+                for definitions in test_definitions:
+                    generate_job_file2(cwd, defconfig, device_type, distro, kernel_version, plan, platform_name,
+                                       priority, test_type, total_templates, definitions)
+
+
+def generate_job_file(cwd,
+                      defconfig,
+                      device_type,
+                      distro,
+                      distro_url,
+                      image_url,
+                      kernel,
+                      kernel_version,
+                      plan,
+                      platform,
+                      platform_name,
+                      priority,
+                      test_definitions,
+                      test_type,
+                      total_templates,
+                      tree):
+    for template in total_templates:
+        job_name = tree + '-' + kernel_version + '-' + defconfig[:100] + \
+                   '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
+        if template in dummy_ssh['templates']:
+            job_json = cwd + '/jobs/' + job_name + '-' + template
+        else:
+            job_json = cwd + '/jobs/' + job_name + '.yaml'
+        template_file = cwd + '/templates/' + plan + '/' + str(template)
+        if os.path.exists(template_file):
+            with open(job_json, 'wt') as fout:
+                with open(template_file, "rt") as fin:
+                    for line in fin:
+                        tmp = line.replace('{dtb_url}', platform)
+                        tmp = tmp.replace('{kernel_url}', kernel)
+                        # add by wuyanjun
+                        # if the jobs are not the boot jobs of LAVA, try to use the
+                        # dummy_ssh as the board device, or use the ${board_type} itself.
+                        if 'boot' not in plan and 'BOOT' not in plan:
+                            tmp = tmp.replace('{device_type}', 'dummy_ssh' + '_' + device_type)
+                        else:
+                            if plan == 'BOOT_NFS':
+                                tmp = tmp.replace('{device_type}', device_type)
+                            else:
+                                tmp = tmp.replace('{device_type}', device_type + "ssh")
+
+                        tmp = tmp.replace('{job_name}', \
+                                          CONFIG.get("jenkinsJob") + "-" + job_json.split("/")[-1].split(".yaml")[0])
+
+                        tmp = tmp.replace('{distro}', distro.lower())
+
+                        # end by wuyanjun
+                        tmp = tmp.replace('{image_url}', image_url)
+                        tmp = tmp.replace('{tree}', tree)
+
+                        if platform_name.endswith('.dtb'):
+                            tmp = tmp.replace('{device_tree}', platform_name)
+                        tmp = tmp.replace('{kernel_version}', kernel_version)
+
+                        tmp = tmp.replace('{defconfig}', defconfig)
+                        tmp = tmp.replace('{distro_name}', distro)
+
+                        tmp = tmp.replace('{device_type_upper}', str(device_type).upper())
+
+                        tmp = tmp.replace('{tree_name}', CONFIG.get("tree"))
+
+                        if plan:
+                            tmp = tmp.replace('{test_plan}', plan)
+
+                        if test_type:
+                            tmp = tmp.replace('{test_type}', test_type)
+                        if priority:
+                            tmp = tmp.replace('{priority}', priority.lower())
+                        else:
+                            tmp = tmp.replace('{priority}', 'high')
+
+                        if test_definitions:
+                            tmp = tmp.replace('{test_definitions}', test_definitions)
+                        else:
+                            tmp = tmp.replace('{test_definitions}', "# no test definitions")
+
+                        if re.findall('nfs_url', tmp):
+                            if len(distro_list):
+                                nfs_url = ""
+                                for distro_url in distro_list:
+                                    if distro in distro_url:
+                                        nfs_url = distro_url
+                                tmp = line.replace('{nfs_url}', nfs_url)
+                            else:
+                                print 'error: need rootfs.tar.gz'
+                                exit(1)
+
+                        fout.write(tmp)
+    return distro_url
 
 
 def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
@@ -286,7 +384,6 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
         for device in device_map[platform_name]:
             device_type = device['device_type']
             device_templates = device['templates']
-            lpae = device['lpae']
             test_type = None
             defconfigs = []
             for plan in plans:
@@ -321,78 +418,12 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
                     # TODO : think filter the test job by platform, distro, device type, level, scope
                     test_definitions = generate_test_definitions(distro, device_type, scope , level)
 
-                    for template in total_templates:
-                        job_name = tree + '-' + kernel_version + '-' + defconfig[:100] + \
-                                '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro
-                        if template in dummy_ssh['templates']:
-                            job_json = cwd + '/jobs/' + job_name + '-' + template
-                        else:
-                            job_json = cwd + '/jobs/' + job_name + '.yaml'
-                        template_file = cwd + '/templates/' + plan + '/' + str(template)
-                        if os.path.exists(template_file):
-                            with open(job_json, 'wt') as fout:
-                                with open(template_file, "rt") as fin:
-                                    for line in fin:
-                                        tmp = line.replace('{dtb_url}', platform)
-                                        tmp = tmp.replace('{kernel_url}', kernel)
-                                        # add by wuyanjun
-                                        # if the jobs are not the boot jobs of LAVA, try to use the
-                                        # dummy_ssh as the board device, or use the ${board_type} itself.
-                                        if 'boot' not in plan and 'BOOT' not in plan:
-                                            tmp = tmp.replace('{device_type}', 'dummy_ssh'+'_'+device_type)
-                                        else:
-                                            if plan == 'BOOT_NFS':
-                                                tmp = tmp.replace('{device_type}', device_type)
-                                            else:
-                                                tmp = tmp.replace('{device_type}', device_type + "ssh")
+                    for definitions in test_definitions:
+                        generate_job_file(cwd, defconfig, device_type,
+                                          distro, distro_url, image_url, kernel,
+                                          kernel_version, plan, platform, platform_name, priority,
+                                          definitions, test_type, total_templates, tree)
 
-                                        tmp = tmp.replace('{job_name}',\
-                                                CONFIG.get("jenkinsJob") + "-" + job_json.split("/")[-1].split(".yaml")[0])
-
-                                        tmp = tmp.replace('{distro}', distro.lower())
-
-                                        # end by wuyanjun
-                                        tmp = tmp.replace('{image_url}', image_url)
-                                        tmp = tmp.replace('{tree}', tree)
-
-                                        if platform_name.endswith('.dtb'):
-                                            tmp = tmp.replace('{device_tree}', platform_name)
-                                        tmp = tmp.replace('{kernel_version}', kernel_version)
-
-                                        tmp = tmp.replace('{defconfig}', defconfig)
-                                        tmp = tmp.replace('{distro_name}', distro)
-
-                                        tmp = tmp.replace('{device_type_upper}', str(device_type).upper())
-
-                                        tmp = tmp.replace('{tree_name}', CONFIG.get("tree"))
-
-                                        if plan:
-                                            tmp = tmp.replace('{test_plan}', plan)
-
-                                        if test_type:
-                                            tmp = tmp.replace('{test_type}', test_type)
-                                        if priority:
-                                            tmp = tmp.replace('{priority}', priority.lower())
-                                        else:
-                                            tmp = tmp.replace('{priority}', 'high')
-
-                                        if test_definitions:
-                                            tmp = tmp.replace('{test_definitions}', test_definitions)
-                                        else:
-                                            tmp = tmp.replace('{test_definitions}', "# no test definitions")
-
-                                        if re.findall('nfs_url', tmp):
-                                            if len(distro_list):
-                                                nfs_url = ""
-                                                for distro_url in distro_list:
-                                                    if distro in distro_url:
-                                                        nfs_url = distro_url
-                                                tmp = line.replace('{nfs_url}', nfs_url)
-                                            else:
-                                                print 'error: need rootfs.tar.gz'
-                                                exit(1)
-
-                                        fout.write(tmp)
 
 def walk_url(url, distro_url, plans=None, arch=None, targets=None,
             priority=None, distro="Ubuntu",scope="*", level="1"):
@@ -455,11 +486,12 @@ def walk_url(url, distro_url, plans=None, arch=None, targets=None,
                 kernel = None
             platform_list = []
 
-    for dir in dirs:
-        walk_url(url + dir, distro_url, plans, arch, targets, priority,\
+    for dir_name in dirs:
+        walk_url(url + dir_name, distro_url, plans, arch, targets, priority,
                  distro, scope, level)
 
-def findAllTestCase(testDir):
+
+def find_all_test_case(testDir):
     test_case_yaml_file_list=[]
     for root, dirs, files in os.walk(testDir):
         # exclude dirs
@@ -475,6 +507,7 @@ def findAllTestCase(testDir):
             print fname
     return test_case_yaml_file_list
 
+
 def main(args):
     global test_kind
 
@@ -487,7 +520,7 @@ def main(args):
     CONFIG = configuration.get_config(args)
 
     TEST_CASE_DEFINITION_DIR = CONFIG.get("testDir")
-    TEST_CASE_DEFINITION_FILE_LIST = findAllTestCase(TEST_CASE_DEFINITION_DIR)
+    TEST_CASE_DEFINITION_FILE_LIST = find_all_test_case(TEST_CASE_DEFINITION_DIR)
 
     TEST_CASE_DEFINITION_URL = "https://github.com/qinshulei/ci-test-cases"
     if CONFIG.get("testUrl") != None and CONFIG.get("testUrl") != "":
@@ -507,8 +540,8 @@ def main(args):
                  CONFIG.get("arch"), CONFIG.get("targets"), CONFIG.get("priority"),
                  distro, CONFIG.get("scope"), CONFIG.get("level"))
     elif CONFIG.get("tree") == "linaro":
-        create_new_jobs(CONFIG.get("plans"), "D05", CONFIG.get("targets"), CONFIG.get("priority"),
-                "", distro , CONFIG.get("scope"), CONFIG.get("level") )
+        create_new_jobs(CONFIG.get("plans"), "D05", CONFIG.get("targets"), CONFIG.get("priority"), distro,
+                        CONFIG.get("scope"), CONFIG.get("level"))
     print 'Done scanning for kernel information'
     print 'Done creating YAML jobs'
     exit(0)
