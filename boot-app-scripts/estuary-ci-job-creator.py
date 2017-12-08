@@ -188,7 +188,7 @@ def generate_job_file2(cwd, defconfig, device_type, distro, kernel_version, plan
                        total_templates, test_definitions, number):
     for template in total_templates:
         job_name = CONFIG.get("tree") + '-' + kernel_version + '-' + defconfig[:100] + \
-                   '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro + '-' + number
+                   '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro + '-' + str(number)
         if template in dummy_ssh['templates']:
             job_json = cwd + '/jobs/' + job_name + '-' + template
         else:
@@ -297,7 +297,7 @@ def generate_job_file(cwd,
                       number):
     for template in total_templates:
         job_name = tree + '-' + kernel_version + '-' + defconfig[:100] + \
-                   '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro + '-' + number
+                   '-' + platform_name + '-' + device_type + '-' + plan + '-' + distro + '-' + str(number)
         if template in dummy_ssh['templates']:
             job_json = cwd + '/jobs/' + job_name + '-' + template
         else:
