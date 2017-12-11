@@ -112,6 +112,9 @@ function run_and_report_jobs() {
         if [ ! -f ${JOBS_DIR}/${RESULTS_DIR}/POLL ]; then
             echo "Running jobs error! Aborting"
             return -1
+        else
+            echo "POLL Result:"
+            cat ${JOBS_DIR}/${RESULTS_DIR}/POLL
         fi
 
         python estuary-report_bak.py --boot ${JOBS_DIR}/${RESULTS_DIR}/POLL --lab $LAVA_USER
