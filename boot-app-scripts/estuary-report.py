@@ -280,10 +280,10 @@ def create_test_report_pdf(job_result_dict):
 
     text = '''<para autoLeading="off" fontSize=12><br /><font color=black>2.Test Suite Result Detail</font><br /><br /></para>'''
     story.append(Paragraph(text,normalStyle))
-    component_data= [['JobID','Suite', 'Name','Logged','Result']]
+    component_data= [['JobID','Suite', 'Name','Result']]
     for job_id in job_result_dict.keys():
         for item in job_result_dict[job_id]:
-            component_data.append([job_id,item['suite'],item['name'],item['logged'],item['result']])
+            component_data.append([job_id,item['suite'],item['name'],item['result']])
 
     component_table = Table(component_data)
     component_table.setStyle(TableStyle([
