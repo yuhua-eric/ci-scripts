@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # <variable> = required
 # Usage ./lava-report.py <option> [json]
+# pip install matplotlib
+# pip install numpy
+# pip install reportlab
 import os
 import urlparse
 import xmlrpclib
@@ -13,9 +16,21 @@ import re
 import urllib2
 import requests
 import shutil
+import matplotlib
+matplotlib.use('Agg')
 
+import matplotlib.pyplot as plt
+import numpy as np
 from lib import configuration
 from lib import utils
+
+from reportlab.pdfgen.canvas import Canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer,Image,Table,TableStyle
 
 #for test report
 whole_summary_name = 'whole_summary.txt'
@@ -24,6 +39,7 @@ total_str = "Total number of test cases: "
 fail_str = "Failed number of test cases: "
 suc_str = "Success number of test cases: "
 
+job_result_dict={}
 device_map = {'d03': ['hip06-d03', 'hisi'],
               'd03ssh': ['d03ssh01','hisi'],
               'd05': ['d05_01', 'hisi'],
@@ -151,6 +167,8 @@ def generate_test_report(job_id, connection):
     testjob_results = connection.results.get_testjob_results_yaml(job_id)
     # print testsuite_results
     test = yaml.load(testjob_results)
+    if job_id not in job_result_dict:
+          job_result_dict[job_id] = test
     suite_list = [] #all test suite list
     case_dict = {} #testcast dict value like 'smoke-test':[test-case1,test-case2,test-case3]
     boot_total = 0
@@ -228,6 +246,221 @@ def generate_test_report(job_id, connection):
         wfp.write("\n" + "*" * 20 + " SUMMARY END " + "*" * 20 + '\n')
 
     print "--------------now end get testjob: %s result ------------------------------" % (job_id)
+
+
+def print_base_info_pie_chart(result_dict,description):
+    suite_dict={}
+    for suite in result_dict.keys():
+        print suite
+        for situation in result_dict[suite]:
+            if situation not in suite_dict:
+                suite_dict[situation]=result_dict[suite][situation]
+            else:
+                value=suite_dict[situation]
+                value=value+result_dict[suite][situation]
+                suite_dict[situation] = value
+    situation_list = []
+    result_list = []
+    for key in suite_dict.keys():
+        result_list.append(suite_dict[key])
+        situation_list.append(key)
+    plt.axes(aspect=1)
+    plt.title(description)
+    plt.pie(x=result_list, labels=situation_list,autopct='%3.1f %%',
+        shadow=True, labeldistance=1.1, startangle=90, pctdistance=0.6)
+    plt.savefig("baseinfo_pie.jpg")
+    plt.close()
+
+def print_scope_info_bar_chart(result_dict,description):
+    scope_list=[]
+    scope_list=result_dict.keys()
+
+    pass_number_list = []
+    for key in result_dict.keys():
+        pass_number_list.append(result_dict[key])
+
+    plt.legend()
+    x_pos = np.arange(len(scope_list))
+    plt.bar(x_pos, pass_number_list, 0.35,facecolor='blue', edgecolor='white',align='center',alpha=0.4)
+    plt.xticks(x_pos,scope_list)
+    plt.xlabel("Scope")
+    plt.ylabel("Pass Number")
+    plt.title(description)
+    plt.savefig("baseinfo_bar.jpg")
+    plt.close()
+
+
+def create_test_report_pdf(job_result_dict):
+#    print job_result_dict
+    story=[]
+    stylesheet=getSampleStyleSheet()
+    normalStyle=stylesheet['Normal']
+    curr_date=time.strftime("%Y-%m-%d", time.localtime())
+    reportfilename="Estuary-Test_Report-%s.pdf"%(curr_date)
+    rpt_title = '<para autoLeading="off" fontSize=15 align=center><b>[ Estuary ] Test Report %s</b><br/><br/><br/></para>' %(curr_date)
+    story.append(Paragraph(rpt_title,normalStyle))
+
+    rpt_ps = '<para autoLeading="off" fontSize=8 align=center>( This mail is send by Jenkins automatically, don\'t reply )</para>'
+    story.append(Paragraph(rpt_ps,normalStyle))
+
+    text = '''<para autoLeading="off" fontSize=12><br /><font color=black>1.General Report</font><br /><br /></para>'''
+    story.append(Paragraph(text,normalStyle))
+
+    pieimg = Image('baseinfo_pie.jpg')
+    pieimg.drawHeight = 320
+    pieimg.drawWidth = 480
+    story.append(pieimg)
+
+    test_suite_dict={}
+    for job_id in job_result_dict.keys():
+        for item in job_result_dict[job_id]:
+            if item['suite'] not in test_suite_dict:
+                test_suite_dict[item['suite']] = {}
+                if item['result'] not in test_suite_dict[item['suite']]:
+                    test_suite_dict[item['suite']][item['result']]=1
+                else:
+                    value=test_suite_dict[item['suite']][item['result']]
+                    value=value+1
+                    test_suite_dict[item['suite']][item['result']]=value
+            else:
+                if item['result'] not in test_suite_dict[item['suite']]:
+                    test_suite_dict[item['suite']][item['result']]=1
+                else:
+                    value=test_suite_dict[item['suite']][item['result']]
+                    value=value+1
+                    test_suite_dict[item['suite']][item['result']]=value
+    component_data= [['TestSuite', 'Passes', 'Fails', 'Totals']]
+    for test_suite in test_suite_dict.keys():
+        passnum=0
+        failnum=0
+        if 'pass' in test_suite_dict[test_suite]:
+            passnum=test_suite_dict[test_suite]['pass']
+        if 'fail' in test_suite_dict[test_suite]:
+            failnum=test_suite_dict[test_suite]['fail']
+        totalnum=passnum+failnum
+        data=[test_suite,passnum,failnum,totalnum]
+        component_data.append(data)
+    #
+    component_table = Table(component_data,colWidths=[150,60,60,60])
+    #
+    component_table.setStyle(TableStyle([
+    ('FONTSIZE',(0,0),(-1,-1),8),#font size
+    ('BACKGROUND',(0,0),(-1,0), colors.lightskyblue),#
+    ('ALIGN',(-1,0),(-2,0),'RIGHT'),#
+    ('VALIGN',(-1,0),(-2,0),'MIDDLE'),  #
+    ('LINEBEFORE',(0,0),(0,-1),0.1,colors.grey),#
+    ('TEXTCOLOR',(0,1),(-2,-1),colors.black),#
+    ('GRID',(0,0),(-1,-1),0.5,colors.black),#
+    ]))
+    story.append(component_table)
+
+    text = '''<para autoLeading="off" fontSize=12><br /><font color=black>2.Test Suite Result Detail</font><br /><br /></para>'''
+    story.append(Paragraph(text,normalStyle))
+    component_data= [['JobID','Suite', 'Name','Logged','Result']]
+    for job_id in job_result_dict.keys():
+        for item in job_result_dict[job_id]:
+            component_data.append([job_id,item['suite'],item['name'],item['logged'],item['result']])
+
+    component_table = Table(component_data)
+    component_table.setStyle(TableStyle([
+    ('FONTSIZE',(0,0),(-1,-1),8),#font size
+    ('BACKGROUND',(0,0),(-1,0), colors.lightskyblue),#
+    ('ALIGN',(-1,0),(-2,0),'RIGHT'),#
+    ('VALIGN',(-1,0),(-2,0),'MIDDLE'),  #
+    ('LINEBEFORE',(0,0),(0,-1),0.1,colors.grey),#
+    ('TEXTCOLOR',(0,1),(-2,-1),colors.black),#
+    ('GRID',(0,0),(-1,-1),0.5,colors.black),#
+    ]))
+    story.append(component_table)
+
+    text = '''<para autoLeading="off" fontSize=12><br /><font color=black>3.Different Scope Pass Number</font><br /><br /></para>'''
+    story.append(Paragraph(text,normalStyle))
+
+    barimg = Image('baseinfo_bar.jpg')
+    barimg.drawHeight = 320
+    barimg.drawWidth = 480
+    story.append(barimg)
+
+
+    doc=SimpleDocTemplate('resultfile.pdf')
+    doc.build(story)
+
+#by job_result_dict get current test report by zhaofs0921
+def generate_current_test_report():
+    print "generate_current_test_report"
+    suite_list = [] #all test suite list
+
+    test_suite_dict={}
+    test_scope_dict={}
+
+#   Statistics of each test suite
+    for job_id in job_result_dict.keys():
+        for item in job_result_dict[job_id]:
+            if item['suite'] not in test_suite_dict:
+                test_suite_dict[item['suite']] = {}
+                if item['result'] not in test_suite_dict[item['suite']]:
+                    test_suite_dict[item['suite']][item['result']]=1
+                else:
+                    value=test_suite_dict[item['suite']][item['result']]
+                    value=value+1
+                    test_suite_dict[item['suite']][item['result']]=value
+            else:
+                if item['result'] not in test_suite_dict[item['suite']]:
+                    test_suite_dict[item['suite']][item['result']]=1
+                else:
+                    value=test_suite_dict[item['suite']][item['result']]
+                    value=value+1
+                    test_suite_dict[item['suite']][item['result']]=value
+    print_base_info_pie_chart(test_suite_dict,"Base Pass Rate Situation Chart")
+    workspace=os.getenv("WORKSPACE")
+    test_suite_dir=os.path.join(workspace,"local/ci-test-cases")
+    test_suite_scope_dict = {}
+    for job_id in job_result_dict.keys():
+        for item in job_result_dict[job_id]:
+            if 'metadata' in item:
+                metadata = item['metadata']
+                if 'path' in metadata and 'repository' in metadata:
+                    count_scope_pass_number(test_suite_scope_dict,metadata['path'],item['result'])
+                elif 'extra' in metadata:
+                    path=""
+                    repository=""
+                    for extra in metadata['extra']:
+                        if 'path' in extra :
+                            path=extra['path']
+                            continue
+                        if 'repository' in extra:
+                            repository=extra['repository']
+                            continue
+                    if path != "" and repository != "":
+                        count_scope_pass_number(test_suite_scope_dict,path,item['result'])
+#    print test_suite_scope_dict
+    print_scope_info_bar_chart(test_suite_scope_dict,"Pass Number Bar Chart")
+    create_test_report_pdf(job_result_dict)
+
+    current_test_result_dir = os.getcwd()
+    test_result_file_name = "test_result_dict.txt"
+    test_result_file = os.path.join(current_test_result_dir,test_result_file_name)
+    if os.path.exists(test_result_file):
+        os.remove(test_result_file)
+    with open(test_result_file, 'w') as wfp:
+        wfp.write(str(job_result_dict))
+
+def count_scope_pass_number(test_suite_scope_dict,path,result):
+    workspace=os.getenv("WORKSPACE")
+    test_suite_dir=os.path.join(workspace,"local/ci-test-cases")
+    yaml_file=utils.load_yaml(os.path.join(test_suite_dir,path))
+    for scope in yaml_file['metadata']['scope']:
+        if result == 'pass':
+            if scope not in test_suite_scope_dict:
+                test_suite_scope_dict[scope]=1
+            else:
+                value=test_suite_scope_dict[scope]
+                value = value+1
+                test_suite_scope_dict[scope] = value
+
+
+def generate_history_test_report():
+    print "generate_history_test_report"
 
 def boot_report(config):
     connection, jobs, duration =  parse_yaml(config.get("boot"))
@@ -505,12 +738,14 @@ def boot_report(config):
                                                                         result['job_name'],
                                                                         result['result']))
 
-
 def main(args):
     config = configuration.get_config(args)
 
     if config.get("boot"):
         boot_report(config)
+        generate_current_test_report()
+        generate_history_test_report()
+
     exit(0)
 
 if __name__ == '__main__':
