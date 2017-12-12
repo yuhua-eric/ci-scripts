@@ -5,16 +5,11 @@
 # pip install numpy
 # pip install reportlab
 import os
-import urlparse
 import xmlrpclib
-import json
 import yaml
 import argparse
 import time
-import subprocess
 import re
-import urllib2
-import requests
 import shutil
 import matplotlib
 matplotlib.use('Agg')
@@ -32,7 +27,8 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer,Image,Table,TableStyle
 
-#for test report
+
+# for test report
 whole_summary_name = 'whole_summary.txt'
 details_summary_name = 'details_summary.txt'
 total_str = "Total number of test cases: "
@@ -40,6 +36,7 @@ fail_str = "Failed number of test cases: "
 suc_str = "Success number of test cases: "
 
 job_result_dict={}
+
 device_map = {'d03': ['hip06-d03', 'hisi'],
               'd03ssh': ['d03ssh01','hisi'],
               'd05': ['d05_01', 'hisi'],
@@ -49,6 +46,7 @@ device_map = {'d03': ['hip06-d03', 'hisi'],
               'x86': ['x86', None],
               'dummy-ssh': ['dummy-ssh', None],
               'kvm': ['x86-kvm', None]}
+
 
 def parse_yaml(yaml):
     jobs = utils.load_yaml(yaml)
@@ -61,6 +59,7 @@ def parse_yaml(yaml):
     jobs.pop('token')
     jobs.pop('server')
     return connection, jobs, duration
+
 
 # add by wuyanjun
 def get_board_type(directory, filename):
@@ -103,6 +102,7 @@ def get_board_type(directory, filename):
         return board_type
     return ''
 
+
 def get_plans(directory, filename):
     m = re.findall('[A-Z]+_?[A-Z]*', filename)
     if m:
@@ -116,6 +116,7 @@ def get_plans(directory, filename):
                     if dir_item == item:
                        return item
     return ''
+
 
 def parser_and_get_result(contents, filename, directory, report_directory, connection):
     summary_post = '_summary.txt'
@@ -159,93 +160,15 @@ def parser_and_get_result(contents, filename, directory, report_directory, conne
                 sf.write("="*13 + "\n")
                 sf.write(' '.join(job_name) + "_test_cases\t\tFAIL\n\n")
 
+
 # add by zhangbp0704
 # parser the test result by lava v2
 def generate_test_report(job_id, connection):
-    print "--------------now begin get testjob: %s result ------------------------------" % (job_id)
-
     testjob_results = connection.results.get_testjob_results_yaml(job_id)
     # print testsuite_results
     test = yaml.load(testjob_results)
     if job_id not in job_result_dict:
           job_result_dict[job_id] = test
-    suite_list = [] #all test suite list
-    case_dict = {} #testcast dict value like 'smoke-test':[test-case1,test-case2,test-case3]
-    boot_total = 0
-    boot_success = 0
-    boot_fail = 0
-    test_total = 0
-    test_success = 0
-    test_fail = 0
-
-    #get all the test suite list from get_testjob_results_yaml
-    for item in test:
-        if suite_list.count(item['suite']) == 0:
-            suite_list.append(item['suite'])
-
-    #inital a no value dict
-    for suite in suite_list:
-        case_dict[suite] = []
-
-    #set all the value in dict
-    for item in test:
-        case_dict[item['suite']].append(item)
-
-    # try to write details file
-    details_dir = os.getcwd()
-    details_file = os.path.join(details_dir, details_summary_name)
-    if os.path.exists(details_file):
-        os.remove(details_file)
-    with open(details_file, "wt") as wfp:
-        wfp.write("*" * 24 + " DETAILS TESTCASE START " + "*" * 24 + '\n')
-        wfp.write("suite_name\t" + "case_name\t\t" + "case_result\t" + '\n')
-
-    for key in case_dict.keys():
-        if key == 'lava':
-            for item in case_dict[key]:
-                if item['result'] == 'pass':
-                    boot_total += 1
-                    boot_success += 1
-                elif item['result'] == 'fail':
-                    boot_total += 1
-                    boot_fail += 1
-                else:
-                    boot_total += 1
-        else:
-            for item in case_dict[key]:
-                if item['result'] == 'pass':
-                    test_total += 1
-                    test_success += 1
-                elif item['result'] == 'fail':
-                    test_total += 1
-                    test_fail += 1
-                else:
-                    test_total += 1
-                with open(details_file, "at") as wfp:
-                    wfp.write(item['suite'] + '\t' + item['name'] + '\t\t' + item['result'] + '\n')
-    with open(details_file, "at") as wfp:
-        wfp.write("*" * 24 + " DETAILS TESTCASE END " + "*" * 24 + '\n')
-
-    #try to write summary file
-    summary_dir = os.getcwd()
-    summary_file = os.path.join(summary_dir, whole_summary_name)
-    if os.path.exists(summary_file):
-        os.remove(summary_file)
-    with open(summary_file, 'w') as wfp:
-        wfp.write("*" * 20 + " BOOT SUMMARY START " + "*" * 20 + '\n')
-        wfp.write("\n" + total_str + str(boot_total))
-        wfp.write("\n" + fail_str + str(boot_fail))
-        wfp.write("\n" + suc_str + str(boot_success))
-        wfp.write("\n" + "*" * 20 + " BOOT SUMMARY END" + "*" * 20 + '\n')
-
-    with open(summary_file, "ab") as wfp:
-        wfp.write("*" * 20 + " SUMMARY TESTCASE START " + "*" * 20 + '\n')
-        wfp.write("\n" + total_str + str(test_total))
-        wfp.write("\n" + fail_str + str(test_fail))
-        wfp.write("\n" + suc_str + str(test_success))
-        wfp.write("\n" + "*" * 20 + " SUMMARY END " + "*" * 20 + '\n')
-
-    print "--------------now end get testjob: %s result ------------------------------" % (job_id)
 
 
 def print_base_info_pie_chart(result_dict,description):
@@ -270,6 +193,7 @@ def print_base_info_pie_chart(result_dict,description):
         shadow=True, labeldistance=1.1, startangle=90, pctdistance=0.6)
     plt.savefig("baseinfo_pie.jpg")
     plt.close()
+
 
 def print_scope_info_bar_chart(result_dict,description):
     scope_list=[]
@@ -385,6 +309,7 @@ def create_test_report_pdf(job_result_dict):
     doc=SimpleDocTemplate('resultfile.pdf')
     doc.build(story)
 
+
 #by job_result_dict get current test report by zhaofs0921
 def generate_current_test_report():
     print "generate_current_test_report"
@@ -445,6 +370,7 @@ def generate_current_test_report():
     with open(test_result_file, 'w') as wfp:
         wfp.write(str(job_result_dict))
 
+
 def count_scope_pass_number(test_suite_scope_dict,path,result):
     workspace=os.getenv("WORKSPACE")
     test_suite_dir=os.path.join(workspace,"local/ci-test-cases")
@@ -461,6 +387,7 @@ def count_scope_pass_number(test_suite_scope_dict,path,result):
 
 def generate_history_test_report():
     print "generate_history_test_report"
+
 
 def boot_report(config):
     connection, jobs, duration =  parse_yaml(config.get("boot"))
@@ -655,6 +582,7 @@ def boot_report(config):
             utils.write_json(json_file, directory, boot_meta)
             # add by wuyanjun
             parser_and_get_result(job_file, log, directory, report_directory, connection)
+
             #try to generate test_summary
             generate_test_report(job_id, connection)
 
@@ -738,11 +666,97 @@ def boot_report(config):
                                                                         result['job_name'],
                                                                         result['result']))
 
+
+def generate_email_test_report():
+    print "--------------now begin get testjob: result ------------------------------"
+
+    suite_list = [] #all test suite list
+    case_dict = {} #testcast dict value like 'smoke-test':[test-case1,test-case2,test-case3]
+    boot_total = 0
+    boot_success = 0
+    boot_fail = 0
+    test_total = 0
+    test_success = 0
+    test_fail = 0
+
+    #get all the test suite list from get_testjob_results_yaml
+    for job_id in job_result_dict.keys():
+        for item in job_result_dict[job_id]:
+            if suite_list.count(item['suite']) == 0:
+                suite_list.append(item['suite'])
+
+    #inital a no value dict
+    for suite in suite_list:
+        case_dict[suite] = []
+
+    #set all the value in dict
+    for job_id in job_result_dict.keys():
+        for item in job_result_dict[job_id]:
+            case_dict[item['suite']].append(item)
+
+    # try to write details file
+    details_dir = os.getcwd()
+    details_file = os.path.join(details_dir, details_summary_name)
+
+    if os.path.exists(details_file):
+        os.remove(details_file)
+    with open(details_file, "wt") as wfp:
+        wfp.write("*" * 24 + " DETAILS TESTCASE START " + "*" * 24 + '\n')
+        wfp.write("suite_name\t" + "case_name\t\t" + "case_result\t" + '\n')
+
+    for key in case_dict.keys():
+        if key == 'lava':
+            for item in case_dict[key]:
+                if item['result'] == 'pass':
+                    boot_total += 1
+                    boot_success += 1
+                elif item['result'] == 'fail':
+                    boot_total += 1
+                    boot_fail += 1
+                else:
+                    boot_total += 1
+        else:
+            for item in case_dict[key]:
+                if item['result'] == 'pass':
+                    test_total += 1
+                    test_success += 1
+                elif item['result'] == 'fail':
+                    test_total += 1
+                    test_fail += 1
+                else:
+                    test_total += 1
+                with open(details_file, "at") as wfp:
+                    wfp.write(item['suite'] + '\t' + item['name'] + '\t\t' + item['result'] + '\n')
+    with open(details_file, "at") as wfp:
+        wfp.write("*" * 24 + " DETAILS TESTCASE END " + "*" * 24 + '\n')
+
+    #try to write summary file
+    summary_dir = os.getcwd()
+    summary_file = os.path.join(summary_dir, whole_summary_name)
+    if os.path.exists(summary_file):
+        os.remove(summary_file)
+    with open(summary_file, 'w') as wfp:
+        wfp.write("*" * 20 + " BOOT SUMMARY START " + "*" * 20 + '\n')
+        wfp.write("\n" + total_str + str(boot_total))
+        wfp.write("\n" + fail_str + str(boot_fail))
+        wfp.write("\n" + suc_str + str(boot_success))
+        wfp.write("\n" + "*" * 20 + " BOOT SUMMARY END" + "*" * 20 + '\n')
+
+    with open(summary_file, "ab") as wfp:
+        wfp.write("*" * 20 + " SUMMARY TESTCASE START " + "*" * 20 + '\n')
+        wfp.write("\n" + total_str + str(test_total))
+        wfp.write("\n" + fail_str + str(test_fail))
+        wfp.write("\n" + suc_str + str(test_success))
+        wfp.write("\n" + "*" * 20 + " SUMMARY END " + "*" * 20 + '\n')
+
+    print "--------------now end get testjob result ------------------------------"
+
 def main(args):
     config = configuration.get_config(args)
 
     if config.get("boot"):
         boot_report(config)
+        generate_email_test_report()
         generate_current_test_report()
         generate_history_test_report()
 
