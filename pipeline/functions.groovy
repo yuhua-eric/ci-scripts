@@ -5,7 +5,7 @@ def send_mail() {
     mailContent = readFile 'MAIL_CONTENT.txt'
     // send test result
 
-    emailext bcc: '', body: mailContent, cc: '', from: 'qinsl0106@thundersoft.com', replyTo: 'qinsl0106@thundersoft.com', subject: mailSubject, to: mailTo, attachmentsPattern: '**/*.pdf'
+    emailext bcc: '', body: mailContent, cc: '', from: 'qinsl0106@thundersoft.com', replyTo: 'qinsl0106@thundersoft.com', subject: mailSubject, to: mailTo, attachmentsPattern: '**/*resultfile.pdf'
 }
 
 return this
