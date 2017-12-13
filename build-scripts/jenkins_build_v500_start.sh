@@ -169,12 +169,12 @@ function sync_code() {
     # rm -rf estuary
     if [ "$VERSION"x != ""x ]; then
         if [ -d "estuary" ];then
-            git clone "https://github.com/open-estuary/estuary.git" -b refs/tags/${VERSION}
-        else
             cd estuary
             git fetch
             git checkout refs/tags/${VERSION}
             cd -
+        else
+            git clone "https://github.com/open-estuary/estuary.git" -b refs/tags/${VERSION}
         fi
     else
         if [ -d "estuary" ];then
