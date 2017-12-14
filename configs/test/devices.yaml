@@ -30,10 +30,9 @@ d05ssh02:
   next-server: 192.168.50.122
   filename: "estuary_install/grubaa64.efi"
 
-# 当前sol连不上,mac 地址不明
-d03ssh01:
-  type: D03
-  bmc: 192.168.2.233
+d05ssh03:
+  type: D05
+  bmc: 192.168.2.128
   ip: 192.168.50.124
   mac: c0:a8:02:e9:00:04
   next-server: 192.168.50.122
