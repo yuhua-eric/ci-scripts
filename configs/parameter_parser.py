@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#    E-mail    :    wu.wu@hisilicon.com
+#    E-mail    :    wu.wu@hisilicon.com, qinsl0106@thundersoft.com
 #    Data      :    2016-03-02 11:44:33
+#    Update    :    2017-12-14 12:28:21
 #    Desc      :
+#    Example   :
+# python configs/parameter_parser.py -f devices.yaml -s dhcp -k filename
+# python configs/parameter_parser.py -f devices.yaml -s dhcp -k filename -w "./estuary_install/grubaa64.efi"
 import yaml
 import os
 from argparse import ArgumentParser
