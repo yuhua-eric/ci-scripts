@@ -37,6 +37,23 @@ def read_keys(filename):
         dictionary = yaml.load(fp)
     return dictionary.keys()
 
+
+def write_value_of_section(filename, section, write):
+    with open(filename, 'r') as fp:
+        dictionary = yaml.load(fp)
+    dictionary[section] = write
+    with open(filename, 'w') as outfile:
+        yaml.dump(dictionary, outfile, default_flow_style=False)
+
+
+def write_value_of_key(filename, section, key, write):
+    with open(filename, 'r') as fp:
+        dictionary = yaml.load(fp)
+    dictionary[section][key] = write
+    with open(filename, 'w') as outfile:
+        yaml.dump(dictionary, outfile, default_flow_style=False)
+
+
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-f", "--file", action="store",dest="filename",
@@ -47,6 +64,10 @@ if __name__ == "__main__":
             help="which key'value to be read")
     parser.add_argument("-v", "--value", action="store", dest="value",
             help="which value to be read")
+
+    parser.add_argument("-w", "--write", action="store", dest="write",
+            help="what value to write, it will modify the yaml file")
+
     args = parser.parse_args()
 
     ci_env = 'dev'
@@ -71,18 +92,35 @@ if __name__ == "__main__":
                     for val in value.keys():
                         print val
                         print value[val]
+                    if args.write:
+                        print "Error: don't support array value replace"
+                        exit(1)
                 else:
                     print value
+                    if args.write:
+                        write_value_of_section(filename, args.section, args.write)
             if args.key and not args.value:
                 value = read_value_of_key(filename, args.section, args.key)
                 if type(value)==list:
                     for val in value:
                         print val
+                    if args.write:
+                        print "Error: don't support array value replace"
+                        exit(1)
                 else:
                     print value
+                    if args.write:
+                        write_value_of_key(filename, args.section, args.key, args.write)
             if args.key and args.value:
                 value = read_value_of_array(filename, args.section, args.key, args.value)
+                if args.write:
+                    print "Error: don't support array value replace"
+                    exit(1)
+
         else:
             keys = read_keys(filename)
             for key in keys:
                 print key
+            if args.write:
+                print "Error: don't support array value replace"
+                exit(1)
