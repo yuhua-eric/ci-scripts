@@ -23,11 +23,15 @@ function config_dhcp() {
     if [ "${tree_name}" = 'linaro' ];then
         # config dhcp
         # change filename
+        cd ..;
         python configs/parameter_parser.py -f devices.yaml -s ${host_name} -k filename -w "pxe_install/arm64/linaro/${version_name}/${distro_name}/${host_name%%ssh*}/grubaa64.efi"
-        cd ..; ./scripts/gen_dhcpd_conf.sh > dhcpd.conf;cd -
+        ./scripts/gen_dhcpd_conf.sh > dhcpd.conf;
+        cd -
     elif [ "${tree_name}" = 'open-estuary' ];then
+        cd ..;
         python configs/parameter_parser.py -f devices.yaml -s ${host_name} -k filename -w "pxe_install/arm64/estuary/${version_name}/${distro_name}/${host_name%%ssh*}/grubaa64.efi"
-        cd ..; ./scripts/gen_dhcpd_conf.sh > dhcpd.conf;cd -
+        ./scripts/gen_dhcpd_conf.sh > dhcpd.conf;
+        cd -
     fi
 
     sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ../dhcpd.conf root@${DHCP_SERVER}:/etc/dhcp/dhcpd.conf
