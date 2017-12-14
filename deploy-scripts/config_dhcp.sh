@@ -18,17 +18,19 @@ function config_dhcp() {
     local host_name=${2:-"d05ssh01"}
     local distro_name=${3:-"centos"}
     local version_name=${4:-"v3.1"}
-    # config dhcp
-
-    cd ..; ./scripts/gen_dhcpd_conf.sh > dhcpd.conf;cd -
 
     # TODO : think generate diffrent dhcp config by tree name
     if [ "${tree_name}" = 'linaro' ];then
-        sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ../dhcpd.conf root@${DHCP_SERVER}:/etc/dhcp/dhcpd.conf
+        # config dhcp
+        # change filename
+        python configs/parameter_parser.py -f devices.yaml -s ${host_name} -k filename -w "pxe_install/arm64/linaro/${version_name}/${distro_name}/${host_name%%ssh*}/grubaa64.efi"
+        cd ..; ./scripts/gen_dhcpd_conf.sh > dhcpd.conf;cd -
     elif [ "${tree_name}" = 'open-estuary' ];then
-        sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  ../dhcpd.conf root@${DHCP_SERVER}:/etc/dhcp/dhcpd.conf
+        python configs/parameter_parser.py -f devices.yaml -s ${host_name} -k filename -w "pxe_install/arm64/estuary/${version_name}/${distro_name}/${host_name%%ssh*}/grubaa64.efi"
+        cd ..; ./scripts/gen_dhcpd_conf.sh > dhcpd.conf;cd -
     fi
 
+    sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ../dhcpd.conf root@${DHCP_SERVER}:/etc/dhcp/dhcpd.conf
     sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${DHCP_SERVER} service isc-dhcp-server restart
 
 }
