@@ -4,7 +4,8 @@
 # prepare system tools
 function prepare_tools() {
     dev_tools="python-yaml"
-    yum install -y ${dev_tools}
+    yum install -y ${dev_tools} || true
+    apt-get install -y ${dev_tools} || true
 }
 
 # jenkins job debug variables
