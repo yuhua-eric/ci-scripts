@@ -9,7 +9,7 @@ allow booting;
 allow bootp;
 allow unknown-clients;
 subnet 192.168.30.0  netmask 255.255.255.0 {
-  range 192.168.30.100 192.168.30.200;
+  range 192.168.30.50 192.168.30.100;
   option subnet-mask 255.255.255.0;
   option routers 192.168.30.1;
   option domain-name-servers 192.168.1.107, 114.114.114.114;
