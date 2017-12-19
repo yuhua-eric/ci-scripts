@@ -17,6 +17,11 @@ subnet 192.168.30.0  netmask 255.255.255.0 {
   max-lease-time 7200;
 }
 
+host EstBuildSvr2 {
+     hardware ethernet e8:4d:d0:c0:d4:7d;
+     fixed-address 192.168.30.101;
+}
+
 # host d05ssh01 {
 #   hardware ethernet c0:a8:02:a9:00:04;
 #   fixed-address 192.168.30.201;
