@@ -41,7 +41,7 @@ node ('compile'){
 
     def build_result = 0
     stage('Build') {
-        build_result = sh script: "./local/ci-scripts/build-scripts/jenkins_build_start.sh -p env.properties 2>&1  | tee build.log", returnStatus: true
+        build_result = sh script: "./local/ci-scripts/build-scripts/jenkins_build_start.sh -p env.properties 2>&1 ", returnStatus: true
     }
     echo "build_result : ${build_result}"
     if (build_result == 0) {

@@ -101,7 +101,7 @@ WEEKLY_TESTING</description>
       <command>#!/bin/bash -ex
 export CODE_REFERENCE=&quot;/estuary_reference&quot;
 #export SKIP_BUILD=&quot;true&quot;
-./local/ci-scripts/build-scripts/jenkins_build_start.sh 2&gt;&amp;1  | tee build.log</command>
+./local/ci-scripts/build-scripts/jenkins_build_start.sh 2&gt;&amp;1  </command>
     </hudson.tasks.Shell>
     <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin="parameterized-trigger@2.33">
       <configs>
