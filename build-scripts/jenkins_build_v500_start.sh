@@ -176,7 +176,9 @@ function sync_code() {
             cd -
         else
             git clone "https://github.com/open-estuary/estuary.git"
+            cd estuary
             git checkout refs/tags/${VERSION}
+            cd -
         fi
     else
         if [ -d "estuary" ];then
