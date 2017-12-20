@@ -263,7 +263,7 @@ function cp_image() {
     DES_DIR=$FTP_DIR/$TREE_NAME/$GIT_DESCRIBE
 
     # do clean
-    # rm -rf $FTP_DIR/$TREE_NAME/
+    rm -rf $FTP_DIR/$TREE_NAME/
     [ -d $DES_DIR ] && sudo rm -rf $DES_DIR
 
     sudo mkdir -p $DES_DIR
