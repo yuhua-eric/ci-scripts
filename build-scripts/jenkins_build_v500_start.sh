@@ -261,7 +261,11 @@ function cp_image() {
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
     DES_DIR=$FTP_DIR/$TREE_NAME/$GIT_DESCRIBE
+
+    # do clean
+    # rm -rf $FTP_DIR/$TREE_NAME/
     [ -d $DES_DIR ] && sudo rm -rf $DES_DIR
+
     sudo mkdir -p $DES_DIR
 
     sudo cp $timefile $DES_DIR
@@ -269,7 +273,7 @@ function cp_image() {
     ls -l $BUILD_DIR
     pushd $BUILD_DIR  # enter BUILD_DIR
 
-    cp -r out/release/ ${DES_DIR}/
+    cp -r out/release/*/* ${DES_DIR}/
 
     popd  # leave BUILD_DIR
     popd  # leave OPEN_ESTUARY_DIR

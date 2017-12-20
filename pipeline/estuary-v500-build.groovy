@@ -38,7 +38,8 @@ node ('ci-v500-compile'){
 
     def build_result = 0
     stage('Build') {
-        build_result = sh script: "./local/ci-scripts/build-scripts/jenkins_build_v500_start.sh -p env.properties 2>&1 ", returnStatus: true
+        //build_result = sh script: "./local/ci-scripts/build-scripts/jenkins_build_v500_start.sh -p env.properties 2>&1 ", returnStatus: true
+
     }
     echo "build_result : ${build_result}"
     if (build_result == 0) {
@@ -50,6 +51,21 @@ node ('ci-v500-compile'){
         return
     }
 
+    stage('stash') {
+        // stash result
+        dir('/fileserver/open-estuary') {
+            stash includes: '**/*', name: 'buildResult'
+        }
+    }
+}
+
+node('ci-compile') {
+    stage('upload') {
+        // unstash result
+        dir('/fileserver/open-estuary'){
+            unstash 'buildResult'
+        }
+    }
     stage('Result') {
         functions.send_mail()
     }
