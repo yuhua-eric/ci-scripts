@@ -8,7 +8,7 @@ TREE_NAME=${1:-"open-estuary"}
 HOST_NAME=${2:-"d05ssh01"}
 
 cd ../
-TARGET_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k ip)
+TARGET_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k bmc)
 DEVICE_TYPE=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k type)
 FTP_IP=$(python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k ip)
 cd -
