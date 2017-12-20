@@ -60,6 +60,10 @@ node ('ci-v500-compile'){
 }
 
 node('ci-compile') {
+    clone2local('https://github.com/qinshulei/ci-scripts.git', './local/ci-scripts')
+    // load functions
+    def functions = load "./local/ci-scripts/pipeline/functions.groovy"
+
     stage('upload') {
         // unstash result
         dir('/fileserver/open-estuary'){
