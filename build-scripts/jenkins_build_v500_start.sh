@@ -317,8 +317,8 @@ function cp_image() {
             popd
 
             pushd $PLATFORM_ARCH_DIR/distro
-            sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$distro_tar_name
-            sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$distro_tar_name.sum
+            sudo ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} $distro_tar_name
+            sudo ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum $distro_tar_name.sum
             popd
         done
     done
