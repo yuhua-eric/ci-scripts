@@ -78,7 +78,7 @@ def get_nfs_url(distro_url, device_type):
         if name.endswith('.tar.gz') and 'distro' in distro_url+name and device_type in distro_url+name:
             distro_list.append(distro_url+name)
         for direc in dirs:
-            get_nfs_url(distro_url+direc, device_type)
+            get_nfs_url(distro_url + direc, device_type)
 
 
 def generate_test_definition(test_path, name):

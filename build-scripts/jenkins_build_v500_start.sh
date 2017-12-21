@@ -275,6 +275,57 @@ function cp_image() {
 
     cp -r out/release/*/* ${DES_DIR}/
 
+    pushd ${DES_DIR} # enter DES_DIR
+    MINI_ROOTFS_FILE=mini-rootfs.cpio.gz
+    GRUB_IMG_FILE=grubaa64.efi
+    GRUB_CFG_FILE=grub.cfg
+    KERNEL_IMG_FILE=Image
+
+    # copy platfom files
+    for PLATFORM in $SHELL_PLATFORM; do
+        echo $PLATFORM
+
+        PLATFORM_L="$(echo $PLATFORM | tr '[:upper:]' '[:lower:]')"
+        PLATFORM_U="$(echo $PLATFORM | tr '[:lower:]' '[:upper:]')"
+        PLATFORM_ARCH_DIR=$DES_DIR/${PLATFORM_L}-${arch[$PLATFORM_L]}
+        [ -d $PLATFORM_ARCH_DIR ] && sudo rm -fr $PLATFORM_ARCH_DIR
+        sudo mkdir -p ${PLATFORM_ARCH_DIR}/{binary,distro}
+
+        pushd $PLATFORM_ARCH_DIR/binary
+        sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$KERNEL_IMG_FILE ${KERNEL_IMG_FILE}_${PLATFORM_U}
+        sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$MINI_ROOTFS_FILE
+        sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$GRUB_IMG_FILE
+
+        # TODO : ln: failed to create symbolic link './grub.cfg': File exists
+        sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$GRUB_CFG_FILE || true
+        popd
+
+        # copy distro files
+        for DISTRO in $SHELL_DISTRO;do
+            echo $DISTRO
+
+            pushd ${CI_SCRIPTS_DIR}
+            distro_tar_name=`python configs/parameter_parser.py -f config.yaml -s DISTRO -k $PLATFORM_U -v $DISTRO`
+            popd
+
+            if [ x"$distro_tar_name" = x"" ]; then
+                continue
+            fi
+
+            echo $distro_tar_name
+
+            pushd $DES_DIR/binary/${arch[$PLATFORM_L]}
+            [ ! -f ${distro_tar_name}.sum ] && sudo sh -c "md5sum $distro_tar_name > ${distro_tar_name}.sum"
+            popd
+
+            pushd $PLATFORM_ARCH_DIR/distro
+            sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$distro_tar_name
+            sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$distro_tar_name.sum
+            popd
+        done
+    done
+
+    popd  # leave DES_DIR
     popd  # leave BUILD_DIR
     popd  # leave OPEN_ESTUARY_DIR
 }
@@ -340,15 +391,15 @@ function main() {
 
     # if GIT_DESCRIBE have exist, skip build.
     if [ -z "${GIT_DESCRIBE}" ];then
-       sync_code
-       clean_build
+        sync_code
+        clean_build
 
-       do_build
-       get_version_info
-       parse_arch_map
-       if [ x"$SKIP_CP_IMAGE" = x"false" ];then
-           cp_image
-       fi
+        do_build
+        get_version_info
+        parse_arch_map
+        if [ x"$SKIP_CP_IMAGE" = x"false" ];then
+            cp_image
+        fi
     else
         DES_DIR=$FTP_DIR/$TREE_NAME/$GIT_DESCRIBE
         if [ -d $DES_DIR ];then
