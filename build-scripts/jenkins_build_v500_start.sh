@@ -296,8 +296,6 @@ function cp_image() {
         sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$MINI_ROOTFS_FILE
         sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$GRUB_IMG_FILE
 
-        # TODO : ln: failed to create symbolic link './grub.cfg': File exists
-        sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$GRUB_CFG_FILE || true
         popd
 
         # copy distro files
