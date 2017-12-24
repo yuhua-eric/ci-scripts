@@ -31,8 +31,12 @@ def boot_device(BMC_HOST, BMC_USER, BMC_PASS):
     # connection.wait()
     # print "grub interrupt prompt find !"
 
+    connection.prompt_str = ['on an aarch64']
+    connection.wait()
+    connection.sendline("")
+
     # TODO: retry login
-    connection.prompt_str = ['login:']
+    connection.prompt_str = ['login:', 'localhost login:']
     connection.wait()
     print "os login interrupt prompt find !"
 
