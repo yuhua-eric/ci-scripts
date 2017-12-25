@@ -21,22 +21,23 @@ def boot_device(BMC_HOST, BMC_USER, BMC_PASS):
     print "start ipmi connection !"
     shell.run_command(power_on_command.split(' '), allow_fail=True)
     time.sleep(2)
-    connection = shell.ipmi_connection(connection_command, 6000)
-    connection.prompt_str = ['seconds to stop automatical booting']
-    connection.wait()
-    print "uefi interrupt prompt find !"
+
+    # connection = shell.ipmi_connection(connection_command, 6000)
+    # connection.prompt_str = ['seconds to stop automatical booting']
+    # connection.wait()
+    # print "uefi interrupt prompt find !"
 
     # don't wait grub. linaro install don't have grub
     # connection.prompt_str = ['GNU GRUB']
     # connection.wait()
     # print "grub interrupt prompt find !"
 
-    connection.prompt_str = ['on an aarch64']
-    connection.wait()
-    connection.sendline("")
+    # connection.prompt_str = ['on an aarch64']
+    # connection.wait()
+    # connection.sendline("")
 
     # TODO: retry login
-    connection.prompt_str = ['login:', 'localhost login:']
+    connection.prompt_str = ['login:']
     connection.wait()
     print "os login interrupt prompt find !"
 
