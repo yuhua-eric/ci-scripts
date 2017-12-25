@@ -313,7 +313,7 @@ function cp_image() {
             echo $distro_tar_name
 
             pushd $DES_DIR/binary/${arch[$PLATFORM_L]}
-            [ ! -f ${distro_tar_name}.sum ] && sudo sh -c "md5sum $distro_tar_name > ${distro_tar_name}.sum"
+            [ ! -f ${distro_tar_name,,}.sum ] && sudo sh -c "md5sum ${distro_tar_name,,} > ${distro_tar_name,,}.sum"
             popd
 
             pushd $PLATFORM_ARCH_DIR/distro
