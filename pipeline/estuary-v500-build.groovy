@@ -56,6 +56,8 @@ node ('ci-v500-compile'){
         dir('/fileserver/open-estuary') {
             stash includes: '**/*', name: 'buildResult'
         }
+
+        stash includes: '*.txt', name: 'mailResult'
     }
 }
 
@@ -71,6 +73,7 @@ node('ci-compile') {
         }
     }
     stage('Result') {
+        unstash 'mailResult'
         functions.send_mail()
     }
 }
