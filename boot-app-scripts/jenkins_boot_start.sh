@@ -444,6 +444,29 @@ EOF
     cd -
 }
 
+function workaround_stash_devices_config() {
+    if [ -n "${CI_ENV}" ];then
+        :
+    else
+        CI_ENV=dev
+    fi
+    if [ -e "configs/"${CI_ENV}"/devices.yaml" ];then
+        cp -f configs/"${CI_ENV}"/devices.yaml /tmp/devices.yaml
+    fi
+}
+
+function workaround_pop_devices_config() {
+    if [ -n "${CI_ENV}" ];then
+        :
+    else
+        CI_ENV=dev
+    fi
+
+    if [ -e "/tmp/devices.yaml" ];then
+        cp -f /tmp/devices.yaml configs/"${CI_ENV}"/devices.yaml
+    fi
+}
+
 function main() {
     parse_input "$@"
     source_properties_file
@@ -469,6 +492,9 @@ function main() {
     parse_arch_map
     clean_workspace
     print_time "the time of preparing all envireonment is "
+
+    workaround_stash_devices_config
+
     trigger_lava_build
     collect_result
     generate_success_mail
