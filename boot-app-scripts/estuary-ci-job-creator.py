@@ -105,8 +105,12 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
             print "warnings: wrong yaml syntax :\n %s" % e
             continue
 
-        if not 'metadata' in test_yaml:
+        if not test_yaml or not 'metadata' in test_yaml:
             print "warning : don't have metadata : " + str(file)
+            continue
+
+        if not 'format' in test_yaml['metadata']:
+            print "warning : don't have metadata.format : " + str(file)
             continue
 
         if 'name' in test_yaml['metadata']:
