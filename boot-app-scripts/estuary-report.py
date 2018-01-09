@@ -191,7 +191,7 @@ def print_base_info_pie_chart(result_dict,description):
     plt.title(description)
     plt.pie(x=result_list, labels=situation_list,autopct='%3.1f %%',
         shadow=True, labeldistance=1.1, startangle=90, pctdistance=0.6)
-    plt.savefig("baseinfo_pie.jpg")
+    plt.savefig("baseinfo_pie.jpg", dpi=120)
     plt.close()
 
 
@@ -210,7 +210,7 @@ def print_scope_info_bar_chart(result_dict,description):
     plt.xlabel("Scope")
     plt.ylabel("Pass Number")
     plt.title(description)
-    plt.savefig("baseinfo_bar.jpg")
+    plt.savefig("baseinfo_bar.jpg", dpi=120)
     plt.close()
 
 
