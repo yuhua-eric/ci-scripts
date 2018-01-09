@@ -338,7 +338,8 @@ def generate_current_test_report():
                     test_suite_dict[item['suite']][item['result']]=value
     print_base_info_pie_chart(test_suite_dict,"Base Pass Rate Situation Chart")
     workspace=os.getenv("WORKSPACE")
-    test_suite_dir=os.path.join(workspace,"local/ci-test-cases")
+#    test_suite_dir=os.path.join(workspace,"local/ci-test-cases")
+    test_suite_dir = TEST_CASE_DEFINITION_DIR
     test_suite_scope_dict = {}
     for job_id in job_result_dict.keys():
         for item in job_result_dict[job_id]:
@@ -754,6 +755,9 @@ def generate_email_test_report():
 def main(args):
     config = configuration.get_config(args)
 
+    global TEST_CASE_DEFINITION_DIR
+    TEST_CASE_DEFINITION_DIR = config.get("testDir")
+
     if config.get("boot"):
         boot_report(config)
         generate_email_test_report()
@@ -766,6 +770,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--boot", help="creates a kernel-ci boot report from a given json file")
     parser.add_argument("--lab", help="lab id")
+    parser.add_argument("--testDir", required=True, help="specific test case dir")
 
     args = vars(parser.parse_args())
     main(args)
