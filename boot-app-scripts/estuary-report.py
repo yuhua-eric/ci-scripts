@@ -337,9 +337,13 @@ def generate_current_test_report():
                     value=value+1
                     test_suite_dict[item['suite']][item['result']]=value
     print_base_info_pie_chart(test_suite_dict,"Base Pass Rate Situation Chart")
+
     workspace=os.getenv("WORKSPACE")
-#    test_suite_dir=os.path.join(workspace,"local/ci-test-cases")
-    test_suite_dir = TEST_CASE_DEFINITION_DIR
+    test_suite_dir=os.path.join(workspace,"local/ci-test-cases")
+
+    if TEST_CASE_DEFINITION_DIR:
+        test_suite_dir = TEST_CASE_DEFINITION_DIR
+
     test_suite_scope_dict = {}
     for job_id in job_result_dict.keys():
         for item in job_result_dict[job_id]:
