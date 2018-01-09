@@ -402,7 +402,7 @@ Boot and Test Status: failed
 Build Log Address: ${BUILD_URL}console
 Build Project Address: $BUILD_URL
 Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}
-The Test Cases Definition Address: https://github.com/qinshulei/ci-test-cases
+The Test Cases Definition Address: ${TEST_REPO}
 
 The boot and test is failed unexpectly. Please check the log and fix it.
 
@@ -428,7 +428,7 @@ Boot and Test Status: Success
 Build Log Address: ${BUILD_URL}console
 Build Project Address: $BUILD_URL
 Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}
-The Test Cases Definition Address: https://github.com/qinshulei/ci-test-cases
+The Test Cases Definition Address: ${TEST_REPO}
 
 EOF
 

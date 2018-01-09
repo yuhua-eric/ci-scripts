@@ -110,7 +110,7 @@ Boot and Test Status: failed
 Build Log Address: ${BUILD_URL}console
 Build Project Address: $BUILD_URL
 Build and Generated Binaries Address: NONE
-The Test Cases Definition Address: https://github.com/qinshulei/ci-test-cases
+The Test Cases Definition Address: ${TEST_REPO}
 
 The build is failed unexpectly. Please check the log and fix it.
 
