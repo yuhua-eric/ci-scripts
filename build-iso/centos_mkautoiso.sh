@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -ex
 
 material_iso="CentOS-7-aarch64-Everything.iso"
 new_iso="auto-CentOS-7-aarch64-Everything.iso"

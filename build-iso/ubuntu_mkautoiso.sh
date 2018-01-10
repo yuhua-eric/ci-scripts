@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -ex
 
 material_iso="estuary-master-ubuntu.iso"
 new_iso="auto-estuary-master-ubuntu.iso"
