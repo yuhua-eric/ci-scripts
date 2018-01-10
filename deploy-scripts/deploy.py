@@ -23,6 +23,7 @@ def boot_device(BMC_HOST, BMC_USER, BMC_PASS):
     time.sleep(2)
 
     connection = shell.ipmi_connection(connection_command, 6000)
+    time.sleep(2)
     # connection.prompt_str = ['seconds to stop automatical booting']
     # connection.wait()
     # print "uefi interrupt prompt find !"
