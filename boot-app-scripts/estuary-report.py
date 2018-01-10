@@ -12,6 +12,7 @@ import time
 import re
 import shutil
 import matplotlib
+
 matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
@@ -25,7 +26,7 @@ from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer,Image,Table,TableStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
 
 
 # for test report
@@ -35,14 +36,14 @@ total_str = "Total number of test cases: "
 fail_str = "Failed number of test cases: "
 suc_str = "Success number of test cases: "
 
-job_result_dict={}
+job_result_dict = {}
 
 device_map = {'d03': ['hip06-d03', 'hisi'],
-              'd03ssh': ['d03ssh01','hisi'],
+              'd03ssh': ['d03ssh01', 'hisi'],
               'd05': ['d05_01', 'hisi'],
-              'd05ssh': ['d05ssh01','hisi'],
+              'd05ssh': ['d05ssh01', 'hisi'],
               'ssh': ['ssh01', None],
-              #'dummy_ssh': ['hip05-d02', 'hisi'],
+              # 'dummy_ssh': ['hip05-d02', 'hisi'],
               'x86': ['x86', None],
               'dummy-ssh': ['dummy-ssh', None],
               'kvm': ['x86-kvm', None]}
@@ -114,7 +115,7 @@ def get_plans(directory, filename):
             for root, dirs, files in os.walk(os.path.join(root_dir, "boot-app-scripts", "templates")):
                 for dir_item in dirs:
                     if dir_item == item:
-                       return item
+                        return item
     return ''
 
 
@@ -145,19 +146,20 @@ def parser_and_get_result(contents, filename, directory, report_directory, conne
                     if write_flag == 1:
                         sf.write(line)
                         continue
-                    if re.search("=+", line) and re.search("=+", lines[i+2]) and re.search('Test.*?case.*?Result', lines[i+3]):
-                            write_flag = 1
-                            sf.write("job_id is: %s\n" % job_id)
-                            sf.write(line)
+                    if re.search("=+", line) and re.search("=+", lines[i + 2]) and re.search('Test.*?case.*?Result',
+                                                                                             lines[i + 3]):
+                        write_flag = 1
+                        sf.write("job_id is: %s\n" % job_id)
+                        sf.write(line)
                     sf.write('\n')
             # for jobs which is Incomplete
             else:
                 job_details = connection.scheduler.job_details(job_id)
                 job_name = re.findall('testdef.*\/(.*?)\.yaml', job_details['original_definition'])
                 sf.write("job_id is: %s\n" % job_id)
-                sf.write("="*13 + "\n")
+                sf.write("=" * 13 + "\n")
                 sf.write(' '.join(job_name) + "\n")
-                sf.write("="*13 + "\n")
+                sf.write("=" * 13 + "\n")
                 sf.write(' '.join(job_name) + "_test_cases\t\tFAIL\n\n")
 
 
@@ -168,45 +170,50 @@ def generate_test_report(job_id, connection):
     # print testsuite_results
     test = yaml.load(testjob_results)
     if job_id not in job_result_dict:
-          job_result_dict[job_id] = test
+        job_result_dict[job_id] = test
 
 
-def print_base_info_pie_chart(result_dict,description):
-    suite_dict={}
+# generate pie chart
+def print_base_info_pie_chart(result_dict, description):
+    # summary suite
+    suite_dict = {}
     for suite in result_dict.keys():
         print suite
         for situation in result_dict[suite]:
             if situation not in suite_dict:
-                suite_dict[situation]=result_dict[suite][situation]
+                suite_dict[situation] = result_dict[suite][situation]
             else:
-                value=suite_dict[situation]
-                value=value+result_dict[suite][situation]
+                value = suite_dict[situation]
+                value = value + result_dict[suite][situation]
                 suite_dict[situation] = value
     situation_list = []
     result_list = []
-    for key in suite_dict.keys():
+
+    # print it
+    for key in sorted(suite_dict.keys()):
         result_list.append(suite_dict[key])
         situation_list.append(key)
     plt.axes(aspect=1)
     plt.title(description)
-    plt.pie(x=result_list, labels=situation_list,autopct='%3.1f %%',
-        shadow=True, labeldistance=1.1, startangle=90, pctdistance=0.6)
+    plt.pie(x=result_list, labels=situation_list, autopct='%3.1f %%',
+            shadow=True, labeldistance=1.1, startangle=90, pctdistance=0.6)
     plt.savefig("baseinfo_pie.jpg", dpi=120)
     plt.close()
 
 
-def print_scope_info_bar_chart(result_dict,description):
-    scope_list=[]
-    scope_list=result_dict.keys()
+# generate bar chart
+def print_scope_info_bar_chart(result_dict, description):
+    scope_list = []
+    scope_list = sorted(result_dict.keys())
 
     pass_number_list = []
-    for key in result_dict.keys():
+    for key in sorted(result_dict.keys()):
         pass_number_list.append(result_dict[key])
 
     plt.legend()
     x_pos = np.arange(len(scope_list))
-    plt.bar(x_pos, pass_number_list, 0.35,facecolor='blue', edgecolor='white',align='center',alpha=0.4)
-    plt.xticks(x_pos,scope_list)
+    plt.bar(x_pos, pass_number_list, 0.35, facecolor='blue', edgecolor='white', align='center', alpha=0.4)
+    plt.xticks(x_pos, scope_list)
     plt.xlabel("Scope")
     plt.ylabel("Pass Number")
     plt.title(description)
@@ -215,134 +222,133 @@ def print_scope_info_bar_chart(result_dict,description):
 
 
 def create_test_report_pdf(job_result_dict):
-#    print job_result_dict
-    story=[]
-    stylesheet=getSampleStyleSheet()
-    normalStyle=stylesheet['Normal']
-    curr_date=time.strftime("%Y-%m-%d", time.localtime())
-    reportfilename="Estuary-Test_Report-%s.pdf"%(curr_date)
-    rpt_title = '<para autoLeading="off" fontSize=15 align=center><b>[ Estuary ] Test Report %s</b><br/><br/><br/></para>' %(curr_date)
-    story.append(Paragraph(rpt_title,normalStyle))
+    # print job_result_dict
+    story = []
+    stylesheet = getSampleStyleSheet()
+
+    normalStyle = stylesheet['Normal']
+    curr_date = time.strftime("%Y-%m-%d", time.localtime())
+    reportfilename = "Estuary-Test_Report-%s.pdf" % (curr_date)
+    rpt_title = '<para autoLeading="off" fontSize=15 align=center><b>[ Estuary ] Test Report %s</b><br/><br/><br/></para>' % (
+    curr_date)
+    story.append(Paragraph(rpt_title, normalStyle))
 
     rpt_ps = '<para autoLeading="off" fontSize=8 align=center>( This mail is send by Jenkins automatically, don\'t reply )</para>'
-    story.append(Paragraph(rpt_ps,normalStyle))
+    story.append(Paragraph(rpt_ps, normalStyle))
 
     text = '''<para autoLeading="off" fontSize=12><br /><font color=black>1.General Report</font><br /><br /></para>'''
-    story.append(Paragraph(text,normalStyle))
+    story.append(Paragraph(text, normalStyle))
 
+    # pie image
     pieimg = Image('baseinfo_pie.jpg')
     pieimg.drawHeight = 320
     pieimg.drawWidth = 480
     story.append(pieimg)
 
-    test_suite_dict={}
+    # calculate the pass number for each suit
+    test_suite_dict = {}
     for job_id in job_result_dict.keys():
         for item in job_result_dict[job_id]:
             if item['suite'] not in test_suite_dict:
                 test_suite_dict[item['suite']] = {}
                 if item['result'] not in test_suite_dict[item['suite']]:
-                    test_suite_dict[item['suite']][item['result']]=1
+                    test_suite_dict[item['suite']][item['result']] = 1
                 else:
-                    value=test_suite_dict[item['suite']][item['result']]
-                    value=value+1
-                    test_suite_dict[item['suite']][item['result']]=value
+                    value = test_suite_dict[item['suite']][item['result']]
+                    value = value + 1
+                    test_suite_dict[item['suite']][item['result']] = value
             else:
                 if item['result'] not in test_suite_dict[item['suite']]:
-                    test_suite_dict[item['suite']][item['result']]=1
+                    test_suite_dict[item['suite']][item['result']] = 1
                 else:
-                    value=test_suite_dict[item['suite']][item['result']]
-                    value=value+1
-                    test_suite_dict[item['suite']][item['result']]=value
-    component_data= [['TestSuite', 'Passes', 'Fails', 'Totals']]
-    for test_suite in test_suite_dict.keys():
-        passnum=0
-        failnum=0
+                    value = test_suite_dict[item['suite']][item['result']]
+                    value = value + 1
+                    test_suite_dict[item['suite']][item['result']] = value
+
+    component_data = [['TestSuite', 'Passes', 'Fails', 'Totals']]
+    for test_suite in sorted(test_suite_dict.keys()):
+        passnum = 0
+        failnum = 0
         if 'pass' in test_suite_dict[test_suite]:
-            passnum=test_suite_dict[test_suite]['pass']
+            passnum = test_suite_dict[test_suite]['pass']
         if 'fail' in test_suite_dict[test_suite]:
-            failnum=test_suite_dict[test_suite]['fail']
-        totalnum=passnum+failnum
-        data=[test_suite,passnum,failnum,totalnum]
+            failnum = test_suite_dict[test_suite]['fail']
+        totalnum = passnum + failnum
+        data = [test_suite, passnum, failnum, totalnum]
         component_data.append(data)
-    #
-    component_table = Table(component_data,colWidths=[150,60,60,60])
-    #
+
+    component_table = Table(component_data, colWidths=[150, 60, 60, 60])
     component_table.setStyle(TableStyle([
-    ('FONTSIZE',(0,0),(-1,-1),8),#font size
-    ('BACKGROUND',(0,0),(-1,0), colors.lightskyblue),#
-    ('ALIGN',(-1,0),(-2,0),'RIGHT'),#
-    ('VALIGN',(-1,0),(-2,0),'MIDDLE'),  #
-    ('LINEBEFORE',(0,0),(0,-1),0.1,colors.grey),#
-    ('TEXTCOLOR',(0,1),(-2,-1),colors.black),#
-    ('GRID',(0,0),(-1,-1),0.5,colors.black),#
+        ('FONTSIZE', (0, 0), (-1, -1), 8),  #font size
+        ('BACKGROUND', (0, 0), (-1, 0), colors.lightskyblue),  #
+        ('ALIGN', (-1, 0), (-2, 0), 'RIGHT'),  #
+        ('VALIGN', (-1, 0), (-2, 0), 'MIDDLE'),  #
+        ('LINEBEFORE', (0, 0), (0, -1), 0.1, colors.grey),  #
+        ('TEXTCOLOR', (0, 1), (-2, -1), colors.black),  #
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),  #
     ]))
     story.append(component_table)
 
     text = '''<para autoLeading="off" fontSize=12><br /><font color=black>2.Test Suite Result Detail</font><br /><br /></para>'''
-    story.append(Paragraph(text,normalStyle))
-    component_data= [['JobID','Suite', 'Name','Result']]
-    for job_id in job_result_dict.keys():
-        for item in job_result_dict[job_id]:
-            component_data.append([job_id,item['suite'],item['name'],item['result']])
+    story.append(Paragraph(text, normalStyle))
+    component_data = [['JobID', 'Suite', 'Name', 'Result']]
+    for job_id in sorted(job_result_dict.keys()):
+        for item in sorted(job_result_dict[job_id], key=lambda x: x['suite']):
+            component_data.append([job_id, item['suite'], item['name'], item['result']])
 
     component_table = Table(component_data)
     component_table.setStyle(TableStyle([
-    ('FONTSIZE',(0,0),(-1,-1),8),#font size
-    ('BACKGROUND',(0,0),(-1,0), colors.lightskyblue),#
-    ('ALIGN',(-1,0),(-2,0),'RIGHT'),#
-    ('VALIGN',(-1,0),(-2,0),'MIDDLE'),  #
-    ('LINEBEFORE',(0,0),(0,-1),0.1,colors.grey),#
-    ('TEXTCOLOR',(0,1),(-2,-1),colors.black),#
-    ('GRID',(0,0),(-1,-1),0.5,colors.black),#
+        ('FONTSIZE', (0, 0), (-1, -1), 8),  #font size
+        ('BACKGROUND', (0, 0), (-1, 0), colors.lightskyblue),  #
+        ('ALIGN', (-1, 0), (-2, 0), 'RIGHT'),  #
+        ('VALIGN', (-1, 0), (-2, 0), 'MIDDLE'),  #
+        ('LINEBEFORE', (0, 0), (0, -1), 0.1, colors.grey),  #
+        ('TEXTCOLOR', (0, 1), (-2, -1), colors.black),  #
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),  #
     ]))
     story.append(component_table)
 
     text = '''<para autoLeading="off" fontSize=12><br /><font color=black>3.Different Scope Pass Number</font><br /><br /></para>'''
-    story.append(Paragraph(text,normalStyle))
+    story.append(Paragraph(text, normalStyle))
 
+    # bar image
     barimg = Image('baseinfo_bar.jpg')
     barimg.drawHeight = 320
     barimg.drawWidth = 480
     story.append(barimg)
 
-
-    doc=SimpleDocTemplate('resultfile.pdf')
+    # generate pdf
+    doc = SimpleDocTemplate('resultfile.pdf')
     doc.build(story)
 
 
-#by job_result_dict get current test report by zhaofs0921
+# by job_result_dict get current test report by zhaofs0921
 def generate_current_test_report():
     print "generate_current_test_report"
-    suite_list = [] #all test suite list
+    suite_list = []  #all test suite list
 
-    test_suite_dict={}
-    test_scope_dict={}
+    test_suite_dict = {}
+    test_scope_dict = {}
 
-#   Statistics of each test suite
+    #   Statistics of each test suite
     for job_id in job_result_dict.keys():
         for item in job_result_dict[job_id]:
             if item['suite'] not in test_suite_dict:
                 test_suite_dict[item['suite']] = {}
                 if item['result'] not in test_suite_dict[item['suite']]:
-                    test_suite_dict[item['suite']][item['result']]=1
+                    test_suite_dict[item['suite']][item['result']] = 1
                 else:
-                    value=test_suite_dict[item['suite']][item['result']]
-                    value=value+1
-                    test_suite_dict[item['suite']][item['result']]=value
+                    value = test_suite_dict[item['suite']][item['result']]
+                    value = value + 1
+                    test_suite_dict[item['suite']][item['result']] = value
             else:
                 if item['result'] not in test_suite_dict[item['suite']]:
-                    test_suite_dict[item['suite']][item['result']]=1
+                    test_suite_dict[item['suite']][item['result']] = 1
                 else:
-                    value=test_suite_dict[item['suite']][item['result']]
-                    value=value+1
-                    test_suite_dict[item['suite']][item['result']]=value
-    print_base_info_pie_chart(test_suite_dict,"Base Pass Rate Situation Chart")
-
-    workspace=os.getenv("WORKSPACE")
-    test_suite_dir=os.path.join(workspace,"local/ci-test-cases")
-
-    if TEST_CASE_DEFINITION_DIR:
-        test_suite_dir = TEST_CASE_DEFINITION_DIR
+                    value = test_suite_dict[item['suite']][item['result']]
+                    value = value + 1
+                    test_suite_dict[item['suite']][item['result']] = value
+    print_base_info_pie_chart(test_suite_dict, "Base Pass Rate Situation Chart")
 
     test_suite_scope_dict = {}
     for job_id in job_result_dict.keys():
@@ -350,43 +356,47 @@ def generate_current_test_report():
             if 'metadata' in item:
                 metadata = item['metadata']
                 if 'path' in metadata and 'repository' in metadata:
-                    count_scope_pass_number(test_suite_scope_dict,metadata['path'],item['result'])
+                    count_scope_pass_number(test_suite_scope_dict, metadata['path'], item['result'])
                 elif 'extra' in metadata:
-                    path=""
-                    repository=""
+                    path = ""
+                    repository = ""
                     for extra in metadata['extra']:
-                        if 'path' in extra :
-                            path=extra['path']
+                        if 'path' in extra:
+                            path = extra['path']
                             continue
                         if 'repository' in extra:
-                            repository=extra['repository']
+                            repository = extra['repository']
                             continue
                     if path != "" and repository != "":
-                        count_scope_pass_number(test_suite_scope_dict,path,item['result'])
-#    print test_suite_scope_dict
-    print_scope_info_bar_chart(test_suite_scope_dict,"Pass Number Bar Chart")
+                        count_scope_pass_number(test_suite_scope_dict, path, item['result'])
+                    #    print test_suite_scope_dict
+    print_scope_info_bar_chart(test_suite_scope_dict, "Pass Number Bar Chart")
     create_test_report_pdf(job_result_dict)
 
     current_test_result_dir = os.getcwd()
     test_result_file_name = "test_result_dict.txt"
-    test_result_file = os.path.join(current_test_result_dir,test_result_file_name)
+    test_result_file = os.path.join(current_test_result_dir, test_result_file_name)
     if os.path.exists(test_result_file):
         os.remove(test_result_file)
     with open(test_result_file, 'w') as wfp:
         wfp.write(str(job_result_dict))
 
 
-def count_scope_pass_number(test_suite_scope_dict,path,result):
-    workspace=os.getenv("WORKSPACE")
-    test_suite_dir=os.path.join(workspace,"local/ci-test-cases")
-    yaml_file=utils.load_yaml(os.path.join(test_suite_dir,path))
+def count_scope_pass_number(test_suite_scope_dict, path, result):
+    # TODO : use parameters
+    workspace = os.getenv("WORKSPACE")
+    test_suite_dir = os.path.join(workspace, "local/ci-test-cases")
+    if TEST_CASE_DEFINITION_DIR:
+        test_suite_dir = TEST_CASE_DEFINITION_DIR
+
+    yaml_file = utils.load_yaml(os.path.join(test_suite_dir, path))
     for scope in yaml_file['metadata']['scope']:
         if result == 'pass':
             if scope not in test_suite_scope_dict:
-                test_suite_scope_dict[scope]=1
+                test_suite_scope_dict[scope] = 1
             else:
-                value=test_suite_scope_dict[scope]
-                value = value+1
+                value = test_suite_scope_dict[scope]
+                value = value + 1
                 test_suite_scope_dict[scope] = value
 
 
@@ -395,7 +405,7 @@ def generate_history_test_report():
 
 
 def boot_report(config):
-    connection, jobs, duration =  parse_yaml(config.get("boot"))
+    connection, jobs, duration = parse_yaml(config.get("boot"))
     # TODO: Fix this when multi-lab sync is working
     results_directory = os.getcwd() + '/results'
     results = {}
@@ -487,10 +497,10 @@ def boot_report(config):
         if not kernel_defconfig or not kernel_version or not kernel_tree:
             try:
                 job_metadata_info = connection.results.get_testjob_metadata(job_id)
-                kernel_defconfig = utils.get_value_by_key(job_metadata_info,'kernel_defconfig')
-                kernel_version = utils.get_value_by_key(job_metadata_info,'kernel_version')
-                kernel_tree = utils.get_value_by_key(job_metadata_info,'kernel_tree')
-                device_tree = utils.get_value_by_key(job_metadata_info,'device_tree')
+                kernel_defconfig = utils.get_value_by_key(job_metadata_info, 'kernel_defconfig')
+                kernel_version = utils.get_value_by_key(job_metadata_info, 'kernel_version')
+                kernel_tree = utils.get_value_by_key(job_metadata_info, 'kernel_tree')
+                device_tree = utils.get_value_by_key(job_metadata_info, 'device_tree')
             except Exception:
                 continue
 
@@ -520,14 +530,14 @@ def boot_report(config):
                 kernel_boot_time = '0.0'
             if results.has_key(kernel_defconfig):
                 results[kernel_defconfig].append({'device_type': platform_name,
-                    'job_id': job_id, 'job_name': job_short_name,
-                    'kernel_boot_time': kernel_boot_time, 'result': result,
-                    'device_name': device_name})
+                                                  'job_id': job_id, 'job_name': job_short_name,
+                                                  'kernel_boot_time': kernel_boot_time, 'result': result,
+                                                  'device_name': device_name})
             else:
                 results[kernel_defconfig] = [{'device_type': platform_name,
-                    'job_id': job_id, 'job_name': job_short_name,
-                    'kernel_boot_time': kernel_boot_time, 'result': result,
-                    'device_name': device_name}]
+                                              'job_id': job_id, 'job_name': job_short_name,
+                                              'kernel_boot_time': kernel_boot_time, 'result': result,
+                                              'device_name': device_name}]
 
             # Create JSON format boot metadata
             print 'Creating JSON format boot metadata'
@@ -607,10 +617,10 @@ def boot_report(config):
         total = passed + failed
         with open(os.path.join(report_directory, boot), 'a') as f:
             f.write('Subject: %s boot: %s boots: %s passed, %s failed (%s)\n' % (kernel_tree,
-                                                                                str(total),
-                                                                                str(passed),
-                                                                                str(failed),
-                                                                                kernel_version))
+                                                                                 str(total),
+                                                                                 str(passed),
+                                                                                 str(failed),
+                                                                                 kernel_version))
             f.write('\n')
             f.write('Total Duration: %.2f minutes\n' % (duration / 60))
             f.write('Tree/Branch: %s\n' % kernel_tree)
@@ -630,11 +640,11 @@ def boot_report(config):
                 for result in results_list:
                     if result['result'] == 'OFFLINE':
                         f.write('    %s   %s   %s   %ss   %s: %s\n' % (result['job_id'],
-                                                                    result['device_type'],
-                                                                    result['device_name'],
-                                                                    result['kernel_boot_time'],
-                                                                    result['job_name'],
-                                                                    result['result']))
+                                                                       result['device_type'],
+                                                                       result['device_name'],
+                                                                       result['kernel_boot_time'],
+                                                                       result['job_name'],
+                                                                       result['result']))
                         f.write('\n')
             first = True
             for defconfig, results_list in results.items():
@@ -651,11 +661,11 @@ def boot_report(config):
                 for result in results_list:
                     if result['result'] == 'FAIL':
                         f.write('    %s   %s   %s   %ss   %s: %s\n' % (result['job_id'],
-                                                                    result['device_type'],
-                                                                    result['device_name'],
-                                                                    result['kernel_boot_time'],
-                                                                    result['job_name'],
-                                                                    result['result']))
+                                                                       result['device_type'],
+                                                                       result['device_name'],
+                                                                       result['kernel_boot_time'],
+                                                                       result['job_name'],
+                                                                       result['result']))
             f.write('\n')
             f.write('Full Boot Report:\n')
             for defconfig, results_list in results.items():
@@ -664,19 +674,19 @@ def boot_report(config):
                 f.write('\n')
                 for result in results_list:
                     f.write('    %s   %s   %s   %ss   %s: %s\n' %
-                                                                    (result['job_id'],
-                                                                        result['device_type'],
-                                                                        result['device_name'],
-                                                                        result['kernel_boot_time'],
-                                                                        result['job_name'],
-                                                                        result['result']))
+                            (result['job_id'],
+                             result['device_type'],
+                             result['device_name'],
+                             result['kernel_boot_time'],
+                             result['job_name'],
+                             result['result']))
 
 
 def generate_email_test_report():
     print "--------------now begin get testjob: result ------------------------------"
 
-    suite_list = [] #all test suite list
-    case_dict = {} #testcast dict value like 'smoke-test':[test-case1,test-case2,test-case3]
+    suite_list = []  #all test suite list
+    case_dict = {}  #testcast dict value like 'smoke-test':[test-case1,test-case2,test-case3]
     boot_total = 0
     boot_success = 0
     boot_fail = 0
@@ -698,18 +708,12 @@ def generate_email_test_report():
     for job_id in job_result_dict.keys():
         for item in job_result_dict[job_id]:
             case_dict[item['suite']].append(item)
-
-    # try to write details file
-    details_dir = os.getcwd()
-    details_file = os.path.join(details_dir, details_summary_name)
-
-    if os.path.exists(details_file):
-        os.remove(details_file)
-    with open(details_file, "wt") as wfp:
-        wfp.write("*" * 24 + " DETAILS TESTCASE START " + "*" * 24 + '\n')
-        wfp.write("suite_name\t" + "case_name\t\t" + "case_result\t" + '\n')
-
-    for key in case_dict.keys():
+    #try to write summary file
+    summary_dir = os.getcwd()
+    summary_file = os.path.join(summary_dir, whole_summary_name)
+    if os.path.exists(summary_file):
+        os.remove(summary_file)
+    for key in sorted(case_dict.keys()):
         if key == 'lava':
             for item in case_dict[key]:
                 if item['result'] == 'pass':
@@ -730,16 +734,6 @@ def generate_email_test_report():
                     test_fail += 1
                 else:
                     test_total += 1
-                with open(details_file, "at") as wfp:
-                    wfp.write(item['suite'] + '\t' + item['name'] + '\t\t' + item['result'] + '\n')
-    with open(details_file, "at") as wfp:
-        wfp.write("*" * 24 + " DETAILS TESTCASE END " + "*" * 24 + '\n')
-
-    #try to write summary file
-    summary_dir = os.getcwd()
-    summary_file = os.path.join(summary_dir, whole_summary_name)
-    if os.path.exists(summary_file):
-        os.remove(summary_file)
     with open(summary_file, 'w') as wfp:
         wfp.write("*" * 20 + " BOOT SUMMARY START " + "*" * 20 + '\n')
         wfp.write("\n" + total_str + str(boot_total))
@@ -754,7 +748,25 @@ def generate_email_test_report():
         wfp.write("\n" + suc_str + str(test_success))
         wfp.write("\n" + "*" * 20 + " SUMMARY END " + "*" * 20 + '\n')
 
+    ## try to write details file
+    details_dir = os.getcwd()
+    details_file = os.path.join(details_dir, details_summary_name)
+    if os.path.exists(details_file):
+        os.remove(details_file)
+    with open(details_file, "wt") as wfp:
+        wfp.write("*" * 24 + " DETAILS TESTCASE START " + "*" * 24 + '\n')
+        wfp.write("job_id\t"+ "suite_name\t" + "case_name\t\t" + "case_result\t" + '\n')
+
+    for job_id in sorted(job_result_dict.keys()):
+        for item in sorted(job_result_dict[job_id], key=lambda x: x['suite']):
+            with open(details_file, "at") as wfp:
+                wfp.write(job_id + "\t" + item['suite'] + '\t' + item['name'] + '\t\t' + item['result'] + '\n')
+
+    with open(details_file, "at") as wfp:
+        wfp.write("*" * 24 + " DETAILS TESTCASE END " + "*" * 24 + '\n')
+
     print "--------------now end get testjob result ------------------------------"
+
 
 def main(args):
     config = configuration.get_config(args)
@@ -769,6 +781,7 @@ def main(args):
         generate_history_test_report()
 
     exit(0)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
