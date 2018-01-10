@@ -384,10 +384,11 @@ def generate_current_test_report():
 
 def count_scope_pass_number(test_suite_scope_dict, path, result):
     # TODO : use parameters
-    workspace = os.getenv("WORKSPACE")
-    test_suite_dir = os.path.join(workspace, "local/ci-test-cases")
     if TEST_CASE_DEFINITION_DIR:
         test_suite_dir = TEST_CASE_DEFINITION_DIR
+    else:
+        workspace = os.getenv("WORKSPACE")
+        test_suite_dir = os.path.join(workspace, "local/ci-test-cases")
 
     yaml_file = utils.load_yaml(os.path.join(test_suite_dir, path))
     for scope in yaml_file['metadata']['scope']:
