@@ -1,0 +1,136 @@
+## Suggest LVM by default.
+#d-i partman-auto/init_automatically_partition string some_device_lvm
+#d-i partman-auto/init_automatically_partition seen false
+# If the system has free space you can choose to only partition that space.
+# This is only honoured if partman-auto/method (below) is not set.
+# Alternatives: custom, some_device, some_device_crypto, some_device_lvm.
+#d-i partman-auto/init_automatically_partition select biggest_free
+## Install the Ubuntu Server seed.
+#tasksel tasksel/force-tasks string server
+## Only install basic language packs. Let tasksel ask about tasks.
+#d-i pkgsel/language-pack-patterns string
+## No language support packages.
+#d-i pkgsel/install-language-support boolean false
+## Only ask the UTC question if there are other operating systems installed.
+#d-i clock-setup/utc-auto boolean true
+## Verbose output and no boot splash screen.
+#d-i debian-installer/quiet boolean false
+##d-i debian-installer/splash boolean false
+## Install the debconf oem-config frontend (if in OEM mode).
+#d-i oem-config-udeb/frontend string debconf
+## Wait for two seconds in grub
+#d-i grub-installer/timeout string 2
+## Add the network and tasks oem-config steps by default.
+#oem-config oem-config/steps multiselect language, timezone, keyboard, user, network, tasks
+##d-i  base-installer/kernel/altmeta   string hwe-16.04
+
+#########################################################################
+## CDROM auto install
+#########################################################################
+# Continue install on "no kernel modules were found for this kernel"
+#d-i anna/no_kernel_modules boolean true
+
+d-i auto-install/enable boolean true
+## Set country, language and keyboard map
+#d-i debian-installer/locale string en_US
+d-i debian-installer/language string en
+d-i debian-installer/country string US
+d-i debain-install/locale string en_US.UTF-8
+# Optionally specify additional locales to be generated.
+#d-i localechooser/supported-locales multiselect zh_CH.UTF-8, C.UTF-8, en_US.UTF-8
+
+#d-i keyboard-configuration/xkb-keymap select us
+## Disable automatic (interactive) keymap detection.
+d-i console-setup/ask_detect boolean false
+d-i keyboard-configuration/layoutcode string us
+## To select a variant of the selected layout (if you leave this out, the
+## basic form of the layout will be used):
+#d-i keyboard-configuration/variantcode string dvorak
+
+##net config
+d-i netcfg/choose_interface select auto
+d-i netcfg/get_hostname string unassigned-hostname
+d-i netcfg/get_domain string unassigned-domain
+#d-i netcfg/hostname string Huawei-D05
+#d-i netcfg/enable boolean false
+
+## set root password
+d-i passwd/root-login boolean root
+#d-i passwd/root-password-crtpted password $6$Kd3yxUtwpOk3fJ.M$KnTt/6pHJzXWYcKGQbqqkifavlMLrQcuOd6OAud97qD2IbFcWGtljsRVo9qWSSHj0Mcy.HmyLZ0JsDlq8mQ7B/
+d-i passwd/root-password password root
+d-i passwd/root-password-again password root
+d-i user-setup/allow-password-weak boolean true
+
+## creat user
+d-i passwd/make-user boolean true
+d-i passwd/user-fullname string User
+d-i passwd/username string user
+d-i passwd/user-password-crypted password $6$Kd3yxUtwpOk3fJ.M$KnTt/6pHJzXWYcKGQbqqkifavlMLrQcuOd6OAud97qD2IbFcWGtljsRVo9qWSSHj0Mcy.HmyLZ0JsDlq8mQ7B/
+## Encrypt your home directory NO
+d-i user-setup/encrypt-home boolean false
+
+## Controls whether or not the hardware clock is set to UTC.
+d-i clock-setup/utc boolean true
+d-i time/zone string Asia/Shanghai
+
+## Disk usage
+d-i partman-auto/disk string /dev/sda
+#d-i partman-auto/method string lvm
+#d-i partman-auto-lvm/guided_size string max
+d-i partman-auto/method string regular
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-md/device_remove_md boolean true
+d-i partman-lvm/confirm boolean true
+d-i partman-lvm/confirm_nooverwrite boolean true
+d-i partman-auto/choose_recipe select atomic
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+
+## umount /dev/sda
+d-i partman/unmount_active boolean true
+d-i preseed/early_command string umount /media || true
+
+##allow to install mirror from LAN unauthenticated mirror
+d-i debian-installer/allow_unauthenticated string true
+## base install 
+#d-i base-installer/kernel/altmeta string hwe-16.04
+d-i base-installer/kernel/image string linux-image-estuary
+
+## apt-setup
+#d-i apt-setup/non-free boolean true
+#d-i apt-setup/contrib boolean true
+d-i apt-setup/use_mirror boolean false
+d-i apt-setup/restricted boolean true
+d-i apt-setup/universe boolean true
+d-i apt-setup/backports boolean true
+d-i apt-setup/services-select multiselect security
+d-i apt-setup/security_host string security.ubuntu.com
+d-i apt-setup/security_path string /ubuntu
+d-i pkgsel/update-policy select none
+
+##install software
+tasksel tasksel/first multiselect standard
+## Individual additional packages to install
+d-i pkgsel/include string openssh-server vim 
+## Whether to upgrade packages after debootstrap.
+## Allowed values: none, safe-upgrade, full-upgrade
+d-i pkgsel/upgrade select none
+popularity-contest popularity-contest/participate boolean false
+
+##Grub and bootloder
+## This is fairly safe to set, it makes grub install automatically to the MBR
+## if no other operating system is detected on the machine.
+d-i grub-installer/only_debian boolean true
+## This one makes grub-installer install to the MBR if it also finds some other
+## OS, which is less safe as it might not be able to boot that other OS.
+d-i grub-installer/with_other_os boolean true
+
+## Avoid that last message about the install being complete.
+d-i finish-install/keep-consoles boolean true
+d-i finish-install/reboot_in_progress note
+d-i cdrom-detect/eject boolean false
+
+#d-i debian-installer/exit/halt boolean true
+#d-i debian-installer/exit/poweroff boolean true
