@@ -58,8 +58,8 @@ function main(){
 
     # need paste the public key
     java -jar jenkins-cli.jar -s http://${JENKINS_URL}/ login
-    java -jar jenkins-cli.jar -s http://${JENKINS_URL}/ build step_config_dhcp_tftp -w -s -v -p TREE_NAME="${TREE_NAME}" -p HOST_NAME="${TARGET_HOSTNAME}" -p DISTRO="${DISTRO}" -p DISTRO_VERSION="${DISTRO_VERSION}"
-    java -jar jenkins-cli.jar -s http://${JENKINS_URL}/ build step_do_pxe_deploy -w -s -v -p TREE_NAME="${TREE_NAME}" -p HOST_NAME="${TARGET_HOSTNAME}" -p DISTRO="${DISTRO}" -p DISTRO_VERSION="${DISTRO_VERSION}"
+    java -jar jenkins-cli.jar -s http://${JENKINS_URL}/ build step_config_dhcp_tftp -w -s -p TREE_NAME="${TREE_NAME}" -p HOST_NAME="${TARGET_HOSTNAME}" -p DISTRO="${DISTRO}" -p DISTRO_VERSION="${DISTRO_VERSION}"
+    java -jar jenkins-cli.jar -s http://${JENKINS_URL}/ build step_do_pxe_deploy -w -s -p TREE_NAME="${TREE_NAME}" -p HOST_NAME="${TARGET_HOSTNAME}" -p DISTRO="${DISTRO}" -p DISTRO_VERSION="${DISTRO_VERSION}"
 
 
     # test
