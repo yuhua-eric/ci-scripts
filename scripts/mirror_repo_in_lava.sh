@@ -23,3 +23,6 @@ else
     echo "    insteadOf = ${TEST_REPO}" >> ~/.gitconfig.edit
 fi
 mv -f ~/.gitconfig.edit ~/.gitconfig
+
+# overwrite system gitconfig
+cp -f ~/.gitconfig /etc/gitconfig
