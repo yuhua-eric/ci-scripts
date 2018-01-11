@@ -294,7 +294,8 @@ def create_test_report_pdf(job_result_dict):
     component_data = [['JobID', 'Suite', 'Name', 'Result']]
     for job_id in sorted(job_result_dict.keys()):
         for item in sorted(job_result_dict[job_id], key=lambda x: x['suite']):
-            component_data.append([job_id, item['suite'], item['name'], item['result']])
+            if item['suite'] != 'lava':
+                component_data.append([job_id, item['suite'], item['name'], item['result']])
 
     component_table = Table(component_data)
     component_table.setStyle(TableStyle([
@@ -758,10 +759,11 @@ def generate_email_test_report():
         wfp.write("*" * 24 + " DETAILS TESTCASE START " + "*" * 24 + '\n')
         wfp.write("job_id\t"+ "suite_name\t" + "case_name\t\t" + "case_result\t" + '\n')
 
-    for job_id in sorted(job_result_dict.keys()):
-        for item in sorted(job_result_dict[job_id], key=lambda x: x['suite']):
-            with open(details_file, "at") as wfp:
-                wfp.write(job_id + "\t" + item['suite'] + '\t' + item['name'] + '\t\t' + item['result'] + '\n')
+    with open(details_file, "at") as wfp:
+        for job_id in sorted(job_result_dict.keys()):
+            for item in sorted(job_result_dict[job_id], key=lambda x: x['suite']):
+                if item['suite'] != 'lava':
+                    wfp.write(job_id + "\t" + item['suite'] + '\t' + item['name'] + '\t\t' + item['result'] + '\n')
 
     with open(details_file, "at") as wfp:
         wfp.write("*" * 24 + " DETAILS TESTCASE END " + "*" * 24 + '\n')
