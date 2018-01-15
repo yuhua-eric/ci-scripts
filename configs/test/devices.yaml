@@ -32,6 +32,24 @@ d05ssh02:
   next-server: 192.168.50.122
   filename: "estuary_install/grubaa64.efi"
 
+# DUT
+d05ssh03:
+  type: D05
+  bmc: 192.168.2.127
+  ip: 192.168.50.127
+  mac: c0:a8:03:7f:00:04
+  next-server: 192.168.50.122
+  filename: "estuary_install/grubaa64.efi"
+
+# DUT
+d03ssh01:
+  type: D03
+  bmc: 192.168.2.250
+  ip: 192.168.50.128
+  mac: c0:a8:03:fa:00:04
+  next-server: 192.168.50.122
+  filename: "estuary_install/grubaa64.efi"
+
 # v500 compile server
 d05ssh03:
   type: D05
