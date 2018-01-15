@@ -31,13 +31,13 @@ function config_tftp() {
                 if [ -d "/tftp/pxe_install/arm64/estuary/${version_name}" ];then
                     # TODO : think diffrent distro and board
                     cp -r "/tftp/pxe_install/arm64/estuary/v5.0" "/tftp/pxe_install/arm64/estuary/${version_name}"
-                    cd "/tftp/pxe_install/arm64/estuary/${version_name}"
-                    cd "${distro_name}"
-                    cd "${DEVICE_TYPE}"
-                    rm -rf netboot
-                    wget ${FTP_SERVER}/open-estuary/${version_name}/"${distro_name}"/netboot.tar.gz
-                    tar -xzvf netboot.tar.gz
                 fi
+                cd "/tftp/pxe_install/arm64/estuary/${version_name}"
+                cd "${distro_name}"
+                cd "${DEVICE_TYPE}"
+                rm -rf netboot
+                wget ${FTP_SERVER}/open-estuary/${version_name}/"${distro_name}"/netboot.tar.gz
+                tar -xzvf netboot.tar.gz
             fi
         fi
     fi
