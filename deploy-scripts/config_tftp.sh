@@ -34,7 +34,7 @@ function config_tftp() {
                 fi
                 cd "/tftp/pxe_install/arm64/estuary/${version_name}"
                 cd "${distro_name}"
-                cd "${DEVICE_TYPE}"
+                cd "${DEVICE_TYPE,,}"
                 rm -rf netboot
                 wget ${FTP_SERVER}/open-estuary/${version_name}/"${distro_name}"/netboot.tar.gz
                 tar -xzvf netboot.tar.gz
