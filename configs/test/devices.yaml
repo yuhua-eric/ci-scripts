@@ -45,13 +45,13 @@ d05ssh03:
 d03ssh01:
   type: D03
   bmc: 192.168.2.250
-  ip: 192.168.50.128
+  ip: 192.168.50.124
   mac: c0:a8:03:fa:00:04
   next-server: 192.168.50.122
   filename: "estuary_install/grubaa64.efi"
 
 # v500 compile server
-d05ssh03:
+d05compile:
   type: D05
   bmc: 192.168.3.128
   ip: 192.168.50.126
