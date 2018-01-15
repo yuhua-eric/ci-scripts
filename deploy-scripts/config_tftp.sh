@@ -28,7 +28,7 @@ function config_tftp() {
     elif [ "${tree_name}" = 'open-estuary' ];then
         if [ "${version_name}" != "v5.0" ];then
             if [[ "${version_name}" =~ "estuary_" ]];then
-                if [ -d "/tftp/pxe_install/arm64/estuary/${version_name}" ];then
+                if [ ! -d "/tftp/pxe_install/arm64/estuary/${version_name}" ];then
                     # TODO : think diffrent distro and board
                     cp -r "/tftp/pxe_install/arm64/estuary/v5.0" "/tftp/pxe_install/arm64/estuary/${version_name}"
                 fi
