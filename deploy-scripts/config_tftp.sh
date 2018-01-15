@@ -9,6 +9,10 @@ TFTP_DIR=/tftp
 TFTP_ESTUARY_GRUB=grub.cfg
 TFTP_LINARO_GRUB=linaro_install/grub.cfg
 
+function init_os_dict() {
+    declare -A os_dict
+    os_dict=( ["centos"]="CentOS" ["ubuntu"]="Ubuntu")
+}
 
 function config_tftp() {
     local tree_name=${1:-"open-estuary"}
@@ -35,8 +39,11 @@ function config_tftp() {
                 cd "/tftp/pxe_install/arm64/estuary/${version_name}"
                 cd "${distro_name}"
                 cd "${DEVICE_TYPE,,}"
+
+                # replave netboot
                 rm -rf netboot
-                wget ${FTP_SERVER}/open-estuary/${version_name}/"${distro_name}"/netboot.tar.gz
+                init_os_dict
+                wget ${FTP_SERVER}/open-estuary/${version_name}/"${os_dict[$distro_name]}"/netboot.tar.gz
                 tar -xzvf netboot.tar.gz
             fi
         fi
