@@ -14,7 +14,7 @@ function config_tftp() {
     local tree_name=${1:-"open-estuary"}
     local host_name=${2:-"d05ssh01"}
     local distro_name=${3:-"centos"}
-    local version_name=${4:-"v3.1"}
+    local version_name=${4:-"v5.0"}
 
     cd ../
     FTP_SERVER=$(python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k ftpserver)
@@ -27,7 +27,7 @@ function config_tftp() {
         :
     elif [ "${tree_name}" = 'open-estuary' ];then
         if [ "${version_name}" != "v5.0" ];then
-            if [[ "${version_name}" =~ "estuary-" ]];then
+            if [[ "${version_name}" =~ "estuary_" ]];then
                 if [ -d "/tftp/pxe_install/arm64/estuary/${version_name}" ];then
                     # TODO : think diffrent distro and board
                     cp -r "/tftp/pxe_install/arm64/estuary/v5.0" "/tftp/pxe_install/arm64/estuary/${version_name}"
