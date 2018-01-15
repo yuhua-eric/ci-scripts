@@ -420,15 +420,23 @@ function generate_success_mail(){
     fi
 
     echo "Estuary CI - ${GIT_DESCRIBE} - Result" > ${WORKSPACE}/MAIL_SUBJECT.txt
+
+    TODAY=$(date +"%Y/%m/%d")
     cat > ${WORKSPACE}/MAIL_CONTENT.txt <<EOF
-( This mail is send by Jenkins automatically, don't reply )
+Estuary CI Auto-test Daily Report (${TODAY})
+
+1、构建信息
 Project Name: ${TREE_NAME}
 Version: ${GIT_DESCRIBE}
+
+2. 今日构建结果
 Boot and Test Status: Success
 Build Log Address: ${BUILD_URL}console
 Build Project Address: $BUILD_URL
 Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}
 The Test Cases Definition Address: ${TEST_REPO}
+
+3. 测试数据统计
 
 EOF
 
@@ -441,6 +449,8 @@ EOF
     echo "The Test Case details is below:" >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat details_summary.txt >> ${WORKSPACE}/MAIL_CONTENT.txt
 
+    echo "" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "4. 本月版本健康度统计" >> ${WORKSPACE}/MAIL_CONTENT.txt
     cd -
 }
 
