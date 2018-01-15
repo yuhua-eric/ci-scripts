@@ -10,7 +10,8 @@ TFTP_ESTUARY_GRUB=grub.cfg
 TFTP_LINARO_GRUB=linaro_install/grub.cfg
 
 function init_os_dict() {
-    declare -A os_dict
+    # declare global dict
+    declare -A -g os_dict
     os_dict=( ["centos"]="CentOS" ["ubuntu"]="Ubuntu")
 }
 
@@ -33,7 +34,6 @@ function config_tftp() {
         if [ "${version_name}" != "v5.0" ];then
             if [[ "${version_name}" =~ "estuary_" ]];then
                 if [ ! -d "/tftp/pxe_install/arm64/estuary/${version_name}" ];then
-                    # TODO : think diffrent distro and board
                     cp -r "/tftp/pxe_install/arm64/estuary/v5.0" "/tftp/pxe_install/arm64/estuary/${version_name}"
                 fi
                 cd "/tftp/pxe_install/arm64/estuary/${version_name}"
@@ -41,7 +41,7 @@ function config_tftp() {
                 cd "${DEVICE_TYPE,,}"
 
                 # replave netboot
-                rm -rf netboot
+                rm -rf netboot netboot.tar.gz || true
                 init_os_dict
                 wget ${FTP_SERVER}/open-estuary/${version_name}/"${os_dict[$distro_name]}"/netboot.tar.gz
                 tar -xzvf netboot.tar.gz
