@@ -392,7 +392,7 @@ def count_scope_pass_number(test_suite_scope_dict, path, result):
         test_suite_dir = os.path.join(workspace, "local/ci-test-cases")
 
     yaml_file = utils.load_yaml(os.path.join(test_suite_dir, path))
-    for scope in yaml_file['metadata']['scope']:
+    for 'scope' in yaml_file['metadata'] and scope in yaml_file['metadata']['scope']:
         if result == 'pass':
             if scope not in test_suite_scope_dict:
                 test_suite_scope_dict[scope] = 1
