@@ -393,6 +393,7 @@ def count_scope_pass_number(test_suite_scope_dict, path, result):
 
     yaml_file = utils.load_yaml(os.path.join(test_suite_dir, path))
     if not 'scope' in yaml_file['metadata']:
+        # TODO : use default unknown scope for these test suit
         return
 
     for scope in yaml_file['metadata']['scope']:
