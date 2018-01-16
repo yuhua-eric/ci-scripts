@@ -443,11 +443,18 @@ EOF
     cd ${WORKSPACE}/local/ci-scripts/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
     echo  ""
     echo "Test summary is below:" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "******************** SUMMARY START ********************" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "Type	Total_Number Failed_Number Success_Number" >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat whole_summary.txt >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "******************** SUMMARY END ********************" >> ${WORKSPACE}/MAIL_CONTENT.txt
+
 
     echo  ""
     echo "The Test Case details is below:" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "************************ DETAILS TESTCASE START ************************" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "job_id	suite_name	case_name		case_result	" >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat details_summary.txt >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "************************ DETAILS TESTCASE END ************************" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "4. 本月版本健康度统计" >> ${WORKSPACE}/MAIL_CONTENT.txt

@@ -32,9 +32,6 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Tabl
 # for test report
 whole_summary_name = 'whole_summary.txt'
 details_summary_name = 'details_summary.txt'
-total_str = "Total number of test cases: "
-fail_str = "Failed number of test cases: "
-suc_str = "Success number of test cases: "
 
 job_result_dict = {}
 
@@ -741,36 +738,28 @@ def generate_email_test_report():
                 else:
                     test_total += 1
     with open(summary_file, 'w') as wfp:
-        wfp.write("*" * 20 + " BOOT SUMMARY START " + "*" * 20 + '\n')
-        wfp.write("\n" + total_str + str(boot_total))
-        wfp.write("\n" + fail_str + str(boot_fail))
-        wfp.write("\n" + suc_str + str(boot_success))
-        wfp.write("\n" + "*" * 20 + " BOOT SUMMARY END" + "*" * 20 + '\n')
+        wfp.write("boot ")
+        wfp.write(str(boot_total) + " ")
+        wfp.write(str(boot_fail) + " ")
+        wfp.write(str(boot_success) + "\n")
 
     with open(summary_file, "ab") as wfp:
-        wfp.write("*" * 20 + " SUMMARY TESTCASE START " + "*" * 20 + '\n')
-        wfp.write("\n" + total_str + str(test_total))
-        wfp.write("\n" + fail_str + str(test_fail))
-        wfp.write("\n" + suc_str + str(test_success))
-        wfp.write("\n" + "*" * 20 + " SUMMARY END " + "*" * 20 + '\n')
+        wfp.write("test ")
+        wfp.write(str(test_total) + " ")
+        wfp.write(str(test_fail) + " ")
+        wfp.write(str(test_success) + "\n")
 
     ## try to write details file
     details_dir = os.getcwd()
     details_file = os.path.join(details_dir, details_summary_name)
     if os.path.exists(details_file):
         os.remove(details_file)
-    with open(details_file, "wt") as wfp:
-        wfp.write("*" * 24 + " DETAILS TESTCASE START " + "*" * 24 + '\n')
-        wfp.write("job_id\t"+ "suite_name\t" + "case_name\t\t" + "case_result\t" + '\n')
 
-    with open(details_file, "at") as wfp:
+    with open(details_file, "wt") as wfp:
         for job_id in sorted(job_result_dict.keys()):
             for item in sorted(job_result_dict[job_id], key=lambda x: x['suite']):
                 if item['suite'] != 'lava':
                     wfp.write(job_id + "\t" + item['suite'] + '\t' + item['name'] + '\t\t' + item['result'] + '\n')
-
-    with open(details_file, "at") as wfp:
-        wfp.write("*" * 24 + " DETAILS TESTCASE END " + "*" * 24 + '\n')
 
     print "--------------now end get testjob result ------------------------------"
 
