@@ -1,0 +1,196 @@
+<table cellspacing="0px">
+    <tr style="height: 40px"></tr>
+    <!--标题-->
+    <tr style="text-align: center;justify-content: center">
+        <td width="100px"></td>
+        <td colspan="11" style="font-weight: bold">${MAIL_TITLE}</td>
+    </tr>
+    <!--1.构建信息-->
+    <tr>
+        <td></td>
+        <td width="200px">1.构建信息</td>
+    </tr>
+    <!--单元格头-->
+    <tr style="text-align: center;justify-content: center;">
+        <td></td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">版本描述</td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">构建开始时间</td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000;border-right:solid  1px #000000;">测试完成时间</td>
+    </tr>
+    <!--单元格数据-->
+    <tr>
+        <td></td>
+        ${MAIL_CONTENT_1}
+        <!--
+        <td style="border-top: solid 1px #000000;border-left: solid 1px #000000;border-bottom: solid 1px black">版本名称-版本号(日期)<br>
+            ex: Estuary V5.0 - 2018/01/10</td>
+        <td style="border-top: solid 1px #000000;border-left: solid 1px #000000;border-bottom: solid 1px black">YYYY/MM/DD HH:MM:SS</td>
+        <td style="border: solid 1px #000000">YYYY/MM/DD HH:MM:SS</td>
+        -->
+    </tr>
+    <tr style="height: 20px"></tr>
+
+    <!--2.今日构建结果-->
+    <tr>
+        <td></td>
+        <td width="200px">2.今日构建结果</td>
+    </tr>
+    <!--单元格头-->
+    <tr style="text-align: center;justify-content: center">
+        <td rowspan="2"></td>
+        <td rowspan="2" style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">项目</td>
+        <td rowspan="2" style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">os类型</td>
+        <td rowspan="2" style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">编译</td>
+        <td colspan="5" style="background-color: #b9bbc0;border: solid 1px #000000;">系统测试数据统计</td>
+    </tr>
+    <tr style="text-align: center;justify-content: center">
+        <td style="background-color: #b9bbc0;border-left: solid 1px #000000">总用例数</td>
+        <td style="background-color: #b9bbc0;border-left: solid 1px #000000">成功率</td>
+        <td style="background-color: #b9bbc0;border-left: solid 1px #000000">成功用例数</td>
+        <td style="background-color: #b9bbc0;border-left: solid 1px #000000">失败用例数</td>
+        <td style="background-color: #b9bbc0;border-right: solid 1px #000000;border-left: solid 1px #000000">未执行用例数</td>
+    </tr>
+    <!--单元格数据-->
+    <tr>
+        <td></td>
+        <td rowspan="3" style="text-align: center;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000;border-bottom: solid 1px black">Estuary V5.0</td>
+        <td style="text-align: center;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000">Ubuntu</td>
+
+        ${MAIL_CONTENT_2_1}
+        <!--
+        <td style="border-top: solid 1px #000000;border-left: solid 1px #000000">pass/fail/block/na</td>
+        <td style="border-top: solid 1px #000000;border-left: solid 1px #000000"></td>
+        <td style="border-top: solid 1px #000000;border-left: solid 1px #000000">xx%</td>
+        <td style="text-align: right;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000"><a href="" style="color: #008000">222</a></td>
+        <td style="text-align: right;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000"><a href="" style="color: #ff0000">33</a></td>
+        <td style="text-align: right;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000;border-right: solid 1px #000000"><a href="" style="color: orange">33</a></td>
+        -->
+    </tr>
+    <tr>
+        <td></td>
+        <td style="text-align: center;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000">Debian</td>
+
+        ${MAIL_CONTENT_2_2}
+        <!--
+             <td style="border-top: solid 1px #000000;border-left: solid 1px #000000">pass/fail/block/na</td>
+             <td style="border-top: solid 1px #000000;border-left: solid 1px #000000"></td>
+             <td style="border-top: solid 1px #000000;border-left: solid 1px #000000">xx%</td>
+             <td style="text-align: right;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000"><a href="" style="color: #008000">222</a></td>
+             <td style="text-align: right;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000"><a href="" style="color: #ff0000">33</a></td>
+             <td style="text-align: right;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000;border-right: solid 1px #000000"><a href="" style="color: orange">33</a></td>
+           -->
+    </tr>
+    <tr>
+        <td></td>
+        <td style="text-align: center;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000;border-bottom: solid 1px #000000">CentOS</td>
+        ${MAIL_CONTENT_2_3}
+        <!--
+        <td style="border-top: solid 1px #000000;border-left: solid 1px #000000;border-bottom: solid 1px #000000">pass/fail/block/na</td>
+        <td style="border-top: solid 1px #000000;border-left: solid 1px #000000;border-bottom: solid 1px #000000"></td>
+        <td style="border-top: solid 1px #000000;border-left: solid 1px #000000;border-bottom: solid 1px #000000">xx%</td>
+        <td style="text-align: right;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000;border-bottom: solid 1px #000000"><a href="" style="color: #008000">222</a></td>
+        <td style="text-align: right;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000;border-bottom: solid 1px #000000"><a href="" style="color: #ff0000">33</a></td>
+        <td style="text-align: right;justify-content: center;border: solid 1px #000000"><a href="" style="color: orange">33</a></td>
+        -->
+    </tr>
+    <tr style="height: 20px"></tr>
+
+    <!--3.测试数据统计-->
+    <tr>
+        <td></td>
+        <td width="200px">3.测试数据统计</td>
+    </tr>
+    <!--单元格头-->
+    <tr style="text-align: center;justify-content: center">
+        <td rowspan="2"></td>
+        <td rowspan="2" style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">层级</td>
+        <td rowspan="2" style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">模块</td>
+        <td rowspan="2" style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">开发责任人</td>
+        <td rowspan="2" style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">测试责任人</td>
+        <td colspan="5" style="background-color: #b9bbc0;border: solid 1px #000000;">系统测试数据统计</td>
+    </tr>
+    <tr style="text-align: center;justify-content: center">
+        <td style="background-color: #b9bbc0;border-left: solid 1px #000000">总用例数</td>
+        <td style="background-color: #b9bbc0;border-left: solid 1px #000000">成功率</td>
+        <td style="background-color: #b9bbc0;border-left: solid 1px #000000">成功用例数</td>
+        <td style="background-color: #b9bbc0;border-left: solid 1px #000000">失败用例数</td>
+        <td style="background-color: #b9bbc0;border-right: solid 1px #000000;border-left: solid 1px #000000">未执行用例数</td>
+    </tr>
+    </tr>
+    <!--单元格数据-->
+    <!--kernel-->
+    ${MAIL_CONTENT_3}
+    <!--
+    <tr>
+        <td></td>
+             <td style="text-align: center;justify-content: center;border-top: solid 1px black;border-left: solid 1px #000000">kernel</td>
+             <td style="text-align: center;justify-content: center;border-top: solid 1px black;border-left: solid 1px #000000">xxx</td>
+             <td style="border-top: solid 1px black;border-left: solid 1px #000000"></td>
+             <td style="border-top: solid 1px black;border-left: solid 1px #000000"></td>
+             <td style="border-top: solid 1px black;border-left: solid 1px #000000"></td>
+             <td style="border-top: solid 1px black;border-left: solid 1px #000000">xx%</td>
+             <td style="text-align: right;justify-content: center;border-top: solid 1px black;border-left: solid 1px #000000"><a href="" style="color: #008000">222</a></td>
+             <td style="text-align: right;justify-content: center;border-top: solid 1px black;border-left: solid 1px #000000"><a href="" style="color: #ff0000">33</a></td>
+             <td style="text-align: right;justify-content: center;border-top: solid 1px black;border-left:solid 1px #000000;border-right: solid 1px #000000"><a href="" style="color: orange">33</a></td>
+    </tr>
+    -->
+    <tr style="height: 20px"></tr>
+
+    <!--4.本月版本健康度统计-->
+    <tr>
+        <td></td>
+        <td width="200px">4.本月版本健康度统计</td>
+    </tr>
+    <!--单元格头-->
+    <tr style="text-align: center;justify-content: center;">
+        <td></td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">项目</td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">编译成功率</td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">测试成功率</td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">静态检查</td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000;border-right: solid 1px black">本月CI构建成功率</td>
+    </tr>
+    <!--单元格数据-->
+    <tr style="text-align: center;justify-content: center;">
+        <td></td>
+        ${MAIL_CONTENT_4}
+        <!--
+             <td style="border-top: solid 1px #000000;border-left: solid 1px #000000;border-bottom: solid 1px #000000">Estuary V5.0</td>
+             <td style="border-top: solid 1px #000000;border-left: solid 1px #000000;border-bottom: solid 1px #000000">xx%</td>
+             <td style="border-top: solid 1px #000000;border-left: solid 1px #000000;border-bottom: solid 1px #000000">xx%</td>
+             <td style="border-top: solid 1px #000000;border-left: solid 1px #000000;border-bottom: solid 1px #000000">xx%</td>
+             <td style="border: solid 1px #000000">xx%</td>
+           -->
+    </tr>
+    <tr style="height: 20px"></tr>
+
+    <!--测试结果页面-->
+    <tr>
+        <td></td>
+        <!--红色-->
+        <td width="200px" style="text-align: center;justify-content: center;color: #ff0000;border-top: solid 1px black;border-left: solid 1px black;border-right: solid 1px #000000">测试结果页面</td>
+    </tr>
+    <!--单元格头-->
+    <tr style="text-align: center;justify-content: center">
+        <td></td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">No</td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">job_id</td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">suite_name</td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">case_name</td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000">case_result</td>
+        <td style="background-color: #b9bbc0;border-top: solid 1px #000000;border-left: solid 1px #000000;border-right: solid 1px #000000">Log</td>
+    </tr>
+    <!--单元格数据-->
+    ${MAIL_CONTENT_5}
+    <!--
+    <tr style="border-bottom: solid 1px black">
+        <td></td>
+             <td style="text-align: center;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000">1</td>
+             <td style="text-align: center;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000">1158</td>
+             <td style="border-top: solid 1px #000000;border-left: solid 1px #000000">go-bindata</td>
+             <td style="border-top: solid 1px #000000;border-left: solid 1px #000000">setup-estuary-repository</td>
+             <td style="text-align: center;justify-content: center;border-top: solid 1px #000000;border-left: solid 1px #000000"></td>
+             <td style="text-align: center;justify-content: center;color:#ff0000;border-top: solid 1px #000000;border-left: solid 1px #000000;border-right: solid 1px #000000"><a href="" style="color: #ff0000">Link</a></td>
+    </tr>
+    -->
+</table>
