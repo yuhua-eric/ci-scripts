@@ -444,16 +444,16 @@ EOF
     echo  ""
     echo "Test summary is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<table>"
-    echo "<tr><th>Type</th><th>Total_Number</th><th>Failed_Number</th><th>Success_Number</th></tr>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    cat whole_summary.txt | awk -F" " '{print "<tr>" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Type</th><th>Total_Number</th><th>Failed_Number</th><th>Success_Number</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    cat whole_summary.txt | awk -F" " '{print "<tr style="text-align: center;justify-content: center;">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>"
 
 
     echo  ""
     echo "The Test Case details is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<table>"
-    echo "</tr><th>job_id</th><th>suite_name</th><th>case_name</th><th>case_result</th></tr>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    cat details_summary.txt | awk -F" " '{print "<tr>" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>job_id</th><th>suite_name</th><th>case_name</th><th>case_result</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    cat details_summary.txt | awk -F" " '{print "<tr style="text-align: center;justify-content: center;">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>"
 
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
