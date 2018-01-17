@@ -6,6 +6,10 @@ cfg_path="./auto_cfg_file/"
 new_grub="grub.cfg"
 new_preseed="ubuntu.seed"
 
+VERSION=$(ls /fileserver/open-estuary)
+if [ -z ${VERSION} ];then
+    exit 1
+fi
 cp /fileserver/open-estuary/${VERSION}/Ubuntu/${material_iso} ./
 
 if [ ! -d ./mnt ];then

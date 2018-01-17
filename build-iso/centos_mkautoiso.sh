@@ -6,6 +6,11 @@ cfg_path="./auto_cfg_file/centos/"
 new_grub="grub.cfg"
 new_kickstart="ks-iso.cfg"
 
+
+VERSION=$(ls /fileserver/open-estuary)
+if [ -z ${VERSION} ];then
+    exit 1
+fi
 cp /fileserver/open-estuary/${VERSION}/CentOS/${material_iso} ./
 
 if [ ! -d ./mnt ];then
