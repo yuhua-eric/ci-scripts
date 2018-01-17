@@ -2,7 +2,7 @@
 
 material_iso="estuary-master-ubuntu.iso"
 new_iso="auto-estuary-master-ubuntu.iso"
-cfg_path="./auto_cfg_file/"
+cfg_path="./auto_cfg_file/ubuntu/"
 new_grub="grub.cfg"
 new_preseed="ubuntu.seed"
 
@@ -10,7 +10,7 @@ VERSION=$(ls /fileserver/open-estuary)
 if [ -z ${VERSION} ];then
     exit 1
 fi
-cp /fileserver/open-estuary/${VERSION}/Ubuntu/${material_iso} ./
+cp -f /fileserver/open-estuary/${VERSION}/Ubuntu/${material_iso} ./
 
 if [ ! -d ./mnt ];then
     mkdir ./mnt
@@ -39,4 +39,4 @@ xorriso -as mkisofs -r -checksum_algorithm_iso md5,sha1 -V 'custom' -o ./$new_is
 umount ./mnt/
 rm -rf ./ubuntu ./mnt
 
-cp ${new_iso} /fileserver/open-estuary/${VERSION}/Ubuntu/
+cp -f ${new_iso} /fileserver/open-estuary/${VERSION}/Ubuntu/

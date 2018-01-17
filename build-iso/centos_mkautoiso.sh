@@ -11,7 +11,7 @@ VERSION=$(ls /fileserver/open-estuary)
 if [ -z ${VERSION} ];then
     exit 1
 fi
-cp /fileserver/open-estuary/${VERSION}/CentOS/${material_iso} ./
+cp -f /fileserver/open-estuary/${VERSION}/CentOS/${material_iso} ./
 
 if [ ! -d ./mnt ];then
     mkdir ./mnt
@@ -40,4 +40,4 @@ genisoimage -e images/efiboot.img -no-emul-boot -T -J -R -c boot.catalog -hide b
 umount ./mnt/
 rm -rf ./centos ./mnt
 
-cp ${new_iso} /fileserver/open-estuary/${VERSION}/CentOS/
+cp -f ${new_iso} /fileserver/open-estuary/${VERSION}/CentOS/
