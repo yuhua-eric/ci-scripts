@@ -428,13 +428,13 @@ Estuary CI Auto-test Daily Report (${TODAY}) <br>
 1、构建信息<br>
 Project Name: ${TREE_NAME} <br>
 Version: ${GIT_DESCRIBE} <br>
+Boot and Test Status: Success <br>
 <br>
 2. 今日构建结果 <br>
-Boot and Test Status: Success <br>
-Build Log Address: ${BUILD_URL}console <br>
-Build Project Address: $BUILD_URL <br>
-Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE} <br>
-The Test Cases Definition Address: ${TEST_REPO} <br>
+<a href="${BUILD_URL}console">Build Log Address</a> <br>
+<a href="$BUILD_URL">Build Project Address</a><br>
+<a href="${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}">Build and Generated Binaries Address</a> <br>
+<a href="${TEST_REPO}">The Test Cases Definition Address</a> <br>
 <br>
 3. 测试数据统计 <br>
 <br>
