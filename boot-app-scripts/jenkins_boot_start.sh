@@ -307,7 +307,7 @@ function collect_result() {
         rm -rf  ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
     fi
 
-    echo '' | tee ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} | tee ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
+    # echo '' | tee ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} | tee ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
 
     cd ${GIT_DESCRIBE}/${RESULTS_DIR}
     distro_dirs=$(ls -d */ | cut -f1 -d'/')
