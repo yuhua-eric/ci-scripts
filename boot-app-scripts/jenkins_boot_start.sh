@@ -448,6 +448,7 @@ EOF
     cat whole_summary.txt | awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
+    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo  ""
     echo "The Test Case details is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
