@@ -102,18 +102,18 @@ function generate_failed_mail(){
     echo "${FAILED_MAIL_LIST}" > MAIL_LIST.txt
     echo "Estuary CI - ${GIT_DESCRIBE} - Failed" > MAIL_SUBJECT.txt
     cat > MAIL_CONTENT.txt <<EOF
-( This mail is send by Jenkins automatically, don't reply )
-Project Name: ${TREE_NAME}
-Version: ${GIT_DESCRIBE}
-Build Status: failed
-Boot and Test Status: failed
-Build Log Address: ${BUILD_URL}console
-Build Project Address: $BUILD_URL
-Build and Generated Binaries Address: NONE
-The Test Cases Definition Address: ${TEST_REPO}
-
-The build is failed unexpectly. Please check the log and fix it.
-
+( This mail is send by Jenkins automatically, don't reply )<br>
+Project Name: ${TREE_NAME}<br>
+Version: ${GIT_DESCRIBE}<br>
+Build Status: failed<br>
+Boot and Test Status: failed<br>
+Build Log Address: ${BUILD_URL}console<br>
+Build Project Address: $BUILD_URL<br>
+Build and Generated Binaries Address: NONE<br>
+The Test Cases Definition Address: ${TEST_REPO}<br>
+<br>
+The build is failed unexpectly. Please check the log and fix it.<br>
+<br>
 EOF
 
 }

@@ -94,16 +94,16 @@ function generate_failed_mail(){
     echo "${FAILED_MAIL_LIST}" > MAIL_LIST.txt
     echo "Estuary CI Build - ${GIT_DESCRIBE} - Failed" > MAIL_SUBJECT.txt
     cat > MAIL_CONTENT.txt <<EOF
-( This mail is send by Jenkins automatically, don't reply )
-Project Name: ${TREE_NAME}
-Version: ${GIT_DESCRIBE}
-Build Status: failed
-Build Log Address: ${BUILD_URL}console
-Build Project Address: $BUILD_URL
-Build and Generated Binaries Address: NONE
-
-The build is failed unexpectly. Please check the log and fix it.
-
+( This mail is send by Jenkins automatically, don't reply )<br>
+Project Name: ${TREE_NAME}<br>
+Version: ${GIT_DESCRIBE}<br>
+Build Status: failed<br>
+Build Log Address: ${BUILD_URL}console<br>
+Build Project Address: $BUILD_URL<br>
+Build and Generated Binaries Address: NONE<br>
+<br>
+The build is failed unexpectly. Please check the log and fix it.<br>
+<br>
 EOF
 }
 
@@ -118,13 +118,13 @@ function generate_success_mail(){
 
     echo "Estuary CI - ${GIT_DESCRIBE} - Result" > ${WORKSPACE}/MAIL_SUBJECT.txt
     cat > ${WORKSPACE}/MAIL_CONTENT.txt <<EOF
-( This mail is send by Jenkins automatically, don't reply )
-Project Name: ${TREE_NAME}
-Version: ${GIT_DESCRIBE}
-Build Status: success
-Build Log Address: ${BUILD_URL}console
-Build Project Address: $BUILD_URL
-Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}
+( This mail is send by Jenkins automatically, don't reply )<br>
+Project Name: ${TREE_NAME}<br>
+Version: ${GIT_DESCRIBE}<br>
+Build Status: success<br>
+Build Log Address: ${BUILD_URL}console<br>
+Build Project Address: $BUILD_URL<br>
+Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}<br>
 EOF
 }
 

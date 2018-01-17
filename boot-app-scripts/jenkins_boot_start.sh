@@ -423,41 +423,41 @@ function generate_success_mail(){
 
     TODAY=$(date +"%Y/%m/%d")
     cat > ${WORKSPACE}/MAIL_CONTENT.txt <<EOF
-Estuary CI Auto-test Daily Report (${TODAY})
-
-1、构建信息
-Project Name: ${TREE_NAME}
-Version: ${GIT_DESCRIBE}
-
-2. 今日构建结果
-Boot and Test Status: Success
-Build Log Address: ${BUILD_URL}console
-Build Project Address: $BUILD_URL
-Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}
-The Test Cases Definition Address: ${TEST_REPO}
-
-3. 测试数据统计
-
+Estuary CI Auto-test Daily Report (${TODAY}) <br>
+<br>
+1、构建信息<br>
+Project Name: ${TREE_NAME} <br>
+Version: ${GIT_DESCRIBE} <br>
+<br>
+2. 今日构建结果 <br>
+Boot and Test Status: Success <br>
+Build Log Address: ${BUILD_URL}console <br>
+Build Project Address: $BUILD_URL <br>
+Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE} <br>
+The Test Cases Definition Address: ${TEST_REPO} <br>
+<br>
+3. 测试数据统计 <br>
+<br>
 EOF
 
     cd ${WORKSPACE}/local/ci-scripts/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
     echo  ""
-    echo "Test summary is below:" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "******************** SUMMARY START ********************" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "Type	Total_Number Failed_Number Success_Number" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    cat whole_summary.txt >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "******************** SUMMARY END ********************" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "Test summary is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "******************** SUMMARY START ********************<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "Type	Total_Number Failed_Number Success_Number<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    cat whole_summary.txt | sed -e 's/$/<br>/' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "******************** SUMMARY END ********************<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
 
     echo  ""
-    echo "The Test Case details is below:" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "************************ DETAILS TESTCASE START ************************" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "job_id	suite_name	case_name		case_result	" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    cat details_summary.txt >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "************************ DETAILS TESTCASE END ************************" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "The Test Case details is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "************************ DETAILS TESTCASE START ************************<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "job_id	suite_name	case_name		case_result	<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    cat details_summary.txt | sed -e 's/$/<br>/' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "************************ DETAILS TESTCASE END ************************<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-    echo "" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "4. 本月版本健康度统计" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "4. 本月版本健康度统计<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     cd -
 }
 
