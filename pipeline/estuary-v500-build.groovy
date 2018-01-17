@@ -36,6 +36,7 @@ node ('ci-v500-compile'){
     // load functions
     def functions = load "./local/ci-scripts/pipeline/functions.groovy"
 
+
     def build_result = 0
     stage('Build') {
         build_result = sh script: "./local/ci-scripts/build-scripts/jenkins_build_v500_start.sh -p env.properties 2>&1 ", returnStatus: true
@@ -50,6 +51,22 @@ node ('ci-v500-compile'){
         currentBuild.result = 'FAILURE'
         return
     }
+
+
+    def iso_result = 0
+    dir('./local/ci-scripts/build-iso') {
+        iso_result = sh script: "buildiso.sh 2>&1 ", returnStatus: true
+    }
+    echo "iso_result : ${iso_result}"
+    if (iso_result == 0) {
+        echo "iso success"
+    } else {
+        echo "iso failed"
+        functions.send_mail()
+        currentBuild.result = 'FAILURE'
+        return
+    }
+
 
     stage('stash') {
         // stash result
