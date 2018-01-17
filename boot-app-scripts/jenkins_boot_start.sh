@@ -443,18 +443,18 @@ EOF
     cd ${WORKSPACE}/local/ci-scripts/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
     echo  ""
     echo "Test summary is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "******************** SUMMARY START ********************<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "Type	Total_Number Failed_Number Success_Number<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    cat whole_summary.txt | sed -e 's/$/<br>/' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "******************** SUMMARY END ********************<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<table>"
+    echo "<tr><th>Type</th><th>Total_Number</th><th>Failed_Number</th><th>Success_Number</th></tr>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    cat whole_summary.txt | awk -F" " '{print "<tr>" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "</table>"
 
 
     echo  ""
     echo "The Test Case details is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "************************ DETAILS TESTCASE START ************************<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "job_id	suite_name	case_name		case_result	<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    cat details_summary.txt | sed -e 's/$/<br>/' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "************************ DETAILS TESTCASE END ************************<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<table>"
+    echo "</tr><th>job_id</th><th>suite_name</th><th>case_name</th><th>case_result</th></tr>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    cat details_summary.txt | awk -F" " '{print "<tr>" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "</table>"
 
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "4. 本月版本健康度统计<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
