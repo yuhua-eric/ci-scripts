@@ -419,7 +419,7 @@ function generate_success_mail(){
         echo "${SUCCESS_MAIL_LIST}" > ${WORKSPACE}/MAIL_LIST.txt
     fi
 
-    echo "Estuary CI - ${GIT_DESCRIBE} - Result" > ${WORKSPACE}/MAIL_SUBJECT.txt
+    echo "Estuary CI Auto-test Daily Report (${TODAY}) - ${GIT_DESCRIBE}" > ${WORKSPACE}/MAIL_SUBJECT.txt
 
     TODAY=$(date +"%Y/%m/%d")
     cat > ${WORKSPACE}/MAIL_CONTENT.txt <<EOF
