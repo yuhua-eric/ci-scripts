@@ -6,6 +6,8 @@ cfg_path="./auto_cfg_file/"
 new_grub="grub.cfg"
 new_preseed="ubuntu.seed"
 
+cp /fileserver/open-estuary/${VERSION}/Ubuntu/${material_iso} ./
+
 if [ ! -d ./mnt ];then
     mkdir ./mnt
 else
@@ -32,3 +34,5 @@ xorriso -as mkisofs -r -checksum_algorithm_iso md5,sha1 -V 'custom' -o ./$new_is
 
 umount ./mnt/
 rm -rf ./ubuntu ./mnt
+
+cp ${new_iso} /fileserver/open-estuary/${VERSION}/Ubuntu/

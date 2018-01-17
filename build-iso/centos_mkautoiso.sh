@@ -6,6 +6,8 @@ cfg_path="./auto_cfg_file/centos/"
 new_grub="grub.cfg"
 new_kickstart="ks-iso.cfg"
 
+cp /fileserver/open-estuary/${VERSION}/CentOS/${material_iso} ./
+
 if [ ! -d ./mnt ];then
     mkdir ./mnt
 else
@@ -15,7 +17,7 @@ else
 fi
 
 if [ ! -d ./centos ];then
-    mkdir ./centos 
+    mkdir ./centos
 else
     rm -rf ./centos
     mkdir centos
@@ -32,3 +34,5 @@ genisoimage -e images/efiboot.img -no-emul-boot -T -J -R -c boot.catalog -hide b
 
 umount ./mnt/
 rm -rf ./centos ./mnt
+
+cp ${new_iso} /fileserver/open-estuary/${VERSION}/CentOS/
