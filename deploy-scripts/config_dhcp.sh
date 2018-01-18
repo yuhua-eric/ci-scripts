@@ -2,6 +2,8 @@
 __ORIGIN_PATH__="$PWD"
 script_path="${0%/*}"  # remove the script name ,get the path
 script_path=${script_path/\./$(pwd)} # if path start with . , replace with $PWD
+source "${script_path}/common.sh"
+
 cd "${script_path}"
 
 # read config from config file
@@ -20,28 +22,6 @@ version_name=${4:-"v5.0"}
 # add for ISO install way
 BOOT_PLAN=${5:-"BOOT_PXE"}
 
-function workaround_stash_devices_config() {
-    if [ -n "${CI_ENV}" ];then
-        :
-    else
-        CI_ENV=dev
-    fi
-    if [ -e "configs/"${CI_ENV}"/devices.yaml" ];then
-        cp -f configs/"${CI_ENV}"/devices.yaml /tmp/devices.yaml
-    fi
-}
-
-function workaround_pop_devices_config() {
-    if [ -n "${CI_ENV}" ];then
-        :
-    else
-        CI_ENV=dev
-    fi
-
-    if [ -e "/tmp/devices.yaml" ];then
-        cp -f /tmp/devices.yaml configs/"${CI_ENV}"/devices.yaml
-    fi
-}
 
 function config_dhcp() {
     # TODO : think generate diffrent dhcp config by tree name

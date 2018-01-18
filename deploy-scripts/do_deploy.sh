@@ -2,6 +2,7 @@
 __ORIGIN_PATH__="$PWD"
 script_path="${0%/*}"  # remove the script name ,get the path
 script_path=${script_path/\./$(pwd)} # if path start with . , replace with $PWD
+source "${script_path}/common.sh"
 cd "${script_path}"
 
 TREE_NAME=${1:-"open-estuary"}
@@ -18,12 +19,6 @@ TARGET_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -
 NFS_BMC_IP=$(python configs/parameter_parser.py -f config.yaml -s NFS -k BMC_IP)
 DEVICE_TYPE=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k type)
 cd -
-
-function init_os_dict() {
-    # declare global dict
-    declare -A -g os_dict
-    os_dict=( ["centos"]="CentOS" ["ubuntu"]="Ubuntu")
-}
 
 function bmc_vmm_connect() {
     local SSH_PASS="Huawei12#$"

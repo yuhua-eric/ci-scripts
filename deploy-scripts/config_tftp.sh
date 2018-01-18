@@ -2,6 +2,8 @@
 __ORIGIN_PATH__="$PWD"
 script_path="${0%/*}"  # remove the script name ,get the path
 script_path=${script_path/\./$(pwd)} # if path start with . , replace with $PWD
+source "${script_path}/common.sh"
+
 cd "${script_path}"
 
 TFTP_DIR=/tftp
@@ -24,12 +26,6 @@ TARGET_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -
 DEVICE_TYPE=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k type)
 cd -
 
-
-function init_os_dict() {
-    # declare global dict
-    declare -A -g os_dict
-    os_dict=( ["centos"]="CentOS" ["ubuntu"]="Ubuntu")
-}
 
 function config_tftp_pxe() {
     # config uefi
