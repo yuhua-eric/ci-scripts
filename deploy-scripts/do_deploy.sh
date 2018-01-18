@@ -49,6 +49,7 @@ function do_deploy() {
     elif [ "${BOOT_PLAN}" = "BOOT_ISO" ];then
         :
         # mount iso
+        bmc_vmm_disconnect || true
         bmc_vmm_connect
     fi
 
