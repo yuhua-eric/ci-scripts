@@ -14,9 +14,9 @@ def boot_device(DEPLOY_TYPE, BMC_HOST, BMC_USER, BMC_PASS):
     pxe_boot_command = 'ipmitool -H %s -I lanplus -U %s -P %s chassis bootdev pxe' % (BMC_HOST, BMC_USER, BMC_PASS)
     iso_boot_command = 'ipmitool -H %s -I lanplus -U %s -P %s chassis bootdev cdrom' % (BMC_HOST, BMC_USER, BMC_PASS)
 
-    if DEPLOY_TYPE = "BOOT_PXE":
+    if DEPLOY_TYPE == "BOOT_PXE":
         shell.run_command(pxe_boot_command.split(' '), allow_fail=True)
-    elif DEPLOY_TYPE = "BOOT_ISO":
+    elif DEPLOY_TYPE == "BOOT_ISO":
         shell.run_command(iso_boot_command.split(' '), allow_fail=True)
     else:
         print "ERROR: don't support this BOOT TYPE " + DEPLOY_TYPE
