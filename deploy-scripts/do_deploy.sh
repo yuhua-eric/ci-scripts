@@ -31,7 +31,7 @@ function bmc_vmm_connect() {
 
     init_os_dict
     sshpass -p ${SSH_PASS} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP} \
-            ipmcset -t vmm -d connect -v nfs://${NFS_BMC_IP}/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/"${$distro_name}"/auto-install.iso
+            ipmcset -t vmm -d connect -v nfs://${NFS_BMC_IP}/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/"${distro_name}"/auto-install.iso
 }
 
 # TODO : trap signal to disconnect bmc
