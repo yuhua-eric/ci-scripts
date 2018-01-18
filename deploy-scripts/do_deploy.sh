@@ -15,7 +15,33 @@ BOOT_PLAN=${5:-"BOOT_NFS"}
 cd ../
 BMC_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k bmc)
 TARGET_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k ip)
+NFS_BMC_IP=$(python configs/parameter_parser.py -f config.yaml -s NFS -k BMC_IP)
 cd -
+
+function init_os_dict() {
+    # declare global dict
+    declare -A -g os_dict
+    os_dict=( ["centos"]="CentOS" ["ubuntu"]="Ubuntu")
+}
+
+function bmc_vmm_connect() {
+    local SSH_PASS="Huawei12#$"
+    local SSH_USER="root"
+    local SSH_IP=${BMC_IP}
+
+    init_os_dict
+    sshpass -p ${SSH_PASS} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP} \
+            ipmcset -t vmm -d connect -v nfs://${NFS_BMC_IP}/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/"${$distro_name}"/auto-install.iso
+}
+
+# TODO : trap signal to disconnect bmc
+function bmc_vmm_disconnect() {
+    local SSH_PASS="Huawei12#$"
+    local SSH_USER=root
+    local SSH_IP=${BMC_IP}
+
+    sshpass -p ${SSH_PASS} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP} ipmcset -t vmm -d disconnect
+}
 
 function do_deploy() {
     if [ "${BOOT_PLAN}" = "BOOT_PXE" ];then
@@ -23,6 +49,7 @@ function do_deploy() {
     elif [ "${BOOT_PLAN}" = "BOOT_ISO" ];then
         :
         # mount iso
+        bmc_vmm_connect
     fi
 
     # do deploy
@@ -38,13 +65,14 @@ function do_deploy() {
     elif [ "${BOOT_PLAN}" = "BOOT_ISO" ];then
         :
         # umount iso
+        bmc_vmm_disconnect
     fi
 }
 
 function copy_ssh_id(){
-    SSH_PASS=root
-    SSH_USER=root
-    SSH_IP=${TARGET_IP}
+    local SSH_PASS=root
+    local SSH_USER=root
+    local SSH_IP=${TARGET_IP}
 
     sshpass -p ${SSH_PASS} ssh-copy-id -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP}
 

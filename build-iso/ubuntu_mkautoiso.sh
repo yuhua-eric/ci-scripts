@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 material_iso="estuary-master-ubuntu.iso"
-new_iso="auto-estuary-master-ubuntu.iso"
+new_iso="auto-install.iso"
 cfg_path="./auto_cfg_file/ubuntu/"
 new_grub="grub.cfg"
 new_preseed="ubuntu.seed"

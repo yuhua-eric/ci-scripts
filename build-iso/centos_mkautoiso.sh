@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 material_iso="CentOS-7-aarch64-Everything.iso"
-new_iso="auto-CentOS-7-aarch64-Everything.iso"
+new_iso="auto-install.iso"
 cfg_path="./auto_cfg_file/centos/"
 new_grub="grub.cfg"
 new_kickstart="ks-iso.cfg"
