@@ -5,15 +5,24 @@ import argparse
 import time
 import re
 
-def boot_device(BMC_HOST, BMC_USER, BMC_PASS):
+def boot_device(DEPLOY_TYPE, BMC_HOST, BMC_USER, BMC_PASS):
     connection_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol activate' % (BMC_HOST, BMC_USER, BMC_PASS)
     disconnction_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol deactivate' % (BMC_HOST, BMC_USER, BMC_PASS)
     power_off_command = 'ipmitool -H %s -I lanplus -U %s -P %s power off' % (BMC_HOST, BMC_USER, BMC_PASS)
     power_on_command = 'ipmitool -H %s -I lanplus -U %s -P %s power on' % (BMC_HOST, BMC_USER, BMC_PASS)
-    pxe_boot_command = 'ipmitool -H %s -I lanplus -U %s -P %s chassis bootdev pxe' % (BMC_HOST, BMC_USER, BMC_PASS)
 
-    shell.run_command(pxe_boot_command.split(' '), allow_fail=True)
+    pxe_boot_command = 'ipmitool -H %s -I lanplus -U %s -P %s chassis bootdev pxe' % (BMC_HOST, BMC_USER, BMC_PASS)
+    iso_boot_command = 'ipmitool -H %s -I lanplus -U %s -P %s chassis bootdev cdrom' % (BMC_HOST, BMC_USER, BMC_PASS)
+
+    if DEPLOY_TYPE = "BOOT_PXE":
+        shell.run_command(pxe_boot_command.split(' '), allow_fail=True)
+    elif DEPLOY_TYPE = "BOOT_ISO":
+        shell.run_command(iso_boot_command.split(' '), allow_fail=True)
+    else:
+        print "ERROR: don't support this BOOT TYPE " + DEPLOY_TYPE
+        exit(-1)
     time.sleep(5)
+
     shell.run_command(disconnction_command.split(' '), allow_fail=True)
     time.sleep(5)
     shell.run_command(power_off_command.split(' '), allow_fail=True)
@@ -74,14 +83,21 @@ def main(args):
     BMC_HOST = '192.168.2.169'
     BMC_USER = 'root'
     BMC_PASS = 'Huawei12#$'
+
+    DEPLOY_TYPE = 'BOOT_NFS'
+
     if args.get("host") != "" or args.get("host") != None:
         BMC_HOST = args.get("host")
 
-    boot_device(BMC_HOST, BMC_USER, BMC_PASS)
+    if args.get("host") != "" or args.get("host") != None:
+        DEPLOY_TYPE = args.get('type')
+
+    boot_device(DEPLOY_TYPE, BMC_HOST, BMC_USER, BMC_PASS)
     exit(0)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", help="target host")
+    parser.add_argument("--type", help="deploy type")
     args = vars(parser.parse_args())
     main(args)

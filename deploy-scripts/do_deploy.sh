@@ -9,19 +9,36 @@ HOST_NAME=${2:-"d05ssh01"}
 distro_name=${3:-"centos"}
 version_name=${4:-"v3.1"}
 
+# add for ISO install way
+BOOT_PLAN=${5:-"BOOT_NFS"}
+
 cd ../
 BMC_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k bmc)
 TARGET_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k ip)
 cd -
 
 function do_deploy() {
+    if [ "${BOOT_PLAN}" = "BOOT_PXE" ];then
+        :
+    elif [ "${BOOT_PLAN}" = "BOOT_ISO" ];then
+        :
+        # mount iso
+    fi
+
     # do deploy
     sleep 10
-    python deploy.py --host ${BMC_IP}
+    python deploy.py --host ${BMC_IP} --type ${BOOT_PLAN}
 
     # wait the sshd service restart
     sleep 10
     copy_ssh_id
+
+    if [ "${BOOT_PLAN}" = "BOOT_PXE" ];then
+        :
+    elif [ "${BOOT_PLAN}" = "BOOT_ISO" ];then
+        :
+        # umount iso
+    fi
 }
 
 function copy_ssh_id(){

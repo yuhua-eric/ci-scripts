@@ -13,6 +13,13 @@ cd -
 DHCP_CONFIG_DIR=/etc/dhcp
 DHCP_FILENAME=dhcpd.conf
 
+tree_name=${1:-"open-estuary"}
+host_name=${2:-"d05ssh01"}
+distro_name=${3:-"centos"}
+version_name=${4:-"v5.0"}
+# add for ISO install way
+BOOT_PLAN=${5:-"BOOT_NFS"}
+
 function workaround_stash_devices_config() {
     if [ -n "${CI_ENV}" ];then
         :
@@ -37,11 +44,6 @@ function workaround_pop_devices_config() {
 }
 
 function config_dhcp() {
-    local tree_name=${1:-"open-estuary"}
-    local host_name=${2:-"d05ssh01"}
-    local distro_name=${3:-"centos"}
-    local version_name=${4:-"v5.0"}
-
     # TODO : think generate diffrent dhcp config by tree name
     cd ..;
     workaround_pop_devices_config
@@ -61,4 +63,8 @@ function config_dhcp() {
     sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${DHCP_SERVER} service isc-dhcp-server restart
 }
 
-config_dhcp "$@"
+if [ "${BOOT_PLAN}" = "BOOT_PXE" ];then
+    config_dhcp "$@"
+elif [ "${BOOT_PLAN}" = "BOOT_ISO" ];then
+    :
+fi
