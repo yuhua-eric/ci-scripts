@@ -15,7 +15,7 @@ distro_name=${3:-"centos"}
 version_name=${4:-"v5.0"}
 
 # add for ISO install way
-BOOT_PLAN=${5:-"BOOT_NFS"}
+BOOT_PLAN=${5:-"BOOT_PXE"}
 
 
 cd ../

@@ -18,7 +18,7 @@ host_name=${2:-"d05ssh01"}
 distro_name=${3:-"centos"}
 version_name=${4:-"v5.0"}
 # add for ISO install way
-BOOT_PLAN=${5:-"BOOT_NFS"}
+BOOT_PLAN=${5:-"BOOT_PXE"}
 
 function workaround_stash_devices_config() {
     if [ -n "${CI_ENV}" ];then
