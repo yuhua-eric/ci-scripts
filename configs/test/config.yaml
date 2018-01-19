@@ -36,7 +36,7 @@ LAVA:
     lavastream: /anonymous/admin/
     lavauser: admin
     lavaurl: http://192.168.50.122
-    LAVA_DISPLAY_URL: http://192.168.1.132:18080
+    LAVA_DISPLAY_URL: http://192.168.1.132:180
 
 # for lava job parameter
 Jenkins:
