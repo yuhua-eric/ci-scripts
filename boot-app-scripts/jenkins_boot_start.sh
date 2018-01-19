@@ -471,9 +471,9 @@ EOF
     echo  ""
     echo "The Test Case details is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table cellspacing="0" cellpadding="15px" border="1">' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Job_ID</th><th>Suite_Name</th><th>Case_Name</th><th>Case_Result</th><th>Link</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Job_ID</th><th>Suite_Name</th><th>Case_Name</th><th>Case_Result</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat details_summary.txt |
-        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td><td>" "'"${LAVA_DISPLAY_URL}/results/"'" $1 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
+        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $1 "\">" $1 "</a><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
