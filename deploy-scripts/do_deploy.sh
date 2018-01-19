@@ -47,7 +47,8 @@ function do_deploy() {
         :
         # mount iso
         bmc_vmm_disconnect || true
-        bmc_vmm_connect
+        # successfully is the vmm connect successs output
+        bmc_vmm_connect | grep 'successfully'
     fi
 
     # do deploy
