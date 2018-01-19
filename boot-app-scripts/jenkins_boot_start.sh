@@ -414,6 +414,7 @@ function generate_failed_mail(){
 Project Name: ${TREE_NAME} <br>
 Version: ${GIT_DESCRIBE} <br>
 Boot and Test Status: failed <br>
+Deploy Type: ${BOOT_PLAN} <br>
 Build Log Address: ${BUILD_URL}console <br>
 Build Project Address: $BUILD_URL <br>
 Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE} <br>
@@ -443,6 +444,7 @@ Estuary CI Auto-test Daily Report (${TODAY}) <br>
 1、构建信息<br>
 Project Name: ${TREE_NAME} <br>
 Version: ${GIT_DESCRIBE} <br>
+Deploy Type: ${BOOT_PLAN} <br>
 Boot and Test Status: Success <br>
 <br>
 2. 今日构建结果 <br>
