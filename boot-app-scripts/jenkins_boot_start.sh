@@ -34,6 +34,8 @@ function parse_params() {
     : ${LAVA_STREAM:=`python configs/parameter_parser.py -f config.yaml -s LAVA -k lavastream`}
     : ${LAVA_TOKEN:=`python configs/parameter_parser.py -f config.yaml -s LAVA -k TOKEN`}
 
+    : ${LAVA_DISPLAY_URL:=`python configs/parameter_parser.py -f config.yaml -s LAVA -k LAVA_DISPLAY_URL`}
+
     : ${FTP_SERVER:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k ftpserver`}
     : ${FTP_DIR:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k FTP_DIR`}
 
@@ -175,8 +177,6 @@ function print_time() {
     echo -e "@@@@@@"$@ `date "+%Y-%m-%d %H:%M:%S"` "\n" >> $timefile
     #echo -e "\n"  >> $timefile
 }
-
-export
 
 #######  Begining the tests ######
 
@@ -410,18 +410,17 @@ function generate_failed_mail(){
     echo "${FAILED_MAIL_LIST}" > MAIL_LIST.txt
     echo "Estuary CI - ${GIT_DESCRIBE} - Failed" > MAIL_SUBJECT.txt
     cat > MAIL_CONTENT.txt <<EOF
-( This mail is send by Jenkins automatically, don't reply )
-Project Name: ${TREE_NAME}
-Version: ${GIT_DESCRIBE}
-Build Status: success
-Boot and Test Status: failed
-Build Log Address: ${BUILD_URL}console
-Build Project Address: $BUILD_URL
-Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}
-The Test Cases Definition Address: ${TEST_REPO}
-
-The boot and test is failed unexpectly. Please check the log and fix it.
-
+( This mail is send by Jenkins automatically, don't reply ) <br>
+Project Name: ${TREE_NAME} <br>
+Version: ${GIT_DESCRIBE} <br>
+Boot and Test Status: failed <br>
+Build Log Address: ${BUILD_URL}console <br>
+Build Project Address: $BUILD_URL <br>
+Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE} <br>
+The Test Cases Definition Address: ${TEST_REPO}<br>
+<br>
+The boot and test is failed unexpectly. Please check the log and fix it.<br>
+<br>
 EOF
 
 }
@@ -461,7 +460,8 @@ EOF
     echo "Test summary is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table cellspacing="0" cellpadding="15px" border="1">' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Type</th><th>Total_Number</th><th>Failed_Number</th><th>Success_Number</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    cat whole_summary.txt | awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    cat whole_summary.txt |
+        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
@@ -469,8 +469,9 @@ EOF
     echo  ""
     echo "The Test Case details is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table cellspacing="0" cellpadding="15px" border="1">' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>job_id</th><th>suite_name</th><th>case_name</th><th>case_result</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    cat details_summary.txt | awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Job_ID</th><th>Suite_Name</th><th>Case_Name</th><th>Case_Result</th><th>Link</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    cat details_summary.txt |
+        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td><td>" "'"${LAVA_DISPLAY_URL}/results/"'" $1 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
