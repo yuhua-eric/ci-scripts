@@ -15,6 +15,7 @@ touch ~/.gitconfig
 mv -f ~/.gitconfig ~/.gitconfig.edit
 if [ -d "${DIR_NAME}" ];then
     rm -rf ${DIR_NAME}
+    echo "" > ~/.gitconfig.edit
 fi
 
 git clone ${TEST_REPO} --mirror
