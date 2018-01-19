@@ -28,6 +28,7 @@ actions:
     os: {distro}
     tree_name: {tree_name}
     distro_version: {kernel_version}
+    deploy_type: BOOT_ISO
 - boot:
     method: ssh
     connection: ssh
