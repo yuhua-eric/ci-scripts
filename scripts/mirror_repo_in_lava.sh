@@ -14,14 +14,13 @@ touch ~/.gitconfig
 
 mv -f ~/.gitconfig ~/.gitconfig.edit
 if [ -d "${DIR_NAME}" ];then
-    cd ${DIR_NAME}
-    git fetch
-    cd -
-else
-    git clone ${TEST_REPO} --mirror
-    echo "[url \"${MIRROR_ROOT}/${DIR_NAME}\"]" >> ~/.gitconfig.edit
-    echo "    insteadOf = ${TEST_REPO}" >> ~/.gitconfig.edit
+    rm -rf ${DIR_NAME}
 fi
+
+git clone ${TEST_REPO} --mirror
+echo "[url \"${MIRROR_ROOT}/${DIR_NAME}\"]" >> ~/.gitconfig.edit
+echo "    insteadOf = ${TEST_REPO}" >> ~/.gitconfig.edit
+
 mv -f ~/.gitconfig.edit ~/.gitconfig
 
 # overwrite system gitconfig
