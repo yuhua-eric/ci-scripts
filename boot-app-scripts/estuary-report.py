@@ -31,6 +31,8 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Tabl
 
 # for test report
 whole_summary_name = 'whole_summary.txt'
+# TODO: add scope data pass result
+scope_summary_name = 'scope_summary.txt'
 details_summary_name = 'details_summary.txt'
 
 job_result_dict = {}
@@ -217,7 +219,6 @@ def print_scope_info_bar_chart(result_dict, description):
     plt.savefig("baseinfo_bar.jpg", dpi=120)
     plt.close()
 
-
 def create_test_report_pdf(job_result_dict):
     # print job_result_dict
     story = []
@@ -325,6 +326,7 @@ def generate_current_test_report():
     print "generate_current_test_report"
     suite_list = []  #all test suite list
 
+    # test suite data
     test_suite_dict = {}
     test_scope_dict = {}
 
@@ -348,6 +350,7 @@ def generate_current_test_report():
                     test_suite_dict[item['suite']][item['result']] = value
     print_base_info_pie_chart(test_suite_dict, "Base Pass Rate Situation Chart")
 
+    # scope data
     test_suite_scope_dict = {}
     for job_id in job_result_dict.keys():
         for item in job_result_dict[job_id]:
@@ -772,8 +775,8 @@ def main(args):
 
     if config.get("boot"):
         boot_report(config)
-        generate_email_test_report()
         generate_current_test_report()
+        generate_email_test_report()
         generate_history_test_report()
 
     exit(0)
