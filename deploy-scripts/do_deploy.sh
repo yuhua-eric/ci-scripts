@@ -20,6 +20,7 @@ NFS_BMC_IP=$(python configs/parameter_parser.py -f config.yaml -s NFS -k BMC_IP)
 DEVICE_TYPE=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k type)
 cd -
 
+# TODO : check the sshpass result
 function bmc_vmm_connect() {
     local SSH_PASS="Huawei12#$"
     local SSH_USER="root"
