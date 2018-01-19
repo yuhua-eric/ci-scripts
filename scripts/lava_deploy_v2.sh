@@ -12,7 +12,7 @@ function parse_input() {
     # Initialize our own variables:
     properties_file=""
 
-    while getopts "h?l:n:d:o:v:" opt; do
+    while getopts "h?l:n:d:o:v:t:" opt; do
         case "$opt" in
             h|\?)
                 show_help
@@ -33,6 +33,9 @@ function parse_input() {
             v)  DISTRO_VERSION="$OPTARG"
                 DISTRO_VERSION=${DISTRO_VERSION:-"v3.1"}
                 ;;
+            t)  DEPLOY_TYPE="$OPTARG"
+                DEPLOY_TYPE=${DEPLOY_TYPE:-"BOOT_PXE"}
+                ;;
 
         esac
     done
@@ -44,6 +47,7 @@ function parse_input() {
     TARGET_HOSTNAME=${TARGET_HOSTNAME:-"d05ssh01"}
     DISTRO=${DISTRO:-"centos"}
     DISTRO_VERSION=${DISTRO_VERSION:-"v3.1"}
+    DEPLOY_TYPE=${DEPLOY_TYPE:-"BOOT_PXE"}
 }
 
 function main(){
@@ -58,9 +62,7 @@ function main(){
 
     # need paste the public key
     java -jar jenkins-cli.jar -s http://${JENKINS_URL}/ login
-    java -jar jenkins-cli.jar -s http://${JENKINS_URL}/ build step_config_dhcp_tftp -w -s -p TREE_NAME="${TREE_NAME}" -p HOST_NAME="${TARGET_HOSTNAME}" -p DISTRO="${DISTRO}" -p DISTRO_VERSION="${DISTRO_VERSION}"
-    java -jar jenkins-cli.jar -s http://${JENKINS_URL}/ build step_do_pxe_deploy -w -s -p TREE_NAME="${TREE_NAME}" -p HOST_NAME="${TARGET_HOSTNAME}" -p DISTRO="${DISTRO}" -p DISTRO_VERSION="${DISTRO_VERSION}"
-
+    java -jar jenkins-cli.jar -s http://${JENKINS_URL}/ build step_lava_deploy_device -w -s -p TREE_NAME="${TREE_NAME}" -p HOST_NAME="${TARGET_HOSTNAME}" -p DISTRO="${DISTRO}" -p DISTRO_VERSION="${DISTRO_VERSION}" -p DEPLOY_TYPE="${DEPLOY_TYPE}"
 
     # test
     # java -jar jenkins-cli.jar -s http://192.168.67.146:8080/ build test-trigger-by-restapi -w -v -p TREE_NAME="open-estuary"
