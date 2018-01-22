@@ -12,6 +12,10 @@ fi
 DIR_NAME=${TEST_REPO##*/}
 touch ~/.gitconfig
 
+# remove old gitconfig
+rm -rf /etc/gitconfig
+
+# save last gitconfig
 mv -f ~/.gitconfig ~/.gitconfig.edit
 if [ -d "${DIR_NAME}" ];then
     rm -rf ${DIR_NAME}
