@@ -331,12 +331,13 @@ function collect_result() {
 
     for distro_name in ${distro_dirs};do
         # echo "##### distro : ${distro_name} ######" | tee -a ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} | tee -a ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
-        # add distro info in txt file
-        sed -i -e 's/^/'"${distro_name}"' /' ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
-        sed -i -e 's/^/'"${distro_name}"' /' ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
+
         cat ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${WHOLE_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
         cat ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
 
+        # add distro info in txt file
+        sed -i -e 's/^/'"${distro_name}"' /' ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
+        sed -i -e 's/^/'"${distro_name}"' /' ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
         # cp -f ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${PDF_FILE} ${GIT_DESCRIBE}/${RESULTS_DIR}/${PDF_FILE}
     done
 
