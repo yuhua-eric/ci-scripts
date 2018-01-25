@@ -56,20 +56,21 @@ node ('ci-v500-compile'){
     }
 
     def iso_result = 0
-    dir('./local/ci-scripts/build-iso') {
-        iso_result = sh script: "./buildiso.sh 2>&1 ", returnStatus: true
+    stage('Build Auto ISO') {
+        dir('./local/ci-scripts/build-iso') {
+            iso_result = sh script: "./buildiso.sh 2>&1 ", returnStatus: true
+        }
     }
     echo "iso_result : ${iso_result}"
     if (iso_result == 0) {
         echo "iso success"
     } else {
         echo "iso failed"
-        functions.send_mail()
         currentBuild.result = 'FAILURE'
         return
     }
 
-    stage('stash') {
+    stage('Stash Build Result') {
         // stash result
         dir('/fileserver/open-estuary') {
             stash includes: '**/*', name: 'buildResult'
@@ -81,14 +82,14 @@ node ('ci-v500-compile'){
 }
 
 node('ci-compile') {
-    stage('upload Binary') {
+    stage('Upload Build Binary') {
         // unstash result
         dir('/fileserver/open-estuary'){
             unstash 'buildResult'
         }
     }
 
-    stage('Result') {
+    stage('Unstash Build Result') {
         unstash 'mailResult'
         unstash 'paramsResult'
     }
@@ -109,12 +110,12 @@ node('ci-compile') {
         clone2local(TEST_REPO, './local/ci-test-cases')
     }
 
-    stage ('mirror') {
+    stage ('Mirror Test Repo') {
         build job: 'step_mirror_test_repo_in_lava', parameters: [[$class: 'StringParameterValue', name: 'TEST_REPO', value: TEST_REPO]]
     }
 
     def test_result = 0
-    stage('Test') {
+    stage('Testing') {
         test_result = sh script: "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1 " , returnStatus: true
     }
     echo "test_result : ${test_result}"
@@ -127,7 +128,7 @@ node('ci-compile') {
         return
     }
 
-    stage('Result') {
+    stage('Send Mail') {
         functions.send_mail()
     }
 }
