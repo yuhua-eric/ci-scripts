@@ -290,6 +290,70 @@
 	},
 
         {
+            "command": "lava_test_shell",
+            "parameters": {
+                "testdef_repos": [
+                    {
+                        "git-repo": "https://github.com/Luojiaxing1991/luo_driver_ci_testcase.git",
+			"parameters":{
+			     "Maintainer": "ChenXiang"
+			},
+			"testdef": "ci_testcase/sas_autotest/sas_autotest.yaml"
+                    }
+                ],
+                "timeout": 172800
+            }
+        },
+
+        {
+            "command": "lava_test_shell",
+            "parameters": {
+                "testdef_repos": [
+                    {
+                        "git-repo": "https://github.com/Luojiaxing1991/luo_driver_ci_testcase.git",
+			"parameters":{
+			     "Maintainer": "fangjian"
+			},
+			"testdef": "ci_testcase/pcie_autotest/pcie_autotest.yaml"
+                    }
+                    ],
+                "timeout": 172800
+            }
+        },
+
+        {
+            "command": "lava_test_shell",
+            "parameters": {
+                "testdef_repos": [
+                    {
+                        "git-repo": "https://github.com/Luojiaxing1991/luo_driver_ci_testcase.git",
+			"parameters":{
+			     "Maintainer": "liuyixian"
+			},
+			"testdef": "ci_testcase/roce_autotest/roce_autotest.yaml"
+                    }
+                    ],
+                "timeout": 172800
+            }
+        },
+
+        {
+            "command": "lava_test_shell",
+            "parameters": {
+                "testdef_repos": [
+                    {
+                        "git-repo": "https://github.com/Luojiaxing1991/luo_driver_ci_testcase.git",
+			"parameters":{
+			     "Maintainer": "linyunfa"
+			},
+			"testdef": "ci_testcase/xge_autotest/xge_autotest.yaml"
+                    }
+                    ],
+                "timeout": 172800
+            }
+        },
+
+        {
             "command": "submit_results",
             "parameters": {
                 "server": "LAVA_SERVER",
