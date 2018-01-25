@@ -64,11 +64,14 @@ def boot_device(DEPLOY_TYPE, BMC_HOST, BMC_USER, BMC_PASS):
     connection.prompt_str = ['root@debian:~#', 'root@centos ~', 'root@ubuntu:', 'root@localhost ~', 'root@unassigned-hostname:~#']
     connection.wait()
 
-    # fix the root login sshd config
-    # ubuntu
+    # WORKAROUND: fix the root login sshd config
+    # ubuntu 14.04
     connection.sendline('sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/" /etc/ssh/sshd_config')
+    # new ubuntu 16.04
+    connection.sendline('sed -i "s/PermitRootLogin prohibit-password/PermitRootLogin yes/" /etc/ssh/sshd_config')
     # centos
     connection.sendline('sed -i "s/#PermitRootLogin yes/PermitRootLogin yes/" /etc/ssh/sshd_config')
+
     connection.wait()
     connection.sendline("service sshd restart")
     connection.wait()
