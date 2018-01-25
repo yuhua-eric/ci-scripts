@@ -61,7 +61,7 @@ def boot_device(DEPLOY_TYPE, BMC_HOST, BMC_USER, BMC_PASS):
     connection.sendline("")
     connection.sendline("")
     # TODO : change prompt as config
-    connection.prompt_str = ['root@debian:~#', 'root@centos ~', 'root@ubuntu:', 'root@localhost ~']
+    connection.prompt_str = ['root@debian:~#', 'root@centos ~', 'root@ubuntu:', 'root@localhost ~', 'root@unassigned-hostname:~#']
     connection.wait()
 
     # fix the root login sshd config
