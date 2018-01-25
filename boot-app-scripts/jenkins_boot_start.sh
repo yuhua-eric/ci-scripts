@@ -331,6 +331,9 @@ function collect_result() {
 
     for distro_name in ${distro_dirs};do
         # echo "##### distro : ${distro_name} ######" | tee -a ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} | tee -a ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
+        # add distro info in txt file
+        sed -i -e 's/^/'"${distro_name}"' /' ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
+        sed -i -e 's/^/'"${distro_name}"' /' ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
         cat ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${WHOLE_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
         cat ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
 
@@ -461,9 +464,9 @@ EOF
     echo  ""
     echo "Test summary is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table cellspacing="0" cellpadding="5px" border="1">' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Type</th><th>Total_Number</th><th>Failed_Number</th><th>Success_Number</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Distro</th><th>Type</th><th>Total Number</th><th>Failed Number</th><th>Success Number</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat whole_summary.txt |
-        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
+        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td><td>" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
@@ -471,9 +474,9 @@ EOF
     echo  ""
     echo "The Test Case details is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table cellspacing="0" cellpadding="5px" border="1">' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Job_ID</th><th>Suite_Name</th><th>Case_Name</th><th>Case_Result</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Distro</th><th>Job ID</th><th>Suite Name</th><th>Case Name</th><th>Case Result</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat details_summary.txt |
-        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $1 "\">" $1 "</a><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
+        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a><td>" $3 "</td><td>" $5 "</td><td>" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
