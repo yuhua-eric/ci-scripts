@@ -49,8 +49,8 @@ d-i keyboard-configuration/layoutcode string us
 
 ##net config
 d-i netcfg/choose_interface select auto
-d-i netcfg/get_hostname string unassigned-hostname
-d-i netcfg/get_domain string unassigned-domain
+d-i netcfg/get_hostname string ubuntu
+d-i netcfg/get_domain string ubuntu
 #d-i netcfg/hostname string Huawei-D05
 #d-i netcfg/enable boolean false
 
@@ -94,7 +94,7 @@ d-i preseed/early_command string umount /media || true
 
 ##allow to install mirror from LAN unauthenticated mirror
 d-i debian-installer/allow_unauthenticated string true
-## base install 
+## base install
 #d-i base-installer/kernel/altmeta string hwe-16.04
 d-i base-installer/kernel/image string linux-image-estuary
 
@@ -113,7 +113,7 @@ d-i pkgsel/update-policy select none
 ##install software
 tasksel tasksel/first multiselect standard
 ## Individual additional packages to install
-d-i pkgsel/include string openssh-server vim 
+d-i pkgsel/include string openssh-server vim
 ## Whether to upgrade packages after debootstrap.
 ## Allowed values: none, safe-upgrade, full-upgrade
 d-i pkgsel/upgrade select none
