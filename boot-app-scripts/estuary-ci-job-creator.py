@@ -516,11 +516,28 @@ def find_all_test_case(testDir):
             print fname
     return test_case_yaml_file_list
 
+def find_all_test_case_by_test_plan(testDir, planDir, plan):
+    try:
+        plan_yaml = load_yaml(planDir + "/" + plan + ".yaml")
+    except(yaml.parser.ParserError, yaml.scanner.ScannerError) as e:
+        print "Errors: wrong yaml syntax :\n %s" % e
+        exit(1)
+
+    test_case_yaml_file_list=[]
+
+    if not ("tests" in plan_yaml and "automated" in  plan_yaml["tests"]):
+        print "Errors: wrong yaml syntax :\n %s" % (planDir + "/" + plan + ".yaml")
+        exit(1)
+    for test in plan_yaml["tests"]["automated"]:
+        test_case_yaml_file_list.append(CONFIG.get("testDir") +  "/" + test["path"])
+
+    return test_case_yaml_file_list
 
 def main(args):
     global test_kind
 
     global TEST_CASE_DEFINITION_DIR
+    global TEST_PLAN_DEFINITION_DIR
     global TEST_CASE_DEFINITION_FILE_LIST
     global TEST_CASE_DEFINITION_URL
 
@@ -528,8 +545,14 @@ def main(args):
 
     CONFIG = configuration.get_config(args)
 
-    TEST_CASE_DEFINITION_DIR = CONFIG.get("testDir")
-    TEST_CASE_DEFINITION_FILE_LIST = find_all_test_case(TEST_CASE_DEFINITION_DIR)
+    TEST_CASE_DEFINITION_DIR = CONFIG.get("testDir") + "/auto-test"
+    TEST_PLAN_DEFINITION_DIR = CONFIG.get("testDir") + "/plans"
+
+    if CONFIG.get("plan") != None and CONFIG.get("plan") != "" and CONFIG.get("plan") != "*":
+        TEST_CASE_DEFINITION_FILE_LIST = find_all_test_case(TEST_CASE_DEFINITION_DIR)
+    else:
+        TEST_CASE_DEFINITION_FILE_LIST = find_all_test_case_by_test_plan(TEST_CASE_DEFINITION_DIR, TEST_PLAN_DEFINITION_DIR, CONFIG.get("plan"))
+        # TEST_PLAN_DEFINITION_FILE_LIST = find_all_test_case(TEST_CASE_DEFINITION_DIR)
 
     TEST_CASE_DEFINITION_URL = "https://github.com/qinshulei/ci-test-cases"
     if CONFIG.get("testUrl") != None and CONFIG.get("testUrl") != "":
@@ -571,6 +594,7 @@ if __name__ == '__main__':
     parser.add_argument("--testDir", required=True, help="specific test case dir")
     parser.add_argument("--testUrl", help="specific test case dir")
 
+    parser.add_argument("--plan", help="test case plan", default="*")
     parser.add_argument("--scope", help="test case group", default="*")
     parser.add_argument("--level", help="test case level", default="1")
     parser.add_argument("--targets", nargs='+', help="specific targets to create\
