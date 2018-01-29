@@ -42,7 +42,7 @@ node ('compile'){
         sh "echo SHELL_DISTRO=\\\"${SHELL_DISTRO}\\\" >> env.properties"
 
         sh "echo TEST_REPO=\\\"${TEST_REPO}\\\" >> env.properties"
-        sh "echo TEST_PLAN=\\\"${TEST_PLAN}\\\" >> env.properties"
+        sh "echo TEST_SCOPE=\\\"${TEST_SCOPE}\\\" >> env.properties"
         sh "echo TEST_LEVEL=\\\"${TEST_LEVEL}\\\" >> env.properties"
 
         sh "echo SUCCESS_MAIL_LIST=\\\"${SUCCESS_MAIL_LIST}\\\" >> env.properties"

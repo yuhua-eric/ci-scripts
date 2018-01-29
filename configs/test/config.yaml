@@ -44,7 +44,7 @@ Jenkins:
     Boot: BOOT_NFS
 
 Test:
-    Plan: '*'
+    Scope: '*'
     Repo: https://github.com/qinshulei/ci-test-cases
     Level: 4
 

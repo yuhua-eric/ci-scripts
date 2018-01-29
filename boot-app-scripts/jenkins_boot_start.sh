@@ -25,7 +25,7 @@ function parse_params() {
 
     : ${BOOT_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Jenkins -k Boot`}
 
-    : ${TEST_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Test -k Plan`}
+    : ${TEST_SCOPE:=`python configs/parameter_parser.py -f config.yaml -s Test -k Scope`}
     : ${TEST_REPO:=`python configs/parameter_parser.py -f config.yaml -s Test -k Repo`}
     : ${TEST_LEVEL:=`python configs/parameter_parser.py -f config.yaml -s Test -k Level`}
 
@@ -55,7 +55,7 @@ SHELL_PLATFORM="${SHELL_PLATFORM}"
 SHELL_DISTRO="${SHELL_DISTRO}"
 BOOT_PLAN="${BOOT_PLAN}"
 TEST_REPO="${TEST_REPO}"
-TEST_PLAN="${TEST_PLAN}"
+TEST_SCOPE="${TEST_SCOPE}"
 TEST_LEVEL="${TEST_LEVEL}"
 ARCH_MAP="${ARCH_MAP}"
 EOF
@@ -94,12 +94,12 @@ function generate_jobs() {
         if [ x"$distro" != x"" ]; then
             python estuary-ci-job-creator.py "$FTP_SERVER/${TREE_NAME}/${GIT_DESCRIBE}/${PLAT}-${board_arch}/" \
                    --tree "${TREE_NAME}" --plans "$test_name" --distro "$distro" --arch "${board_arch}" \
-                   --testUrl "${TEST_REPO}" --testDir "${TEST_CASE_DIR}" --scope "${TEST_PLAN}" --level "${TEST_LEVEL}" \
+                   --testUrl "${TEST_REPO}" --testDir "${TEST_CASE_DIR}" --scope "${TEST_SCOPE}" --level "${TEST_LEVEL}" \
                    --jenkinsJob "${JENKINS_JOB_INFO}"
         else
             python estuary-ci-job-creator.py "$FTP_SERVER/${TREE_NAME}/${GIT_DESCRIBE}/${PLAT}-${board_arch}/" \
                    --tree "${TREE_NAME}" --plans "$test_name" --arch "${board_arch}" \
-                   --testUrl "${TEST_REPO}" --testDir "${TEST_CASE_DIR}"  --scope "${TEST_PLAN}" --level "${TEST_LEVEL}" \
+                   --testUrl "${TEST_REPO}" --testDir "${TEST_CASE_DIR}"  --scope "${TEST_SCOPE}" --level "${TEST_LEVEL}" \
                    --jekinsJob "${JENKINS_JOB_INFO}"
         fi
     done
