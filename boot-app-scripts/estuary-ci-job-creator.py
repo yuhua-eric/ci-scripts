@@ -50,6 +50,8 @@ parse_re = re.compile('href="([^./"?][^"?]*)"')
 
 distro_list = []
 
+TEST_DIR_BASE_NAME = "auto-test"
+PLAN_DIR_BASE_NAME = "plans"
 
 def setup_job_dir(directory):
     print 'Setting up YAML output directory at: jobs/'
@@ -84,7 +86,7 @@ def get_nfs_url(distro_url, device_type):
 def generate_test_definition(test_path, name):
     test_definition =  "      - repository: \"" + TEST_CASE_DEFINITION_URL +"\"\n"
     test_definition += "        from: git\n"
-    test_definition += "        path: \"" + test_path + "\"\n"
+    test_definition += "        path: \"" + TEST_DIR_BASE_NAME + "/" + test_path + "\"\n"
     test_definition += "        name: \"" + name + "\"\n"
     return test_definition
 
@@ -546,8 +548,8 @@ def main(args):
 
     CONFIG = configuration.get_config(args)
 
-    TEST_CASE_DEFINITION_DIR = CONFIG.get("testDir") + "/auto-test"
-    TEST_PLAN_DEFINITION_DIR = CONFIG.get("testDir") + "/plans"
+    TEST_CASE_DEFINITION_DIR = CONFIG.get("testDir") + "/" + TEST_DIR_BASE_NAME
+    TEST_PLAN_DEFINITION_DIR = CONFIG.get("testDir") + "/" + PLAN_DIR_BASE_NAME
 
     if CONFIG.get("plan") != None and CONFIG.get("plan") != "" and CONFIG.get("plan") != "*":
         TEST_CASE_DEFINITION_FILE_LIST = find_all_test_case_by_test_plan(TEST_CASE_DEFINITION_DIR, TEST_PLAN_DEFINITION_DIR, CONFIG.get("plan"))
