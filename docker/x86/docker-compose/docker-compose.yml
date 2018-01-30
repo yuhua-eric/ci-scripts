@@ -1,0 +1,117 @@
+version: "2"
+# you can `export HELPDESK_SITE=NJ` to change the default site.
+# you need change the port.
+services:
+  ci-fileserver:
+    image: [your_docker_registry]/kernelci/fileserver:latest
+    container_name: ci-fileserver
+    restart: always
+    hostname: ci-fileserver
+    volumes:
+      - ${WORK_HOME}/fileserver_data:/home/static
+      - /etc/timezone:/etc/timezone
+      - /etc/localtime:/etc/localtime
+    ports:
+      - 8083:8083
+    networks:
+      - ci-default
+
+  ci-db:
+    image: [your_docker_registry]/public/postgres:9.6
+    container_name: ci-db
+    restart: always
+    privileged: true
+    hostname: ci-db
+    environment:
+      POSTGRES_PASSWORD: xTIxixpyFfao
+      POSTGRES_USER: lavaserver
+      POSTGRES_DB: lavaserver
+    volumes:
+      - ${WORK_HOME}/lava_data/sql_data:/var/lib/postgresql/data
+      # init sql
+      # - ${WORK_HOME}/lava_data/postgres.sql:/docker-entrypoint-initdb.d/postgres.sql
+    networks:
+      - ci-default
+
+  ci-lava:
+    image: [your_docker_registry]/kernelci/lava:v0.2
+    container_name: ci-lava
+    restart: always
+    hostname: ci-lava
+    privileged: true
+    links:
+      - ci-db
+    volumes:
+      - ${WORK_HOME}/tftp_nfs_data:/var/lib/lava/dispatcher/tmp
+      - ${WORK_HOME}/lava_data/var-lib-lava-server:/var/lib/lava-server
+      - ${WORK_HOME}/lava_data/etc-lava-server:/etc/lava-server
+      - ${WORK_HOME}/lava_data/etc-lava-coordinator:/etc/lava-dispatcher
+      - ${WORK_HOME}/lava_data/sshkey:/root/.ssh
+    depends_on:
+      - ci-fileserver
+      - ci-db
+    ports:
+      - 69:69/udp
+      - 80:80
+      - 5555:5555
+      - 5556:5556
+      - 3079:3079
+    networks:
+      - ci-default
+
+  ci-jenkins:
+    image: [your_docker_registry]/public/jenkins:latest
+    container_name: ci-jenkins
+    hostname: ci-jenkins
+    restart: always
+    volumes:
+      - ${WORK_HOME}/jenkins_data/:/var/jenkins_home
+      - /etc/timezone:/etc/timezone
+      - /etc/localtime:/etc/localtime
+    links:
+      - ci-fileserver
+      - ci-lava
+      - ci-compile
+    depends_on:
+      - ci-lava
+    ports:
+      - 8080:8080
+      - 50000:50000
+    networks:
+      - ci-default
+
+  ci-compile:
+    image: [your_docker_registry]/kernelci/estuary-build
+    container_name: ci-compile
+    hostname: ci-compile
+    restart: always
+    privileged: true
+    links:
+      - ci-fileserver
+    ports:
+      - '10000:22'
+    volumes:
+      - ${WORK_HOME}/compile_data:/home/ts
+      - ${WORK_HOME}/estuary_reference:/estuary_reference
+      - ${WORK_HOME}/fileserver_data/:/fileserver/
+      - ${WORK_HOME}/tftp_nfs_data:/tftp
+      - /etc/timezone:/etc/timezone
+      - /etc/localtime:/etc/localtime
+    devices:
+      - /dev/loop0:/dev/loop0
+      - /dev/loop1:/dev/loop1
+      - /dev/loop2:/dev/loop2
+      - /dev/loop3:/dev/loop3
+      - /dev/loop4:/dev/loop4
+      - /dev/loop5:/dev/loop5
+      - /dev/loop6:/dev/loop6
+      - /dev/loop7:/dev/loop7
+    extra_hosts:
+      - "njbuild02.thundersoft.com:192.168.65.12"
+    depends_on:
+      - ci-fileserver
+    networks:
+      - ci-default
+networks:
+  ci-default:
+    driver: "bridge"

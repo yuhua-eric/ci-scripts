@@ -1,0 +1,182 @@
+diff --git a/lava_dispatcher/pipeline/actions/deploy/ssh.py b/lava_dispatcher/pipeline/actions/deploy/ssh.py
+index ea205bd..7d436bc 100644
+--- a/lava_dispatcher/pipeline/actions/deploy/ssh.py
++++ b/lava_dispatcher/pipeline/actions/deploy/ssh.py
+@@ -90,6 +90,15 @@ class ScpOverlay(DeployAction):
+         lava_test_results_dir = lava_test_results_base % self.job.job_id
+         self.set_namespace_data(action='test', label='results', key='lava_test_results_dir', value=lava_test_results_dir)
+ 
++        tree_name = self.parameters['deployment_data'].get('tree_name', '')
++        self.set_namespace_data(action='deploy', label='install', key='tree_name', value=tree_name)
++        distro = self.parameters['deployment_data'].get('distro', '')
++        self.set_namespace_data(action='deploy', label='install', key='distro', value=distro)
++        distro_version = self.parameters['deployment_data'].get('distro_version', '')
++        self.set_namespace_data(action='deploy', label='install', key='distro_version', value=distro_version)
++        deploy_type = self.parameters['deployment_data'].get('deploy_type', '')
++        self.set_namespace_data(action='deploy', label='install', key='deploy_type', value=deploy_type)
++
+     def populate(self, parameters):
+         self.internal_pipeline = Pipeline(parent=self, job=self.job, parameters=parameters)
+         tar_flags = parameters['deployment_data']['tar_flags'] if 'tar_flags' in parameters['deployment_data'].keys() else ''
+diff --git a/lava_dispatcher/pipeline/connections/serial.py b/lava_dispatcher/pipeline/connections/serial.py
+index 234bba3..53f9a9b 100644
+--- a/lava_dispatcher/pipeline/connections/serial.py
++++ b/lava_dispatcher/pipeline/connections/serial.py
+@@ -45,6 +45,14 @@ class ConnectDevice(Action):
+ 
+     def validate(self):
+         super(ConnectDevice, self).validate()
++        # add pre_connect validate
++        if 'pre_connect' in self.job.device['commands']:
++            pre_command = self.job.device['commands']['pre_connect']
++            try:
++                exe = pre_command.split(' ')[0]
++            except AttributeError:
++                self.errors = "Unable to parse the pre connection command %s" % pre_command
++
+         if 'connect' not in self.job.device['commands']:
+             self.errors = "Unable to connect to device %s - missing connect command." % self.job.device.hostname
+             return
+@@ -70,6 +78,15 @@ class ConnectDevice(Action):
+             self.logger.warning("connection_namespace provided but no connection found. "
+                                 "Please ensure that this parameter is correctly set to existing namespace.")
+ 
++        # pre connect command:
++        if 'pre_connect' in self.job.device['commands']:
++            pre_connect = self.job.device['commands']['pre_connect']
++            self.logger.info("%s pre Connecting to device using '%s'", self.name, pre_connect)
++            for pre_command in pre_connect.split(';'):
++                pre_command = pre_command.strip()
++                if pre_command and pre_command != "" :
++                    self.run_command(pre_command.split(' '), allow_silent=True, allow_fail=True)
++
+         command = self.job.device['commands']['connect'][:]  # local copy to retain idempotency.
+         self.logger.info("%s Connecting to device using '%s'", self.name, command)
+         # ShellCommand executes the connection command
+diff --git a/lava_dispatcher/pipeline/connections/ssh.py b/lava_dispatcher/pipeline/connections/ssh.py
+index 364d603..5c2359d 100644
+--- a/lava_dispatcher/pipeline/connections/ssh.py
++++ b/lava_dispatcher/pipeline/connections/ssh.py
+@@ -24,7 +24,7 @@ from lava_dispatcher.pipeline.utils.filesystem import check_ssh_identity_file
+ from lava_dispatcher.pipeline.utils.shell import infrastructure_error
+ from lava_dispatcher.pipeline.action import Action
+ from lava_dispatcher.pipeline.shell import ShellCommand, ShellSession
+-
++from lava_dispatcher.pipeline.utils.strings import substitute
+ 
+ # pylint: disable=too-many-public-methods,too-many-instance-attributes
+ 
+@@ -125,12 +125,43 @@ class ConnectSsh(Action):
+                 self.command.extend(['-i', self.identity_file])
+             self.command.extend(self.ssh_port)
+ 
++        # add pre_connect validate
++        if  'commands' in self.job.device and 'pre_connect' in self.job.device['commands']:
++            pre_command = self.job.device['commands']['pre_connect']
++            try:
++                exe = pre_command.split(' ')[0]
++            except AttributeError:
++                self.errors = "Unable to parse the pre connection command %s" % pre_command
++
+     def run(self, connection, max_end_time, args=None):
+         if connection:
+             self.logger.debug("Already connected")
+             return connection
+         # ShellCommand executes the connection command
+ 
++        # pre connect command:
++        if self.primary and self.primary and 'commands' in self.job.device and 'pre_connect' in self.job.device['commands']:
++            tree_name = self.get_namespace_data(action='deploy', label='install', key='tree_name')
++            distro_version = self.get_namespace_data(action='deploy', label='install', key='distro_version')
++            distro = self.get_namespace_data(action='deploy', label='install', key='distro')
++            deploy_type = self.get_namespace_data(action='deploy', label='install', key='deploy_type')
++            if tree_name == None:
++                tree_name = ""
++            substitutions = {
++                '{TREE_NAME}' : tree_name,
++                '{DISTRO_VERSION}' : distro_version,
++                '{DISTRO}' : distro,
++                '{DEPLOY_TYPE}' : deploy_type
++            }
++            pre_connect = self.job.device['commands']['pre_connect']
++            self.logger.info("%s pre Connecting to device using '%s'", self.name, pre_connect)
++            for pre_command in pre_connect.split(';'):
++                pre_command = pre_command.strip()
++                if pre_command and pre_command != "" :
++                    replace_command = substitute(pre_command.split(' '), substitutions)
++                    self.logger.info("%s substitute command : '%s'", self.name, replace_command)
++                    self.run_command(replace_command, allow_silent=True)
++
+         params = self._check_params()
+         command = self.command[:]  # local copy for idempotency
+         overrides = None
+diff --git a/lava_dispatcher/pipeline/menus/menus.py b/lava_dispatcher/pipeline/menus/menus.py
+index e079b6d..9c0a17a 100644
+--- a/lava_dispatcher/pipeline/menus/menus.py
++++ b/lava_dispatcher/pipeline/menus/menus.py
+@@ -207,15 +207,29 @@ class SelectorMenuAction(Action):
+                     change_prompt = True
+                 if 'items' in block['select']:
+                     for selector in block['select']['items']:
+-                        menu_text = connection.raw_connection.before
+-                        action = self.selector.select(menu_text, selector)
+-                        if action:
+-                            self.logger.debug("Selecting option %s", action)
+-                        elif 'fallback' in block['select']:
+-                            action = self.selector.select(menu_text, block['select']['fallback'])
+-                        if not action:
+-                            raise JobError("No selection was made")
+-                        connection.sendline(action, delay=self.character_delay)
++                        KEY_UP = '\x1b[A'
++                        KEY_DOWN = '\x1b[B'
++                        KEY_RIGHT = '\x1b[C'
++                        KEY_LEFT = '\x1b[D'
++                        if selector == 'down':
++                            connection.raw_connection.send(KEY_DOWN, delay=self.character_delay)
++                        elif selector == 'up':
++                            connection.raw_connection.send(KEY_UP, delay=self.character_delay)
++                        elif selector == 'enter':
++                            connection.raw_connection.sendcontrol('M')
++                        elif selector == 'wait':
++                            # do wait
++                            connection.raw_connection.sendcontrol('M')
++                        else:
++                            menu_text = connection.raw_connection.before
++                            action = self.selector.select(menu_text, selector)
++                            if action:
++                                self.logger.debug("Selecting option %s", action)
++                            elif 'fallback' in block['select']:
++                                action = self.selector.select(menu_text, block['select']['fallback'])
++                            if not action:
++                                raise JobError("No selection was made")
++                            connection.sendline(action, delay=self.character_delay)
+                         self._change_prompt(connection, change_prompt)
+                 if 'escape' in block['select']:
+                     self.logger.debug("Sending escape")
+diff --git a/lava_dispatcher/pipeline/parser.py b/lava_dispatcher/pipeline/parser.py
+index df85b73..d78040f 100644
+--- a/lava_dispatcher/pipeline/parser.py
++++ b/lava_dispatcher/pipeline/parser.py
+@@ -60,11 +60,20 @@ def parse_action(job_data, name, device, pipeline, test_info, test_count):
+         parameters['stage'] = test_count - 1
+         LavaTest.select(device, parameters)(pipeline, parameters)
+     elif name == 'deploy':
++        deployment_data = get_deployment_data(parameters.get('os', ''))
++        if parameters.get('tree_name', '') != '':
++            deployment_data.__data__['tree_name'] = parameters.get('tree_name', '')
++        if parameters.get('distro_version', '') != '':
++            deployment_data.__data__['distro_version'] = parameters.get('distro_version', '')
++        if parameters.get('deploy_type', '') != '':
++            deployment_data.__data__['deploy_type'] = parameters.get('deploy_type', '')
+         if parameters['namespace'] in test_info:
+             if any([testclass for testclass in test_info[parameters['namespace']] if testclass['class'].needs_deployment_data()]):
+-                parameters.update({'deployment_data': get_deployment_data(parameters.get('os', ''))})
++                # parameters.update({'deployment_data': get_deployment_data(parameters.get('os', ''))})
++                parameters.update({'deployment_data': deployment_data})
+         if 'preseed' in parameters:
+-            parameters.update({'deployment_data': get_deployment_data(parameters.get('os', ''))})
++            # parameters.update({'deployment_data': get_deployment_data(parameters.get('os', ''))})
++            parameters.update({'deployment_data': deployment_data})
+         Deployment.select(device, parameters)(pipeline, parameters)
+ 
+ 
