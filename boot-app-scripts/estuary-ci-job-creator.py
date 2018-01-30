@@ -517,6 +517,7 @@ def find_all_test_case(testDir):
     return test_case_yaml_file_list
 
 def find_all_test_case_by_test_plan(testDir, planDir, plan):
+    load_yaml = utils.load_yaml
     try:
         plan_yaml = load_yaml(planDir + "/" + plan + ".yaml")
     except(yaml.parser.ParserError, yaml.scanner.ScannerError) as e:
