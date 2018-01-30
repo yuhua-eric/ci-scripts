@@ -550,9 +550,9 @@ def main(args):
     TEST_PLAN_DEFINITION_DIR = CONFIG.get("testDir") + "/plans"
 
     if CONFIG.get("plan") != None and CONFIG.get("plan") != "" and CONFIG.get("plan") != "*":
-        TEST_CASE_DEFINITION_FILE_LIST = find_all_test_case(TEST_CASE_DEFINITION_DIR)
-    else:
         TEST_CASE_DEFINITION_FILE_LIST = find_all_test_case_by_test_plan(TEST_CASE_DEFINITION_DIR, TEST_PLAN_DEFINITION_DIR, CONFIG.get("plan"))
+    else:
+        TEST_CASE_DEFINITION_FILE_LIST = find_all_test_case(TEST_CASE_DEFINITION_DIR)
         # TEST_PLAN_DEFINITION_FILE_LIST = find_all_test_case(TEST_CASE_DEFINITION_DIR)
 
     TEST_CASE_DEFINITION_URL = "https://github.com/qinshulei/ci-test-cases"
