@@ -478,7 +478,7 @@ EOF
     echo '<table cellspacing="0" cellpadding="5px" border="1">' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Distro</th><th>Job ID</th><th>Suite Name</th><th>Case Name</th><th>Case Result</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat details_summary.txt |
-        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a><td>" $3 "</td><td>" $5 "</td><td>" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
+        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a><td>" $3 "</td><td>" $4 "</td><td>" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
