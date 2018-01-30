@@ -77,6 +77,7 @@ function parse_params() {
 
     : ${BOOT_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Jenkins -k Boot`}
 
+    : ${TEST_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Test -k Plan`}
     : ${TEST_SCOPE:=`python configs/parameter_parser.py -f config.yaml -s Test -k Scope`}
     : ${TEST_REPO:=`python configs/parameter_parser.py -f config.yaml -s Test -k Repo`}
     : ${TEST_LEVEL:=`python configs/parameter_parser.py -f config.yaml -s Test -k Level`}
@@ -126,6 +127,7 @@ SHELL_PLATFORM="${SHELL_PLATFORM}"
 SHELL_DISTRO="${SHELL_DISTRO}"
 BOOT_PLAN="${BOOT_PLAN}"
 TEST_REPO="${TEST_REPO}"
+TEST_PLAN="${TEST_PLAN}"
 TEST_SCOPE="${TEST_SCOPE}"
 TEST_LEVEL="${TEST_LEVEL}"
 ARCH_MAP="${ARCH_MAP}"
