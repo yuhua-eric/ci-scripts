@@ -36,12 +36,13 @@ LAVA:
     lavastream: /anonymous/admin/
     lavauser: admin
     lavaurl: http://192.168.50.122
-    LAVA_DISPLAY_URL: http://192.168.1.132:180
+    LAVA_DISPLAY_URL: http://120.31.149.194:180
 
 # for lava job parameter
 Jenkins:
     url: http://192.168.50.122:8080
     Boot: BOOT_NFS
+    JENKINS_DISPLAY_URL: http://120.31.149.194:18080
 
 Test:
     Plan: '*'
