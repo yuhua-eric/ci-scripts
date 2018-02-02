@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-material_iso="CentOS-7-aarch64-Everything.iso"
+#material_iso="CentOS-7-aarch64-Everything.iso"
 new_iso="auto-install.iso"
 cfg_path="../configs/auto-install/centos/auto-iso/"
 new_grub="grub.cfg"
@@ -11,6 +11,12 @@ VERSION=$(ls /fileserver/open-estuary)
 if [ -z ${VERSION} ];then
     exit 1
 fi
+
+material_iso=$(ls *CentOS*.iso)
+if [ -z "${material_iso}" ];then
+    exit 1
+fi
+
 cp -f /fileserver/open-estuary/${VERSION}/CentOS/${material_iso} ./
 
 if [ ! -d ./mnt ];then

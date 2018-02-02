@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-material_iso="estuary-master-ubuntu.iso"
+#material_iso="estuary-master-ubuntu.iso"
 new_iso="auto-install.iso"
 cfg_path="../configs/auto-install/ubuntu/auto-iso/"
 new_grub="grub.cfg"
@@ -10,6 +10,12 @@ VERSION=$(ls /fileserver/open-estuary)
 if [ -z ${VERSION} ];then
     exit 1
 fi
+
+material_iso=$(ls *ubuntu*.iso)
+if [ -z "${material_iso}" ];then
+    exit 1
+fi
+
 cp -f /fileserver/open-estuary/${VERSION}/Ubuntu/${material_iso} ./
 
 if [ ! -d ./mnt ];then

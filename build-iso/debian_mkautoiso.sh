@@ -1,15 +1,21 @@
 #!/bin/bash -ex
 
-material_iso="estuary-master-debian-9.0-arm64-CD-1.iso"
+#material_iso="estuary-master-debian-9.0-arm64-CD-1.iso"
 new_iso="auto-install.iso"
 cfg_path="../configs/auto-install/debian/auto-iso/"
 new_grub="grub.cfg"
 new_preseed="preseed.cfg"
 
 VERSION=$(ls /fileserver/open-estuary)
-if [ -z ${VERSION} ];then
+if [ -z "${VERSION}" ];then
     exit 1
 fi
+
+material_iso=$(ls *debian*.iso)
+if [ -z "${material_iso}" ];then
+    exit 1
+fi
+
 cp -f /fileserver/open-estuary/${VERSION}/Debian/${material_iso} ./
 
 if [ ! -d ./mnt ];then
