@@ -26,5 +26,5 @@ function workaround_pop_devices_config() {
 function init_os_dict() {
     # declare global dict
     declare -A -g os_dict
-    os_dict=( ["centos"]="CentOS" ["ubuntu"]="Ubuntu")
+    os_dict=( ["centos"]="CentOS" ["ubuntu"]="Ubuntu" ["debian"]="Debian")
 }
