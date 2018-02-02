@@ -58,7 +58,7 @@ function config_tftp_iso() {
     if [ "${tree_name}" = 'linaro' ];then
         :
     elif [ "${tree_name}" = 'open-estuary' ];then
-        if [ ! -d "/tftp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}" ];then
+        if [ ! -e "/tftp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/auto-install.iso" ];then
             mkdir -p "/tftp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}"
             cd "/tftp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}"
             # replave iso
