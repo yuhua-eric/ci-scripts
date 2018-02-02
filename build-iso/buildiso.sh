@@ -12,3 +12,4 @@
 
 ./centos_mkautoiso.sh
 ./ubuntu_mkautoiso.sh
+./debian_mkautoiso.sh
