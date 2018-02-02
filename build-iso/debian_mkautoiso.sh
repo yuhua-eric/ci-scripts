@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-material_iso="estuary-master-debian.iso"
+material_iso="estuary-master-debian-9.0-arm64-CD-1.iso"
 new_iso="auto-install.iso"
 cfg_path="../configs/auto-install/debian/auto-iso/"
 new_grub="grub.cfg"
