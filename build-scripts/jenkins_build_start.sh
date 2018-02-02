@@ -158,14 +158,12 @@ function prepare_repo_tool() {
     pushd $WORK_DIR
     mkdir -p bin;
     export PATH=${WORK_DIR}/bin:$PATH;
-    if [ ! -e bin ]; then
-        if which repo;then
-            echo "skip download repo"
-        else
-            echo "download repo"
-            wget -c http://download.open-estuary.org/AllDownloads/DownloadsEstuary/utils/repo -O bin/repo
-            chmod a+x bin/repo;
-        fi
+    if which repo;then
+        echo "skip download repo"
+    else
+        echo "download repo"
+        wget -c http://download.open-estuary.org/AllDownloads/DownloadsEstuary/utils/repo -O bin/repo
+        chmod a+x bin/repo;
     fi
     popd
 }
