@@ -3,7 +3,7 @@ Build:
     Distro:
         - Ubuntu
         - CentOS
-        #- Debian
+        - Debian
         #- Fedora
         #- OpenSuse
         #- Rancher
