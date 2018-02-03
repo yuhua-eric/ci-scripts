@@ -15,9 +15,15 @@ def getGitBranchName() {
     return scm.branches[0].name
 }
 
+def getGitUrl() {
+    return scm.getUserRemoteConfigs()[0].getUrl()
+}
+
 node ('compile'){
     stage('Preparation') { // for display purposes
-        clone2local('https://github.com/qinshulei/ci-scripts.git', getGitBranchName(), './local/ci-scripts')
+        echo " ### the git url : " + getGitUrl()
+
+        clone2local(getGitUrl(), getGitBranchName(), './local/ci-scripts')
 
         dir('./local/ci-test-cases') {
             deleteDir()
