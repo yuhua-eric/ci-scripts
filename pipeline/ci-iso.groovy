@@ -11,8 +11,14 @@ def clone2local(giturl, localdir) {
     }
 }
 
+def getGitBranchName() {
+    return scm.branches[0].name
+}
+
 node ('compile'){
     stage('Preparation') { // for display purposes
+        echo "get branch name" + getGitBranchName()
+
         clone2local('https://github.com/qinshulei/ci-scripts.git', './local/ci-scripts')
 
         dir('./local/ci-test-cases') {
