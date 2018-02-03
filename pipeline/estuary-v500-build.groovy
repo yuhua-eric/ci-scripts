@@ -15,9 +15,13 @@ def getGitBranchName() {
     return scm.branches[0].name
 }
 
+def getGitUrl() {
+    return scm.getUserRemoteConfigs()[0].getUrl()
+}
+
 node ('ci-v500-compile'){
     stage('Preparation') { // for display purposes
-        clone2local('https://github.com/qinshulei/ci-scripts.git', getGitBranchName(), './local/ci-scripts')
+        clone2local(getGitUrl(), getGitBranchName(), './local/ci-scripts')
 
         // prepare variables.
         sh 'env'
@@ -82,7 +86,7 @@ node ('ci-v500-compile'){
 }
 
 node('ci-compile') {
-    clone2local('https://github.com/qinshulei/ci-scripts.git', getGitBranchName(), './local/ci-scripts')
+    clone2local(getGitUrl(), getGitBranchName(), './local/ci-scripts')
     // load functions
     def functions = load "./local/ci-scripts/pipeline/functions.groovy"
 
