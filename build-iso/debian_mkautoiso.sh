@@ -11,12 +11,10 @@ if [ -z "${VERSION}" ];then
     exit 1
 fi
 
-material_iso=$(ls *debian*.iso)
+material_iso=$(ls /fileserver/open-estuary/${VERSION}/Debian/*debian*.iso)
 if [ -z "${material_iso}" ];then
     exit 1
 fi
-
-cp -f /fileserver/open-estuary/${VERSION}/Debian/${material_iso} ./
 
 if [ ! -d ./mnt ];then
     mkdir ./mnt
@@ -33,7 +31,7 @@ else
     mkdir debian
 fi
 
-mount $material_iso ./mnt
+mount "${material_iso}" ./mnt
 
 cp -rf ./mnt/* ./mnt/.disk/ ./debian/
 

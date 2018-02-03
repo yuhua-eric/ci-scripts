@@ -12,12 +12,10 @@ if [ -z ${VERSION} ];then
     exit 1
 fi
 
-material_iso=$(ls *CentOS*.iso)
+material_iso=$(ls /fileserver/open-estuary/${VERSION}/CentOS/*CentOS*.iso)
 if [ -z "${material_iso}" ];then
     exit 1
 fi
-
-cp -f /fileserver/open-estuary/${VERSION}/CentOS/${material_iso} ./
 
 if [ ! -d ./mnt ];then
     mkdir ./mnt
@@ -34,7 +32,7 @@ else
     mkdir centos
 fi
 
-mount $material_iso ./mnt
+mount "${material_iso}" ./mnt
 
 cp -rf ./mnt/* ./mnt/.discinfo ./mnt/.treeinfo ./centos/
 

@@ -11,12 +11,11 @@ if [ -z ${VERSION} ];then
     exit 1
 fi
 
-material_iso=$(ls *ubuntu*.iso)
+# find the iso path
+material_iso=$(ls /fileserver/open-estuary/${VERSION}/Ubuntu/*ubuntu*.iso)
 if [ -z "${material_iso}" ];then
     exit 1
 fi
-
-cp -f /fileserver/open-estuary/${VERSION}/Ubuntu/${material_iso} ./
 
 if [ ! -d ./mnt ];then
     mkdir ./mnt
@@ -27,13 +26,13 @@ else
 fi
 
 if [ ! -d ./ubuntu ];then
-    mkdir ./ubuntu 
+    mkdir ./ubuntu
 else
     rm -rf ./ubuntu
     mkdir ubuntu
 fi
 
-mount $material_iso ./mnt
+mount "${material_iso}" ./mnt
 
 cp -rf ./mnt/* ./mnt/.disk/ ./ubuntu/
 
