@@ -1,19 +1,23 @@
-def clone2local(giturl, localdir) {
+def clone2local(giturl, branchname, localdir) {
     def exists = fileExists localdir
     if (!exists){
         new File(localdir).mkdir()
     }
     dir (localdir) {
-        checkout([$class: 'GitSCM', branches: [[name: '*/master']],
+        checkout([$class: 'GitSCM', branches: [[name: branchname]],
                 extensions: [[$class: 'CloneOption', timeout: 120]], gitTool: 'Default',
                 userRemoteConfigs: [[url: giturl]]
             ])
     }
 }
 
+def getGitBranchName() {
+    return scm.branches[0].name
+}
+
 node ('compile'){
     stage('Preparation') { // for display purposes
-        clone2local('https://github.com/qinshulei/ci-scripts.git', './local/ci-scripts')
+        clone2local('https://github.com/qinshulei/ci-scripts.git', getGitBranchName(), './local/ci-scripts')
 
         // prepare variables.
         sh 'env'
