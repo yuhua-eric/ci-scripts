@@ -1,4 +1,8 @@
 #!/bin/bash -ex
+#: Title                  : centos_mkautoiso.sh
+#: Usage                  : ./centos_mkautoiso.sh
+#: Author                 : qinsl0106@thundersoft.com
+#: Description            : 生成 centos auto-install.iso
 
 #material_iso="CentOS-7-aarch64-Everything.iso"
 new_iso="auto-install.iso"

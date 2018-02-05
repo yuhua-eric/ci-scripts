@@ -1,4 +1,8 @@
 #!/bin/bash -ex
+#: Title                  : ubuntu_mkautoiso.sh
+#: Usage                  : ./ubuntu_mkautoiso.sh
+#: Author                 : qinsl0106@thundersoft.com
+#: Description            : 生成 ubuntu auto-install.iso
 
 #material_iso="estuary-master-ubuntu.iso"
 new_iso="auto-install.iso"

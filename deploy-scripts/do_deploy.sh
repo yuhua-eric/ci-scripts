@@ -1,4 +1,9 @@
 #!/bin/bash -ex
+#: Title                  : do_deploy.sh
+#: Usage                  : ./do_deploy.sh ${tree_name} ${host_name} ${distro_name} ${version_name} ${BOOT_PLAN}
+#: Author                 : qinsl0106@thundersoft.com
+#: Description            : 做自动部署
+
 __ORIGIN_PATH__="$PWD"
 script_path="${0%/*}"  # remove the script name ,get the path
 script_path=${script_path/\./$(pwd)} # if path start with . , replace with $PWD

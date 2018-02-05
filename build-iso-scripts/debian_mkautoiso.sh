@@ -1,4 +1,8 @@
 #!/bin/bash -ex
+#: Title                  : debian_mkautoiso.sh
+#: Usage                  : ./debian_mkautoiso.sh
+#: Author                 : qinsl0106@thundersoft.com
+#: Description            : 生成 debian auto-install.iso
 
 #material_iso="estuary-master-debian-9.0-arm64-CD-1.iso"
 new_iso="auto-install.iso"

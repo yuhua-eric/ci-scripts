@@ -1,4 +1,8 @@
 #!/bin/bash -ex
+#: Title                  : common.sh
+#: Usage                  : source common.sh
+#: Author                 : qinsl0106@thundersoft.com
+#: Description            : 部署部分公共方法
 
 function workaround_stash_devices_config() {
     if [ -n "${CI_ENV}" ];then

@@ -5,8 +5,8 @@ visibility: public
 
 metadata:
   # please change these fields when modifying this job for your own tests.
-  docs-source: https://github.com/zwx168238/ci-scripts/tree/dev/boot-app-scripts/templates/BOOT_NFS
-  docs-filename: d03-arm64-kernel-ci-boot-nfs-template.yaml
+  docs-source: https://github.com/qinshulei/ci-scripts/tree/dev/test-scripts/templates/BOOT_NFS
+  docs-filename: d05-arm64-kernel-ci-boot-nfs-template.yaml
   kernel_defconfig : {defconfig}
   kernel_version : {kernel_version}
   kernel_tree : {tree}

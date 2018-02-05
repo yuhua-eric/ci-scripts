@@ -4,8 +4,8 @@
 
 ```
 .
-├── boot-app-scripts              # 测试任务相关脚本
-├── build-iso                     # 自动安装ISO相关脚本
+├── test-scripts              # 测试任务相关脚本
+├── build-iso-scripts             # 自动安装ISO相关脚本
 ├── build-scripts                 # 编译任务相关脚本
 ├── configs                       # CI环境配置文件
 ├── deploy-scripts                # 部署相关脚本

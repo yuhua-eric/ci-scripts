@@ -1,5 +1,9 @@
 #!/bin/bash -ex
-# the server need open mode :
+#: Title                  : jenkins_build_start.sh
+#: Usage                  : ./local/ci-scripts/build-scripts/jenkins_build_start.sh -p env.properties
+#: Author                 : qinsl0106@thundersoft.com
+#: Description            : CI中 编译部分 的jenkins任务脚本，针对v3.1
+# the server need open mod loop :
 # modprobe loop
 # export CODE_REFERENCE=""
 

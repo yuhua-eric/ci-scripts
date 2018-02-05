@@ -66,7 +66,7 @@ node ('ci-v500-compile'){
 
     def iso_result = 0
     stage('Build Auto ISO') {
-        dir('./local/ci-scripts/build-iso') {
+        dir('./local/ci-scripts/build-iso-scripts') {
             iso_result = sh script: "./buildiso.sh 2>&1 ", returnStatus: true
         }
     }
@@ -125,7 +125,7 @@ node('ci-compile') {
 
     def test_result = 0
     stage('Testing') {
-        test_result = sh script: "./local/ci-scripts/boot-app-scripts/jenkins_boot_start.sh -p env.properties 2>&1 " , returnStatus: true
+        test_result = sh script: "./local/ci-scripts/test-scripts/jenkins_boot_start.sh -p env.properties 2>&1 " , returnStatus: true
     }
     echo "test_result : ${test_result}"
     if (test_result == 0) {

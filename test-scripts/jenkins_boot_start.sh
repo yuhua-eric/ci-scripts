@@ -1,4 +1,9 @@
 #!/bin/bash -ex
+#: Title                  : jenkins_boot_start.sh
+#: Usage                  : ./local/ci-scripts/test-scripts/jenkins_boot_start.sh -p env.properties
+#: Author                 : qinsl0106@thundersoft.com
+#: Description            : CI中 测试部分 的jenkins任务脚本
+
 function init_build_option() {
     SKIP_LAVA_RUN=${SKIP_LAVA_RUN:-"false"}
 }
@@ -221,7 +226,7 @@ function clean_workspace() {
 }
 
 function trigger_lava_build() {
-    pushd ${WORKSPACE}/local/ci-scripts/boot-app-scripts
+    pushd ${WORKSPACE}/local/ci-scripts/test-scripts
     mkdir -p ${GIT_DESCRIBE}/${RESULTS_DIR}
     for DISTRO in $SHELL_DISTRO; do
         if [ -d $DISTRO ];then
@@ -301,7 +306,7 @@ function trigger_lava_build() {
 
 function collect_result() {
     # push the binary files to the ftpserver
-    pushd ${WORKSPACE}/local/ci-scripts/boot-app-scripts
+    pushd ${WORKSPACE}/local/ci-scripts/test-scripts
     DES_DIR=${FTP_DIR}/${TREE_NAME}/${GIT_DESCRIBE}/
     [ ! -d $DES_DIR ] && echo "Don't have the images and dtbs" && exit -1
 
@@ -334,12 +339,12 @@ function collect_result() {
         # echo "##### distro : ${distro_name} ######" | tee -a ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} | tee -a ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
 
         # add distro info in txt file
-        sed -i -e 's/^/'"${distro_name}"' /' ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${WHOLE_SUM}
-        sed -i -e 's/^/'"${distro_name}"' /' ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM}
+        sed -i -e 's/^/'"${distro_name}"' /' ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${WHOLE_SUM}
+        sed -i -e 's/^/'"${distro_name}"' /' ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM}
 
-        cat ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${WHOLE_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
-        cat ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
-        # cp -f ${CI_SCRIPTS_DIR}/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${PDF_FILE} ${GIT_DESCRIBE}/${RESULTS_DIR}/${PDF_FILE}
+        cat ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${WHOLE_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
+        cat ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
+        # cp -f ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${PDF_FILE} ${GIT_DESCRIBE}/${RESULTS_DIR}/${PDF_FILE}
     done
 
     # apt-get install pdftk
@@ -462,7 +467,7 @@ Boot and Test Status: Success <br>
 <br>
 EOF
 
-    cd ${WORKSPACE}/local/ci-scripts/boot-app-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
+    cd ${WORKSPACE}/local/ci-scripts/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
     echo  ""
     echo "Test summary is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table cellspacing="0" cellpadding="5px" border="1">' >> ${WORKSPACE}/MAIL_CONTENT.txt
