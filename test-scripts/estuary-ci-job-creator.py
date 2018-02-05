@@ -178,7 +178,7 @@ def generate_test_definitions(distro, device_type,test_scope, test_level):
     for test in work_test_list:
         definition = generate_test_definition(test['metadata']['test_path'], test['metadata']['name'])
         current_definition += definition
-        if i == 5:
+        if i == 4:
             all_definitions.append(current_definition)
             current_definition = ""
             i = 0
