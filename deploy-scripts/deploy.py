@@ -31,7 +31,8 @@ def boot_device(DEPLOY_TYPE, BMC_HOST, BMC_USER, BMC_PASS):
     shell.run_command(power_on_command.split(' '), allow_fail=True)
     time.sleep(2)
 
-    connection = shell.ipmi_connection(connection_command, 6000)
+    # set the install timeout 50 minutes. because lava action timeout is 1 hour
+    connection = shell.ipmi_connection(connection_command, 3000)
     time.sleep(2)
     # connection.prompt_str = ['seconds to stop automatical booting']
     # connection.wait()
