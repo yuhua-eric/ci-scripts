@@ -218,6 +218,7 @@ class ShellCommand(pexpect.spawn):  # pylint: disable=too-many-public-methods
             exit(-1)
         except pexpect.EOF:
             # FIXME: deliberately closing the connection (and starting a new one) needs to be supported.
+            # TODO: need throw a exception to do further process
             print "error : pexpect eof"
             exit(-1)
         return proc
