@@ -41,6 +41,42 @@ d05ssh03:
   next-server: 192.168.50.122
   filename: "estuary_install/grubaa64.efi"
 
+# 20180209 New Device
+d05ssh04:
+  type: D05
+  bmc: 192.168.2.133
+  ip: 192.168.50.128
+  mac: c0:a8:02:85:00:04
+  next-server: 192.168.50.122
+  filename: "estuary_install/grubaa64.efi"
+
+# 20180209 New Device
+d05ssh05:
+  type: D05
+  bmc: 192.168.2.134
+  ip: 192.168.50.129
+  mac: c0:a8:02:86:00:04
+  next-server: 192.168.50.122
+  filename: "estuary_install/grubaa64.efi"
+
+# 20180209 New Device
+d05ssh06:
+  type: D05
+  bmc: 192.168.2.135
+  ip: 192.168.50.130
+  mac: c0:a8:02:87:00:04
+  next-server: 192.168.50.122
+  filename: "estuary_install/grubaa64.efi"
+
+# 20180209 New Device
+d05ssh07:
+  type: D05
+  bmc: 192.168.2.178
+  ip: 192.168.50.131
+  mac: c0:a8:02:b2:00:04
+  next-server: 192.168.50.122
+  filename: "estuary_install/grubaa64.efi"
+
 # DUT
 d03ssh01:
   type: D03
@@ -50,11 +86,41 @@ d03ssh01:
   next-server: 192.168.50.122
   filename: "estuary_install/grubaa64.efi"
 
+# 20180209 New Device
+# DUT
+d03ssh02:
+  type: D03
+  bmc: 192.168.2.214
+  ip: 192.168.50.123
+  mac: c0:a8:02:e9:00:04
+  next-server: 192.168.50.122
+  filename: "estuary_install/grubaa64.efi"
+
+# 20180209 New Device
+# DUT
+d03ssh03:
+  type: D03
+  bmc: 192.168.2.233
+  ip: 192.168.50.132
+  mac: c0:a8:02:e9:00:04
+  next-server: 192.168.50.122
+  filename: "estuary_install/grubaa64.efi"
+
 # v500 compile server
-d05compile:
+d05compile01:
   type: D05
   bmc: 192.168.3.128
   ip: 192.168.50.126
   mac: c0:a8:03:80:00:04
+  next-server: 192.168.50.122
+  filename: "estuary_install/grubaa64.efi"
+
+# 20180209 New Device
+# v500 compile server
+d05compile02:
+  type: D05
+  bmc: 192.168.2.193
+  ip: 192.168.50.121
+  mac: c0:a8:02:c1:00:04
   next-server: 192.168.50.122
   filename: "estuary_install/grubaa64.efi"
