@@ -223,7 +223,7 @@ function do_build() {
         pushd estuary
 
         for DISTRO in $SHELL_DISTRO;do
-            ( ./build.sh --build_dir=${BUILD_DIR} -d "${DISTRO,,}" & )
+            ( ./build.sh --build_dir=${BUILD_DIR} -d "${DISTRO,,}" | tee ${WORKSPACE}/${DISTRO}_build.log & )
         done
         wait
 
