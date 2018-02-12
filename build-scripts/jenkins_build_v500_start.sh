@@ -222,11 +222,12 @@ function do_build() {
         # Execute build
         pushd estuary
 
-        for DISTRO in $SHELL_DISTRO;do
-            ./build.sh --build_dir=${BUILD_DIR} -d "${DISTRO,,}" | tee ${WORKSPACE}/${DISTRO}_build.log &
-        done
-        wait
+        #for DISTRO in $SHELL_DISTRO;do
+        #    ./build.sh --build_dir=${BUILD_DIR} -d "${DISTRO,,}" | tee ${WORKSPACE}/${DISTRO}_build.log &
+        #done
+        #wait
 
+        ./build.sh --build_dir=${BUILD_DIR}
         if [ $? -ne 0 ]; then
             echo "estuary build failed!"
             exit -1
