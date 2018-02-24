@@ -1,0 +1,18 @@
+{
+  "Column" : [
+    "版本描述",
+    "Sha1",
+    "Value",
+    "构建结果",
+    "构建开始时间",
+    "测试完成时间"
+  ],
+  "Row" : [
+    "Estuary V5.0 - 2018/01/10",
+		"PASS/FAIL",
+    "YYYY/MM/DD",
+    "HH:MM:SS",
+    "YYYY/MM/DD",
+    "HH:MM:SS"
+  ]
+}

@@ -9,8 +9,11 @@ import sys
 import os
 import argparse
 
-style = 'style="border: solid 1px black;"'
-
+table_style = 'style=""'
+tr_th_style = 'style="text-align: center;justify-content: center;background-color: #b9bbc0;"'
+tr_style = 'style="text-align: center;justify-content: center;"'
+th_style = 'style=""'
+td_style = 'style=""'
 
 def load_json(file_name):
     with open(file_name) as f:
@@ -53,15 +56,15 @@ def get_rows(rows, row_span_arr, row_str):
                 if isinstance(item, dict):
                     row_str += extract_dict(item)
                 else:
-                    row_str += ('<td ' + style + '>' + str(
+                    row_str += ('<td ' + td_style + '>' + str(
                         item) + '</td>\n')
-            row_str += '</tr>\n<tr>\n'
+            row_str += '</tr>\n<tr ' + tr_style + '>\n'
         else:
             rowspan = row_span_arr.pop(0)
             if isinstance(rows, dict):
                 row_str += extract_dict(rows, rowspan)
             else:
-                row_str += '\n<td rowspan=%s '% rowspan + style + '>' + str(
+                row_str += '\n<td rowspan=%s '% rowspan + td_style + '>' + str(
                     rows) + '</td>\n'
 
     return row_str
@@ -70,14 +73,14 @@ def get_rows(rows, row_span_arr, row_str):
 def extract_dict(data, rowspan=1):
     row_str = ''
     if data.has_key('link') and data.has_key('color'):
-        row_str += ('<td rowspan=%s '%rowspan + style + '> <a href="' + data['link'] + '" style="color:' + data[
+        row_str += ('<td rowspan=%s '%rowspan + td_style + '> <a href="' + data['link'] + '" style="color:' + data[
             'color'] + '">' +
                     data['data'] + '</a></td>\n')
     elif data.has_key('link'):
-        row_str += ('<td rowspan=%s '%rowspan + style + '>  <a href="' + data[
+        row_str += ('<td rowspan=%s '%rowspan + td_style + '>  <a href="' + data[
             'link'] + '">' + data['data'] + '</a></td>\n')
     elif data.has_key('color'):
-        row_str += ('<td rowspan=%s '%rowspan + style + '>  <font color="' + data[
+        row_str += ('<td rowspan=%s '%rowspan + td_style + '>  <font color="' + data[
             'color'] + '">' + data['data'] + '</font></td>\n')
     return row_str
 
@@ -95,27 +98,27 @@ def get_col(column):
             if isinstance(item, list):
                 tmp.append(column.index(item))
         tmp2 = [(x - 1) for x in tmp]
-        col_str += '<tr style="text-align: center;justify-content: center">\n'
+        col_str += '<tr ' + tr_th_style + '>\n'
         for index in range(len(column)):
             if index in tmp:
                 continue
             if index in tmp2:
-                col_str += '<td colspan=%s '%len(column[index + 1]) + style + '>%s</td>\n' % (
+                col_str += '<th colspan=%s ' % len(column[index + 1]) + th_style + '>%s</th>\n' % (
                    column[index])
             else:
-                col_str += '<td rowspan=2 ' + style + '> %s</td>\n' % column[index]
+                col_str += '<th rowspan=2 ' + th_style + '> %s</th>\n' % column[index]
 
-        col_str += '</tr>\n<tr>'
+        col_str += '</tr>\n<tr' + tr_th_style + '>'
         for index in tmp:
             for item in column[index]:
-                col_str += '<td '+ style + '>%s</td>\n' % item
+                col_str += '<th ' + th_style + '>%s</th>\n' % item
         col_str += '</tr>'
         return col_str
     else:
         col_str = ''
-        col_str += '<tr style="text-align: center;justify-content: center">\n'
+        col_str += '<tr ' + tr_th_style + '>\n'
         for item in column:
-            col_str += '<td ' + style + '>%s</td>\n' % item
+            col_str += '<th ' + th_style + '>%s</th>\n' % item
         col_str += '</tr>'
         return col_str
 
@@ -136,9 +139,17 @@ def main():
     row_index = []
     row_span_arr = get_rowspan(rows_temp, row_index)
 
-    content = "<tr>\n" + get_rows(rows_temp, row_span_arr, '')[:-5]
+    temp_rows_data = get_rows(rows_temp, row_span_arr, '').rstrip("\n")
+    dumy_str = '<tr ' + tr_style + '>'
+    if temp_rows_data.endswith(dumy_str):
+        temp_rows_data = temp_rows_data[:-len(dumy_str)]
+
+    content = "<tr " + tr_style + ">\n" + temp_rows_data
     column = get_col(column_temp)
-    print '<table cellspacing="0px" '+ style + '>\n'+ column + '\n' + content + '</table>'
+    print '<table cellspacing="0px" cellpadding="5px" border="1" ' + table_style + '>\n' \
+          + column + '\n' \
+          + content + \
+          '</table>'
 
     # for test use
     # x = '<table cellspacing="0px" '+ style + '>\n'+ column + '\n' + content + '</table>'

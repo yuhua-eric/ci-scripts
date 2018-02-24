@@ -4,6 +4,48 @@
 #: Author                 : qinsl0106@thundersoft.com
 #: Description            : CI中 测试部分 的jenkins任务脚本
 
+######################################## help ########################################
+#
+# returns 0 if a variable is defined (set)
+# returns 1 if a variable is unset
+#
+# e.g. : defined "A"
+#
+defined() {
+    [[ "${!1-X}" == "${!1-Y}" ]]
+}
+
+#
+# return 0 if a variable is undefined or value's length == 0
+# return 1 otherwise
+#
+# e.g. : is_null_or_empty "A"
+#
+is_null_or_empty() {
+    if defined "$1"; then
+        if [ -z "${!1}" ]; then
+            return 0
+        else
+            return 1
+        fi
+    else
+        return 0
+    fi
+}
+
+#
+# echo the variable name and value to console
+#
+# e.g. : echo_vars "A" "B" "C"
+#
+echo_vars () {
+    local vars=$@
+    for var in $vars;do
+        echo "[echo_vars] $var : ${!var}"
+    done
+}
+
+######################################## logic ########################################
 function init_build_option() {
     SKIP_LAVA_RUN=${SKIP_LAVA_RUN:-"false"}
 }
@@ -436,59 +478,84 @@ EOF
 
 }
 
-
 function generate_success_mail(){
+    echo "###################### start generate mail ####################"
+
+    # prepare parameters
     cd ${WORKSPACE}
     if [ "${DEBUG}" = "true" ];then
         echo "${FAILED_MAIL_LIST}" > ${WORKSPACE}/MAIL_LIST.txt
     else
         echo "${SUCCESS_MAIL_LIST}" > ${WORKSPACE}/MAIL_LIST.txt
     fi
-
     TODAY=$(date +"%Y/%m/%d")
-    echo "Estuary CI Auto-test Daily Report (${TODAY}) - ${GIT_DESCRIBE}" > ${WORKSPACE}/MAIL_SUBJECT.txt
+    # JOB_RESULT --> DISTRO_RESULT --> MODULE_RESULT --> SUITE_RESULT --> CASE_RESULT
+    # TODO : depends on all distro's result. PASS/FAIL
+    JOB_RESULT=FAIL
 
-    cat > ${WORKSPACE}/MAIL_CONTENT.txt <<EOF
-Estuary CI Auto-test Daily Report (${TODAY}) <br>
-<br>
-1、构建信息<br>
-Project Name: ${TREE_NAME} <br>
-Version: ${GIT_DESCRIBE} <br>
-Deploy Type: ${BOOT_PLAN} <br>
-Boot and Test Status: Success <br>
-<br>
-2. 今日构建结果 <br>
-<a href="${BUILD_URL}console">Build Log Address</a> <br>
-<a href="$BUILD_URL">Build Project Address</a><br>
-<a href="${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}">Build and Generated Binaries Address</a> <br>
-<a href="${TEST_REPO}">The Test Cases Definition Address</a> <br>
-<br>
-3. 测试数据统计 <br>
-<br>
-EOF
+    # echo all mail releated info
+    echo_vars TODAY GIT_DESCRIBE JOB_RESULT TREE_NAME BOOT_PLAN BUILD_URL FTP_SERVER TEST_REPO
 
-    cd ${WORKSPACE}/local/ci-scripts/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
-    echo  ""
-    echo "Test summary is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "------------------------------------------------------------"
+
+    cd ${WORKSPACE}/local/ci-scripts/test-scripts/
+
+    echo "Estuary CI Auto-test Daily Report (${TODAY}) - ${JOB_RESULT}" > ${WORKSPACE}/MAIL_SUBJECT.txt
+
+    echo "Estuary CI Auto-test Daily Report (${TODAY}) <br>" > ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "1、构建信息<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    python ./html/html-table.py -f ./html/1-job-info-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+
+
+    echo "2. 今日构建结果 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    python ./html/html-table.py -f ./html/2-job-result-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+
+    echo "3. 测试数据统计 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "3.1 Ubuntu版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    python ./html/html-table.py -f ./html/3-distro-result-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "3.2 Debian版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    python ./html/html-table.py -f ./html/3-distro-result-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "3.3 CentOS版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    python ./html/html-table.py -f ./html/3-distro-result-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+
+    echo "4. X月版本健康度统计 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    python ./html/html-table.py -f ./html/4-health-rate-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+
+    echo "5. 构建结果访问 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    python ./html/html-table.py -f ./html/5-job-link-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+
+    ## 统计结果
+    echo "6. 统计结果:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table cellspacing="0" cellpadding="5px" border="1">' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Distro</th><th>Type</th><th>Total Number</th><th>Failed Number</th><th>Success Number</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    cat whole_summary.txt |
+    cat ${GIT_DESCRIBE}/${RESULTS_DIR}/whole_summary.txt |
         awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td><td>" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
+    ## 详细测试结果
     echo  ""
-    echo "The Test Case details is below:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "7. 详细测试结果:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table cellspacing="0" cellpadding="5px" border="1">' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Distro</th><th>Job ID</th><th>Suite Name</th><th>Case Name</th><th>Case Result</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    cat details_summary.txt |
+    cat ${GIT_DESCRIBE}/${RESULTS_DIR}/details_summary.txt |
         awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a><td>" substr($3,3,length($3)) "</td><td>" $4 "</td><td>" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "4. 本月版本健康度统计<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+
+    ##  编译结果
+    echo "8. 编译结果<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     cd -
+
+    echo "######################################## generate mail success ########################################"
 }
 
 function workaround_stash_devices_config() {
