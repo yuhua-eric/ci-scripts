@@ -15,6 +15,7 @@ tr_style = 'style="text-align: center;justify-content: center;"'
 th_style = 'style=""'
 td_style = 'style=""'
 
+
 def _decode_list(data):
     rv = []
     for item in data:
@@ -26,6 +27,7 @@ def _decode_list(data):
             item = _decode_dict(item)
         rv.append(item)
     return rv
+
 
 def _decode_dict(data):
     rv = {}
