@@ -529,7 +529,7 @@ function generate_success_mail(){
     export_vars JOB_INFO_VERSION JOB_INFO_SHA1 JOB_INFO_RESULT JOB_INFO_START_TIME JOB_INFO_END_TIME
     envsubst < ./html/1-job-info-table.json > ./html/1-job-info-table.json.tmp
     python ./html/html-table.py -f ./html/1-job-info-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
-    # rm -f ./html/1-job-info-table.json.tmp
+    rm -f ./html/1-job-info-table.json.tmp
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "2. 今日构建结果 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
@@ -543,6 +543,7 @@ END
     export_vars JOB_RESULT_VERSION JOB_RESULT_DATA
     envsubst < ./html/2-job-result-table.json > ./html/2-job-result-table.json.tmp
     python ./html/html-table.py -f ./html/2-job-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
+    rm -f ./html/2-job-result-table.json.tmp
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "3. 测试数据统计 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
@@ -567,6 +568,7 @@ END
     export_vars DISTRO_RESULT_DATA
     envsubst < ./html/3-distro-result-table.json > ./html/3-distro-result-table.json.tmp
     python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
+    rm -f ./html/3-distro-result-table.json.tmp
     echo "3.2 Debian版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
     DISTRO_RESULT_DATA=$(cat <<-END
     "kernel", [
@@ -588,6 +590,7 @@ END
     export_vars DISTRO_RESULT_DATA
     envsubst < ./html/3-distro-result-table.json > ./html/3-distro-result-table.json.tmp
     python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
+    rm -f ./html/3-distro-result-table.json.tmp
     echo "3.3 CentOS版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
         DISTRO_RESULT_DATA=$(cat <<-END
     "kernel", [
@@ -609,6 +612,7 @@ END
     export_vars DISTRO_RESULT_DATA
     envsubst < ./html/3-distro-result-table.json > ./html/3-distro-result-table.json.tmp
     python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
+    rm -f ./html/3-distro-result-table.json.tmp
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "4. X月版本健康度统计 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
@@ -620,6 +624,7 @@ END
     export_vars HEALTH_RATE_VERSION HEALTH_RATE_COMPILE HEALTH_RATE_TEST HEALTH_RATE_LINT HEALTH_RATE_TOTAL
     envsubst < ./html/4-health-rate-table.json > ./html/4-health-rate-table.json.tmp
     python ./html/html-table.py -f ./html/4-health-rate-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
+    rm -f ./html/4-health-rate-table.json.tmp
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "5. 构建结果访问 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
@@ -629,6 +634,7 @@ END
     exports_vars JOB_LINK_COMPILE JOB_LINK_RESULT JOB_LINK_TEST_CASE
     envsubst < ./html/5-job-link-table.json > ./html/5-job-link-table.json.tmp
     python ./html/html-table.py -f ./html/5-job-link-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
+    rm -f ./html/5-job-link-table.json.tmp
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     ## 统计结果
