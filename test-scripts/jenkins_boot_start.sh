@@ -528,13 +528,21 @@ function generate_success_mail(){
     JOB_INFO_END_TIME=$(date +"%Y/%m/%d %H:%M:%S")
     export_vars JOB_INFO_VERSION JOB_INFO_SHA1 JOB_INFO_RESULT JOB_INFO_START_TIME JOB_INFO_END_TIME
     envsubst < ./html/1-job-info-table.json > ./html/1-job-info-table.json.tmp
-    python ./html/html-table.py -f ./html/1-job-info-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    python ./html/html-table.py -f ./html/1-job-info-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     # rm -f ./html/1-job-info-table.json.tmp
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-
     echo "2. 今日构建结果 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    python ./html/html-table.py -f ./html/2-job-result-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    JOB_RESULT_VERSION="Estuary V5.0"
+    JOB_RESULT_DATA=$(cat <<-END
+    ["Ubuntu", "pass/fail/block/na", "99", "xx%", "222", "111", "333"],
+    ["Debian", "pass/fail/block/na", "99", "xx%", "222", "111", "333"],
+    ["CentOS", "pass/fail/block/na", "99", "xx%", "222", "111", "333"]
+END
+                   )
+    export_vars JOB_RESULT_VERSION JOB_RESULT_DATA
+    envsubst < ./html/./html/2-job-result-table.json > ./html/./html/2-job-result-table.json.tmp
+    python ./html/html-table.py -f ./html/2-job-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "3. 测试数据统计 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt

@@ -8,7 +8,7 @@
   ],
   "Row" : [
     "${JOB_INFO_VERSION}",
-    "${JOB_INFO_SHA1}"
+    "${JOB_INFO_SHA1}",
 		"${JOB_INFO_RESULT}",
     "${JOB_INFO_START_TIME}",
     "${JOB_INFO_END_TIME}"

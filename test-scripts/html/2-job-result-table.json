@@ -13,10 +13,8 @@
     ]
   ],
   "Row":[
-    "Estuary V5.0",[
-      ["Ubuntu", "pass/fail/block/na", "99", "xx%", "222", "111", "333"],
-      ["Debian", "pass/fail/block/na", "99", "xx%", "222", "111", "333"],
-      ["CentOS", "pass/fail/block/na", "99", "xx%", "222", "111", "333"]
+    "${JOB_RESULT_VERSION}",[
+      ${JOB_RESULT_DATA}
     ]
   ]
 }
