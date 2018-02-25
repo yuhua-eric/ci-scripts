@@ -631,7 +631,7 @@ END
     JOB_LINK_COMPILE="${BUILD_URL}console"
     JOB_LINK_RESULT="${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}"
     JOB_LINK_TEST_CASE="${TEST_REPO}"
-    exports_vars JOB_LINK_COMPILE JOB_LINK_RESULT JOB_LINK_TEST_CASE
+    export_vars JOB_LINK_COMPILE JOB_LINK_RESULT JOB_LINK_TEST_CASE
     envsubst < ./html/5-job-link-table.json > ./html/5-job-link-table.json.tmp
     python ./html/html-table.py -f ./html/5-job-link-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     rm -f ./html/5-job-link-table.json.tmp
