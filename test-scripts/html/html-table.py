@@ -157,6 +157,7 @@ def main():
     parser = argparse.ArgumentParser(prog='PROG')
     parser.add_argument('-f', '--file', required=True,
                         help='The data file path to load.')
+    parser.add_argument('-o', '--output_file', help='allow output the result to a file')
     args = parser.parse_args()
 
     # load data
@@ -177,16 +178,17 @@ def main():
 
     column = get_col(column_temp)
 
-    print '<table cellspacing="0px" cellpadding="5px" border="1" ' + table_style + '>'
-    print column
-    print content
-    print '</table>'
+    result = '<table cellspacing="0px" cellpadding="5px" border="1" ' + table_style + '>' \
+                                  + column \
+                                  + content \
+                                  + '</table>'
 
-    # for test use
-    # x = '<table cellspacing="0px" '+ style + '>\n'+ column + '\n' + content + '</table>'
-    # with open('test.txt', 'w') as f:
-    #     f.write(x)
-
+    # if don't have output_file ,print to console
+    if args.output_file:
+        with open('test.txt', 'w') as f:
+            f.write(result)
+    else:
+        print result
 
 if __name__ == '__main__':
     main()
