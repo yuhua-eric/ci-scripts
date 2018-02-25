@@ -93,8 +93,8 @@ def get_rows(rows, row_span_arr, row_str):
             if isinstance(rows, dict):
                 row_str += extract_dict(rows, rowspan)
             else:
-                row_str += '\n<td rowspan=%s ' % rowspan + td_style + '>'
-                + str(rows) + '</td>\n'
+                row_str += '\n<td rowspan=%s ' % rowspan + td_style + '>' \
+                    + str(rows) + '</td>\n'
 
     return row_str
 
@@ -102,14 +102,14 @@ def get_rows(rows, row_span_arr, row_str):
 def extract_dict(data, rowspan=1):
     row_str = ''
     if data.has_key('link') and data.has_key('color'):
-        row_str += ('<td rowspan=%s '%rowspan + td_style + '> <a href="'
-                    + data['link'] + '" style="color:' + data['color'] + '">'
+        row_str += ('<td rowspan=%s '%rowspan + td_style + '> <a href="' \
+                    + data['link'] + '" style="color:' + data['color'] + '">' \
                     + data['data'] + '</a></td>\n')
     elif data.has_key('link'):
-        row_str += ('<td rowspan=%s '%rowspan + td_style + '>  <a href="'
+        row_str += ('<td rowspan=%s '%rowspan + td_style + '>  <a href="' \
                     + data['link'] + '">' + data['data'] + '</a></td>\n')
     elif data.has_key('color'):
-        row_str += ('<td rowspan=%s '%rowspan + td_style + '>  <font color="'
+        row_str += ('<td rowspan=%s '%rowspan + td_style + '>  <font color="' \
                     + data['color'] + '">' + data['data'] + '</font></td>\n')
     return row_str
 
@@ -137,7 +137,7 @@ def get_col(column):
             else:
                 col_str += '<th rowspan=2 ' + th_style + '> %s</th>\n' % column[index]
 
-        col_str += '</tr>\n<tr' + tr_th_style + '>'
+        col_str += '</tr>\n<tr ' + tr_th_style + '>'
         for index in tmp:
             for item in column[index]:
                 col_str += '<th ' + th_style + '>%s</th>\n' % item
