@@ -7,10 +7,10 @@
     "本月CI构建成功率"
   ],
   "Row" : [
-    "Estuary V5.0",
-	  "xx%",
-    "xx%",
-    "xx%",
-    "xx%"
+    "${HEALTH_RATE_VERSION}",
+	  "${HEALTH_RATE_COMPILE}",
+    "${HEALTH_RATE_TEST}",
+    "${HEALTH_RATE_LINT}",
+    "${HEALTH_RATE_TOTAL}"
   ]
 }

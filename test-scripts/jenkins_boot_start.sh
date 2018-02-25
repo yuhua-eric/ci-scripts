@@ -535,31 +535,100 @@ function generate_success_mail(){
     echo "2. 今日构建结果 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     JOB_RESULT_VERSION="Estuary V5.0"
     JOB_RESULT_DATA=$(cat <<-END
-    ["Ubuntu", "pass/fail/block/na", "99", "xx%", "222", "111", "333"],
-    ["Debian", "pass/fail/block/na", "99", "xx%", "222", "111", "333"],
-    ["CentOS", "pass/fail/block/na", "99", "xx%", "222", "111", "333"]
+    ["Ubuntu", "fail", "100", "50%", "50", "50", "0"],
+    ["Debian", "fail", "100", "50%", "50", "50", "0"],
+    ["CentOS", "fail", "100", "50%", "50", "50", "0"]
 END
                    )
     export_vars JOB_RESULT_VERSION JOB_RESULT_DATA
-    envsubst < ./html/./html/2-job-result-table.json > ./html/./html/2-job-result-table.json.tmp
+    envsubst < ./html/2-job-result-table.json > ./html/2-job-result-table.json.tmp
     python ./html/html-table.py -f ./html/2-job-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "3. 测试数据统计 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "3.1 Ubuntu版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    python ./html/html-table.py -f ./html/3-distro-result-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    DISTRO_RESULT_DATA=$(cat <<-END
+    "kernel", [
+        ["xxx","developer","tester","total","pass rate","pass num","fail num","block num"]
+    ],
+    "virtualization",[
+        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"]
+    ],
+    "distribution",[
+        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx4","developer","tester","total","pass rate","pass num","fail num","block num"]
+    ]
+END
+                      )
+    export_vars DISTRO_RESULT_DATA
+    envsubst < ./html/3-distro-result-table.json > ./html/3-distro-result-table.json.tmp
+    python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "3.2 Debian版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    python ./html/html-table.py -f ./html/3-distro-result-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    DISTRO_RESULT_DATA=$(cat <<-END
+    "kernel", [
+        ["xxx","developer","tester","total","pass rate","pass num","fail num","block num"]
+    ],
+    "virtualization",[
+        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"]
+    ],
+    "distribution",[
+        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx4","developer","tester","total","pass rate","pass num","fail num","block num"]
+    ]
+END
+                      )
+    export_vars DISTRO_RESULT_DATA
+    envsubst < ./html/3-distro-result-table.json > ./html/3-distro-result-table.json.tmp
+    python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "3.3 CentOS版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    python ./html/html-table.py -f ./html/3-distro-result-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+        DISTRO_RESULT_DATA=$(cat <<-END
+    "kernel", [
+        ["xxx","developer","tester","total","pass rate","pass num","fail num","block num"]
+    ],
+    "virtualization",[
+        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"]
+    ],
+    "distribution",[
+        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx4","developer","tester","total","pass rate","pass num","fail num","block num"]
+    ]
+END
+                      )
+    export_vars DISTRO_RESULT_DATA
+    envsubst < ./html/3-distro-result-table.json > ./html/3-distro-result-table.json.tmp
+    python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "4. X月版本健康度统计 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    python ./html/html-table.py -f ./html/4-health-rate-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    HEALTH_RATE_VERSION="Estuary V5.0"
+    HEALTH_RATE_COMPILE="100%"
+    HEALTH_RATE_TEST="0%"
+    HEALTH_RATE_LINT="100%"
+    HEALTH_RATE_TOTAL="0%"
+    export_vars HEALTH_RATE_VERSION HEALTH_RATE_COMPILE HEALTH_RATE_TEST HEALTH_RATE_LINT HEALTH_RATE_TOTAL
+    envsubst < ./html/4-health-rate-table.json > ./html/4-health-rate-table.json.tmp
+    python ./html/html-table.py -f ./html/4-health-rate-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "5. 构建结果访问 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    python ./html/html-table.py -f ./html/5-job-link-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    JOB_LINK_COMPILE="${BUILD_URL}console"
+    JOB_LINK_RESULT="${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}"
+    JOB_LINK_TEST_CASE="${TEST_REPO}"
+    exports_vars JOB_LINK_COMPILE JOB_LINK_RESULT JOB_LINK_TEST_CASE
+    envsubst < ./html/5-job-link-table.json > ./html/5-job-link-table.json.tmp
+    python ./html/html-table.py -f ./html/5-job-link-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     ## 统计结果

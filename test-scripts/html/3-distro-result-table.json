@@ -14,19 +14,6 @@
     ]
   ],
   "Row":[
-    "kernel", [
-      ["xxx","developer","tester","total","pass rate","pass num","fail num","block num"]
-    ],
-    "virtualization",[
-      ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
-      ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
-      ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"]
-    ],
-    "distribution",[
-      ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
-      ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
-      ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"],
-      ["xxx4","developer","tester","total","pass rate","pass num","fail num","block num"]
-    ]
+    ${DISTRO_RESULT_DATA}
   ]
 }
