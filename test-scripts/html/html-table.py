@@ -15,9 +15,36 @@ tr_style = 'style="text-align: center;justify-content: center;"'
 th_style = 'style=""'
 td_style = 'style=""'
 
+def _decode_list(data):
+    rv = []
+    for item in data:
+        if isinstance(item, unicode):
+            item = item.encode('utf-8')
+        elif isinstance(item, list):
+            item = _decode_list(item)
+        elif isinstance(item, dict):
+            item = _decode_dict(item)
+        rv.append(item)
+    return rv
+
+def _decode_dict(data):
+    rv = {}
+    for key, value in data.iteritems():
+        if isinstance(key, unicode):
+            key = key.encode('utf-8')
+        if isinstance(value, unicode):
+            value = value.encode('utf-8')
+        elif isinstance(value, list):
+            value = _decode_list(value)
+        elif isinstance(value, dict):
+            value = _decode_dict(value)
+        rv[key] = value
+    return rv
+
+
 def load_json(file_name):
     with open(file_name) as f:
-        data = json.load(f)
+        data = json.load(f, object_hook=_decode_dict)
         return data
 
 
@@ -143,13 +170,14 @@ def main():
     dumy_str = '<tr ' + tr_style + '>'
     if temp_rows_data.endswith(dumy_str):
         temp_rows_data = temp_rows_data[:-len(dumy_str)]
-
     content = "<tr " + tr_style + ">\n" + temp_rows_data
+
     column = get_col(column_temp)
-    print '<table cellspacing="0px" cellpadding="5px" border="1" ' + table_style + '>\n' \
-          + column + '\n' \
-          + content + \
-          '</table>'
+
+    print '<table cellspacing="0px" cellpadding="5px" border="1" ' + table_style + '>'
+    print column
+    print content
+    print '</table>'
 
     # for test use
     # x = '<table cellspacing="0px" '+ style + '>\n'+ column + '\n' + content + '</table>'
