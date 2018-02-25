@@ -9,7 +9,7 @@ import sys
 import os
 import argparse
 
-table_style = 'style=""'
+table_style = 'style="border: solid 1px black;"'
 tr_th_style = 'style="text-align: center;justify-content: center;background-color: #b9bbc0;"'
 tr_style = 'style="text-align: center;justify-content: center;"'
 th_style = 'style=""'
