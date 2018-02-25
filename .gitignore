@@ -3,3 +3,4 @@
 result.html
 ci-scripts.iml
 jenkins-cli.jar
+*.tmp

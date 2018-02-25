@@ -47,6 +47,18 @@ echo_vars () {
     done
 }
 
+#
+# export all params variable
+#
+# e.g. : export_vars "A" "B" "C"
+#
+export_vars () {
+    local vars=$@
+    for var in $vars;do
+        export $var
+    done
+}
+
 ######################################## logic ########################################
 function init_build_option() {
     SKIP_LAVA_RUN=${SKIP_LAVA_RUN:-"false"}
@@ -507,7 +519,17 @@ function generate_success_mail(){
     echo "Estuary CI Auto-test Daily Report (${TODAY}) <br>" > ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "1、构建信息<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+
+    JOB_INFO_VERSION="Estuary V5.0 - ${TODAY}"
+    # TODO : the start time need read from file.
+    JOB_INFO_SHA1="${GIT_DESCRIBE}"
+    JOB_INFO_RESULT=${JOB_RESULT}
+    JOB_INFO_START_TIME=$(date +"%Y/%m/%d %H:%M:%S")
+    JOB_INFO_END_TIME=$(date +"%Y/%m/%d %H:%M:%S")
+    export_vars JOB_INFO_VERSION JOB_INFO_SHA1 JOB_INFO_RESULT JOB_INFO_START_TIME JOB_INFO_END_TIME
+    envsubst < ./html/1-job-info-table.json > ./html/1-job-info-table.json.tmp
     python ./html/html-table.py -f ./html/1-job-info-table.json >> ${WORKSPACE}/MAIL_CONTENT.txt
+    # rm -f ./html/1-job-info-table.json.tmp
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
 
