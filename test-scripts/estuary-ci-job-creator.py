@@ -41,7 +41,8 @@ d05 = {'device_type': 'd05',
 }
 
 dummy_ssh = {'device_type': 'dummy_ssh',
-             'templates': [ 'dummy_ssh_template.yaml'],}
+             'templates': ['dummy_ssh_template.yaml']
+             }
 
 device_map = {
               'D03': [d03],
@@ -148,7 +149,8 @@ def create_jobs2(plans, platform_name, targets, priority, distro, scope, level,
                 config_plan.read(cwd + '/templates/' + plan + '/' + plan + '.ini')
                 # TODO : think filter the test job by platform, distro, device type, level, scope
                 test_definitions = generate_test_definitions(
-                    common.filter_test_definitions(distro, device_type, scope, level, test_case_definition_dir, test_case_definition_file_list), test_case_definition_url)
+                    common.filter_test_definitions(distro, device_type, scope, level,
+                                                   test_case_definition_dir, test_case_definition_file_list), test_case_definition_url)
 
                 number = 1
                 for definitions in test_definitions:
@@ -210,7 +212,8 @@ def generate_job_file2(cwd, defconfig, device_type, distro, kernel_version, plan
 
 
 def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
-                distro_url, distro, scope, level, test_case_definition_dir, test_case_definition_file_list, test_case_definition_url):
+                distro_url, distro, scope, level,
+                test_case_definition_dir, test_case_definition_file_list, test_case_definition_url):
     print 'Creating YAML Job Files...'
     cwd = os.getcwd()
     image_url = base_url
