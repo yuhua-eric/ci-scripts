@@ -503,6 +503,7 @@ function generate_success_mail(){
         echo "${SUCCESS_MAIL_LIST}" > ${WORKSPACE}/MAIL_LIST.txt
     fi
     TODAY=$(date +"%Y/%m/%d")
+    MONTH=$(date +"%Y%m")
     # JOB_RESULT --> DISTRO_RESULT --> MODULE_RESULT --> SUITE_RESULT --> CASE_RESULT
     # TODO : depends on all distro's result. PASS/FAIL
     JOB_RESULT=FAIL
@@ -615,7 +616,7 @@ END
     rm -f ./html/3-distro-result-table.json.tmp
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-    echo "4. X月版本健康度统计 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "4. ${MONTH}月版本健康度统计 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     HEALTH_RATE_VERSION="Estuary V5.0"
     HEALTH_RATE_COMPILE="100%"
     HEALTH_RATE_TEST="0%"
