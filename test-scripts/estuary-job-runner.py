@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 # <variable> = required
 # [variable] = optional
 # Usage ./lava-job-runner.py <username> <token> <lava_server_url> [job_repo] [bundle_stream]

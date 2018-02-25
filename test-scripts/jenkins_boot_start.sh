@@ -1,4 +1,6 @@
 #!/bin/bash -ex
+# -*- coding: utf-8 -*-
+
 #: Title                  : jenkins_boot_start.sh
 #: Usage                  : ./local/ci-scripts/test-scripts/jenkins_boot_start.sh -p env.properties
 #: Author                 : qinsl0106@thundersoft.com

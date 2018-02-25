@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 # <variable> = required
 # Usage ./lava-report.py <option> [json]
 # pip install matplotlib
