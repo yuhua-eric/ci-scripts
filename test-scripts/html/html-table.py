@@ -9,9 +9,9 @@ import sys
 import os
 import argparse
 
-table_style = 'style="border: solid 1px black;"'
-tr_th_style = 'style="text-align: center;justify-content: center;background-color: #b9bbc0;"'
-tr_style = 'style="text-align: center;justify-content: center;"'
+table_style = 'cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;"'
+tr_th_style = 'style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:0px,40px"'
+tr_style = 'style="text-align: center; justify-content: center; font-size:12px;"'
 th_style = 'style=""'
 td_style = 'style=""'
 
@@ -178,7 +178,7 @@ def main():
 
     column = get_col(column_temp)
 
-    result = '<table cellspacing="0px" cellpadding="5px" border="1" ' + table_style + '>' \
+    result = '<table ' + table_style + '>' \
                                   + column \
                                   + content \
                                   + '</table>'
