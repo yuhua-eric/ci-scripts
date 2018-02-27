@@ -456,7 +456,7 @@ function generate_success_mail(){
 
     echo "Estuary CI Auto-test Daily Report (${TODAY}) <br>" > ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "1、构建信息<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>1、构建信息</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     JOB_INFO_VERSION="Estuary V5.0 - ${TODAY}"
     # TODO : the start time need read from file.
@@ -468,9 +468,9 @@ function generate_success_mail(){
     envsubst < ./html/1-job-info-table.json > ./html/1-job-info-table.json.tmp
     python ./html/html-table.py -f ./html/1-job-info-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     rm -f ./html/1-job-info-table.json.tmp
-    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-    echo "2. 今日构建结果 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>2. 今日构建结果</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     JOB_RESULT_VERSION="Estuary V5.0"
     JOB_RESULT_DATA=$(cat <<-END
     ["Ubuntu", "fail", "100", "50%", "50", "50", "0"],
@@ -482,9 +482,9 @@ END
     envsubst < ./html/2-job-result-table.json > ./html/2-job-result-table.json.tmp
     python ./html/html-table.py -f ./html/2-job-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     rm -f ./html/2-job-result-table.json.tmp
-    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-    echo "3. 测试数据统计 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>3. 测试数据统计</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "3.1 Ubuntu版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
     DISTRO_RESULT_DATA=$(cat <<-END
     "kernel", [
@@ -507,6 +507,8 @@ END
     envsubst < ./html/3-distro-result-table.json > ./html/3-distro-result-table.json.tmp
     python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     rm -f ./html/3-distro-result-table.json.tmp
+    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+
     echo "3.2 Debian版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
     DISTRO_RESULT_DATA=$(cat <<-END
     "kernel", [
@@ -529,6 +531,8 @@ END
     envsubst < ./html/3-distro-result-table.json > ./html/3-distro-result-table.json.tmp
     python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     rm -f ./html/3-distro-result-table.json.tmp
+    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+
     echo "3.3 CentOS版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
         DISTRO_RESULT_DATA=$(cat <<-END
     "kernel", [
@@ -551,9 +555,9 @@ END
     envsubst < ./html/3-distro-result-table.json > ./html/3-distro-result-table.json.tmp
     python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     rm -f ./html/3-distro-result-table.json.tmp
-    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-    echo "4. ${MONTH}月版本健康度统计 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>4. ${MONTH}月版本健康度统计</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     HEALTH_RATE_VERSION="Estuary V5.0"
     HEALTH_RATE_COMPILE="100%"
     HEALTH_RATE_TEST="0%"
@@ -563,9 +567,9 @@ END
     envsubst < ./html/4-health-rate-table.json > ./html/4-health-rate-table.json.tmp
     python ./html/html-table.py -f ./html/4-health-rate-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     rm -f ./html/4-health-rate-table.json.tmp
-    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-    echo "5. 构建结果访问 <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>5. 构建结果访问</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     JOB_LINK_COMPILE="${BUILD_URL}console"
     JOB_LINK_RESULT="${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}"
     JOB_LINK_TEST_CASE="${TEST_REPO}"
@@ -573,31 +577,29 @@ END
     envsubst < ./html/5-job-link-table.json > ./html/5-job-link-table.json.tmp
     python ./html/html-table.py -f ./html/5-job-link-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     rm -f ./html/5-job-link-table.json.tmp
-    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     ## 统计结果
-    echo "6. 统计结果:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>6. 统计结果:</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table cellspacing="0" cellpadding="5px" border="1">' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Distro</th><th>Type</th><th>Total Number</th><th>Failed Number</th><th>Success Number</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat ${GIT_DESCRIBE}/${RESULTS_DIR}/whole_summary.txt |
         awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td><td>" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-
-    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     ## 详细测试结果
     echo  ""
-    echo "7. 详细测试结果:<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>7. 详细测试结果:</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table cellspacing="0" cellpadding="5px" border="1">' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<tr style="text-align: center;justify-content: center;background-color: #b9bbc0;"><th>Distro</th><th>Job ID</th><th>Suite Name</th><th>Case Name</th><th>Case Result</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat ${GIT_DESCRIBE}/${RESULTS_DIR}/details_summary.txt |
         awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;\">" "<td>" $1 "</td><td><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a><td>" substr($3,3,length($3)) "</td><td>" $4 "</td><td>" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-
-    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     ##  编译结果
-    echo "8. 编译结果<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>8. 编译结果</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     cd -
 
     echo "######################################## generate mail success ########################################"
