@@ -12,8 +12,8 @@ function prepare_tools() {
     dev_tools="python-yaml"
 
     if ! (dpkg-query -l $dev_tools >/dev/null 2>&1); then
-        sudo apt-get update
-        if ! (sudo apt-get install -y --force-yes $dev_tools); then
+        apt-get update
+        if ! (apt-get install -y --force-yes $dev_tools); then
             echo "ERROR: can't install tools: ${dev_tools}"
             exit 1
         fi
@@ -53,7 +53,7 @@ function clean_build() {
     if [ x"$SKIP_BUILD" = x"true" ];then
         :
     else
-        sudo rm -fr $BUILD_DIR
+        rm -fr $BUILD_DIR
     fi
 }
 
@@ -364,10 +364,10 @@ function cp_image() {
     TOOLCHAIN_FILE=gcc-linaro-aarch64-linux-gnu-4.9-2014.09_linux.tar.xz
 
     DES_DIR=$FTP_DIR/$TREE_NAME/$GIT_DESCRIBE
-    [ -d $DES_DIR ] && sudo rm -rf $DES_DIR
-    sudo mkdir -p $DES_DIR
+    [ -d $DES_DIR ] && rm -rf $DES_DIR
+    mkdir -p $DES_DIR
 
-    sudo cp $timefile $DES_DIR
+    cp $timefile $DES_DIR
 
     ls -l $BUILD_DIR
     pushd $BUILD_DIR  # enter BUILD_DIR
@@ -375,8 +375,8 @@ function cp_image() {
     # copy arch files
     pushd binary
     for arch_dir in arm*;do
-        sudo mkdir -p $DES_DIR/$arch_dir
-        sudo cp $arch_dir/* $DES_DIR/$arch_dir
+        mkdir -p $DES_DIR/$arch_dir
+        cp $arch_dir/* $DES_DIR/$arch_dir
     done
     popd
 
@@ -387,26 +387,26 @@ function cp_image() {
         PLATFORM_L="$(echo $PLATFORM | tr '[:upper:]' '[:lower:]')"
         PLATFORM_U="$(echo $PLATFORM | tr '[:lower:]' '[:upper:]')"
         PLATFORM_ARCH_DIR=$DES_DIR/${PLATFORM_L}-${arch[$PLATFORM_L]}
-        [ -d $PLATFORM_ARCH_DIR ] && sudo rm -fr $PLATFORM_ARCH_DIR
-        sudo mkdir -p ${PLATFORM_ARCH_DIR}/{binary,toolchain,distro}
+        [ -d $PLATFORM_ARCH_DIR ] && rm -fr $PLATFORM_ARCH_DIR
+        mkdir -p ${PLATFORM_ARCH_DIR}/{binary,toolchain,distro}
 
         # copy toolchain files
         pushd $PLATFORM_ARCH_DIR/toolchain
-        sudo ln -s ../../${arch[$PLATFORM_L]}/$TOOLCHAIN_FILE
+        ln -s ../../${arch[$PLATFORM_L]}/$TOOLCHAIN_FILE
         popd
 
         # copy binary files
-        sudo find binary/$PLATFORM_U/ -type l -exec rm {} \;  || true # ensure remove symlinks
-        sudo cp -rf binary/$PLATFORM_U/* $PLATFORM_ARCH_DIR/binary
+        find binary/$PLATFORM_U/ -type l -exec rm {} \;  || true # ensure remove symlinks
+        cp -rf binary/$PLATFORM_U/* $PLATFORM_ARCH_DIR/binary
 
         pushd $PLATFORM_ARCH_DIR/binary
-        sudo ln -s ../../${arch[$PLATFORM_L]}/$KERNEL_IMG_FILE ${KERNEL_IMG_FILE}_${PLATFORM_U}
-        sudo ln -s ../../${arch[$PLATFORM_L]}/$DEPLOY_UTILS_FILE
-        sudo ln -s ../../${arch[$PLATFORM_L]}/$MINI_ROOTFS_FILE
-        sudo ln -s ../../${arch[$PLATFORM_L]}/$GRUB_IMG_FILE
+        ln -s ../../${arch[$PLATFORM_L]}/$KERNEL_IMG_FILE ${KERNEL_IMG_FILE}_${PLATFORM_U}
+        ln -s ../../${arch[$PLATFORM_L]}/$DEPLOY_UTILS_FILE
+        ln -s ../../${arch[$PLATFORM_L]}/$MINI_ROOTFS_FILE
+        ln -s ../../${arch[$PLATFORM_L]}/$GRUB_IMG_FILE
 
         # TODO : ln: failed to create symbolic link './grub.cfg': File exists
-        sudo ln -s ../../${arch[$PLATFORM_L]}/$GRUB_CFG_FILE || true
+        ln -s ../../${arch[$PLATFORM_L]}/$GRUB_CFG_FILE || true
         popd
 
         # copy distro files
@@ -424,12 +424,12 @@ function cp_image() {
             echo $distro_tar_name
 
             pushd $DES_DIR/${arch[$PLATFORM_L]}
-            [ ! -f ${distro_tar_name}.sum ] && sudo sh -c "md5sum $distro_tar_name > ${distro_tar_name}.sum"
+            [ ! -f ${distro_tar_name}.sum ] && sh -c "md5sum $distro_tar_name > ${distro_tar_name}.sum"
             popd
 
             pushd $PLATFORM_ARCH_DIR/distro
-            sudo ln -s ../../${arch[$PLATFORM_L]}/$distro_tar_name
-            sudo ln -s ../../${arch[$PLATFORM_L]}/$distro_tar_name.sum
+            ln -s ../../${arch[$PLATFORM_L]}/$distro_tar_name
+            ln -s ../../${arch[$PLATFORM_L]}/$distro_tar_name.sum
             popd
         done
     done

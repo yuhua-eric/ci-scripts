@@ -48,7 +48,7 @@ function clean_build() {
     if [ x"$SKIP_BUILD" = x"true" ];then
         :
     else
-        sudo rm -fr $BUILD_DIR
+        rm -fr $BUILD_DIR
     fi
 }
 
@@ -276,11 +276,11 @@ function cp_image() {
 
     # do clean
     rm -rf $FTP_DIR/$TREE_NAME/
-    [ -d $DES_DIR ] && sudo rm -rf $DES_DIR
+    [ -d $DES_DIR ] && rm -rf $DES_DIR
 
-    sudo mkdir -p $DES_DIR
+    mkdir -p $DES_DIR
 
-    sudo cp $timefile $DES_DIR
+    cp $timefile $DES_DIR
 
     ls -l $BUILD_DIR
     pushd $BUILD_DIR  # enter BUILD_DIR
@@ -300,13 +300,13 @@ function cp_image() {
         PLATFORM_L="$(echo $PLATFORM | tr '[:upper:]' '[:lower:]')"
         PLATFORM_U="$(echo $PLATFORM | tr '[:lower:]' '[:upper:]')"
         PLATFORM_ARCH_DIR=$DES_DIR/${PLATFORM_L}-${arch[$PLATFORM_L]}
-        [ -d $PLATFORM_ARCH_DIR ] && sudo rm -fr $PLATFORM_ARCH_DIR
-        sudo mkdir -p ${PLATFORM_ARCH_DIR}/{binary,distro}
+        [ -d $PLATFORM_ARCH_DIR ] && rm -fr $PLATFORM_ARCH_DIR
+        mkdir -p ${PLATFORM_ARCH_DIR}/{binary,distro}
 
         pushd $PLATFORM_ARCH_DIR/binary
-        sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$KERNEL_IMG_FILE ${KERNEL_IMG_FILE}_${PLATFORM_U}
-        sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$MINI_ROOTFS_FILE
-        sudo ln -s ../../binary/${arch[$PLATFORM_L]}/$GRUB_IMG_FILE
+        ln -s ../../binary/${arch[$PLATFORM_L]}/$KERNEL_IMG_FILE ${KERNEL_IMG_FILE}_${PLATFORM_U}
+        ln -s ../../binary/${arch[$PLATFORM_L]}/$MINI_ROOTFS_FILE
+        ln -s ../../binary/${arch[$PLATFORM_L]}/$GRUB_IMG_FILE
 
         popd
 
@@ -325,12 +325,12 @@ function cp_image() {
             echo $distro_tar_name
 
             pushd $DES_DIR/binary/${arch[$PLATFORM_L]}
-            [ ! -f ${distro_tar_name,,}.sum ] && sudo sh -c "md5sum ${distro_tar_name,,} > ${distro_tar_name,,}.sum"
+            [ ! -f ${distro_tar_name,,}.sum ] && md5sum ${distro_tar_name,,} > ${distro_tar_name,,}.sum
             popd
 
             pushd $PLATFORM_ARCH_DIR/distro
-            sudo ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} $distro_tar_name
-            sudo ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum $distro_tar_name.sum
+            ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} $distro_tar_name
+            ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum $distro_tar_name.sum
             popd
         done
     done
