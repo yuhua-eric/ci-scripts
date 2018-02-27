@@ -1,16 +1,8 @@
 #!/bin/bash
+__ORIGIN_PATH__="$PWD"
+script_path="${0%/*}"  # remove the script name ,get the path
+script_path=${script_path/\./$(pwd)} # if path start with . , replace with $PWD
+source "${script_path}/../common-scripts/common.sh"
 
-# prepare system tools
-function prepare_tools() {
-    dev_tools="sshpass ipmitool python-pip python-pexpect"
 
-    if ! (dpkg-query -l $dev_tools >/dev/null 2>&1); then
-        sudo apt-get update
-        if ! (sudo apt-get install -y --force-yes $dev_tools); then
-            echo "ERROR: can't install tools: ${dev_tools}"
-            exit 1
-        fi
-    fi
-}
-
-prepare_tools
+prepare_tools "sshpass ipmitool python-pip python-pexpect"

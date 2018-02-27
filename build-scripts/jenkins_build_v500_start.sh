@@ -5,12 +5,10 @@
 #: Description            : CI中自动编译的jenkins任务脚本，针对v500
 # only works on centos
 
-# prepare system tools
-function prepare_tools() {
-    dev_tools="python-yaml"
-    yum install -y ${dev_tools} || true
-    apt-get install -y ${dev_tools} || true
-}
+__ORIGIN_PATH__="$PWD"
+script_path="${0%/*}"  # remove the script name ,get the path
+script_path=${script_path/\./$(pwd)} # if path start with . , replace with $PWD
+source "${script_path}/../common-scripts/common.sh"
 
 # jenkins job debug variables
 function init_build_option() {
@@ -154,20 +152,6 @@ function show_properties() {
     cat ${WORKSPACE}/env.properties
 }
 
-function print_time() {
-    init_timefile
-    echo  $@ `date "+%Y-%m-%d %H:%M:%S"` >> $timefile
-}
-
-function init_timefile() {
-    timefile=${WORKSPACE}/timestamp.log
-    if [ -f $timefile ]; then
-        rm -fr $timefile
-    else
-        touch $timefile
-    fi
-}
-
 function sync_code() {
     mkdir -p $OPEN_ESTUARY_DIR;
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
@@ -235,7 +219,7 @@ function do_build() {
         popd
     fi
 
-    print_time "the end time of estuary build is "
+    print_time "time_build_build_end"
     popd
 }
 
@@ -382,7 +366,9 @@ function main() {
     parse_input "$@"
     source_properties_file
 
-    prepare_tools
+    init_timefile build
+
+    prepare_tools "python-yaml"
 
     init_build_option
     init_workspace
@@ -397,7 +383,7 @@ function main() {
 
     generate_failed_mail
 
-    print_time "the begin time is "
+    print_time "time_build_build_begin"
 
     # if GIT_DESCRIBE have exist, skip build.
     if [ -z "${GIT_DESCRIBE}" ];then

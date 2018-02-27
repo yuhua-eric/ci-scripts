@@ -6,60 +6,11 @@
 #: Author                 : qinsl0106@thundersoft.com
 #: Description            : CI中 测试部分 的jenkins任务脚本
 
-######################################## help ########################################
-#
-# returns 0 if a variable is defined (set)
-# returns 1 if a variable is unset
-#
-# e.g. : defined "A"
-#
-defined() {
-    [[ "${!1-X}" == "${!1-Y}" ]]
-}
+__ORIGIN_PATH__="$PWD"
+script_path="${0%/*}"  # remove the script name ,get the path
+script_path=${script_path/\./$(pwd)} # if path start with . , replace with $PWD
+source "${script_path}/../common-scripts/common.sh"
 
-#
-# return 0 if a variable is undefined or value's length == 0
-# return 1 otherwise
-#
-# e.g. : is_null_or_empty "A"
-#
-is_null_or_empty() {
-    if defined "$1"; then
-        if [ -z "${!1}" ]; then
-            return 0
-        else
-            return 1
-        fi
-    else
-        return 0
-    fi
-}
-
-#
-# echo the variable name and value to console
-#
-# e.g. : echo_vars "A" "B" "C"
-#
-echo_vars () {
-    local vars=$@
-    for var in $vars;do
-        echo "[echo_vars] $var : ${!var}"
-    done
-}
-
-#
-# export all params variable
-#
-# e.g. : export_vars "A" "B" "C"
-#
-export_vars () {
-    local vars=$@
-    for var in $vars;do
-        export $var
-    done
-}
-
-######################################## logic ########################################
 function init_build_option() {
     SKIP_LAVA_RUN=${SKIP_LAVA_RUN:-"false"}
 }
@@ -235,21 +186,7 @@ function run_and_move_result() {
     fi
 }
 
-function print_time() {
-    echo -e "@@@@@@"$@ `date "+%Y-%m-%d %H:%M:%S"` "\n" >> $timefile
-    #echo -e "\n"  >> $timefile
-}
-
 #######  Begining the tests ######
-
-function init_timefile() {
-    timefile=${WORKSPACE}/timestamp_boot.txt
-    if [ -f ${timefile} ]; then
-        rm -fr ${timefile}
-    else
-        touch ${timefile}
-    fi
-}
 
 function init_summaryfile() {
     if [ -f ${WORKSPACE}/whole_summary.txt ]; then
@@ -297,7 +234,7 @@ function trigger_lava_build() {
                 # pxe install in previous step.use ssh to do the pxe test.
                 # BOOT_ISO
                 # boot from ISO
-                print_time "the start time of $boot_plan is "
+                print_time "time_test_${boot_plan}_start"
                 generate_jobs $boot_plan $DISTRO
 
                 if [ -d ${JOBS_DIR} ]; then
@@ -311,12 +248,12 @@ function trigger_lava_build() {
                         fi
                     fi
                 fi
-                print_time "the end time of $boot_plan is "
+                print_time "time_test_${boot_plan}_end"
             elif [ "$boot_plan" = "BOOT_PXE" ]; then
                 # pxe install in previous step.use ssh to do the pxe test.
                 # BOOT_PXE
                 # boot from PXE
-                print_time "the start time of $boot_plan is "
+                print_time "time_test_${boot_plan}_start"
                 generate_jobs $boot_plan $DISTRO
 
                 if [ -d ${JOBS_DIR} ]; then
@@ -330,11 +267,11 @@ function trigger_lava_build() {
                         fi
                     fi
                 fi
-                print_time "the end time of $boot_plan is "
+                print_time "time_test_${boot_plan}_end"
             else
                 # BOOT_NFS
                 # boot from NFS
-                print_time "the start time of $boot_plan is "
+                print_time "time_test_${boot_plan}_start"
                 generate_jobs $boot_plan $DISTRO
 
                 if [ -d ${JOBS_DIR} ]; then
@@ -348,7 +285,7 @@ function trigger_lava_build() {
                         fi
                     fi
                 fi
-                print_time "the end time of $boot_plan is "
+                print_time "time_test_${boot_plan}_end"
             fi
         done
         if [ ! -d $GIT_DESCRIBE/${RESULTS_DIR}/${DISTRO} ];then
@@ -693,6 +630,8 @@ function main() {
     parse_input "$@"
     source_properties_file
 
+    init_timefile test
+
     init_workspace
     init_build_option
 
@@ -706,14 +645,13 @@ function main() {
 
     prepare_tools
 
-    init_timefile
-    print_time "the begin time of boot test is "
+    print_time "time_test_test_begin"
     init_summaryfile
 
     ##### copy some files to the lava-server machine to support the boot process #####
     parse_arch_map
     clean_workspace
-    print_time "the time of preparing all envireonment is "
+    print_time "time_preparing_envireonment"
 
     workaround_stash_devices_config
 

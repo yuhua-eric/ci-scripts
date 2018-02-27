@@ -7,18 +7,10 @@
 # modprobe loop
 # export CODE_REFERENCE=""
 
-# prepare system tools
-function prepare_tools() {
-    dev_tools="python-yaml"
-
-    if ! (dpkg-query -l $dev_tools >/dev/null 2>&1); then
-        apt-get update
-        if ! (apt-get install -y --force-yes $dev_tools); then
-            echo "ERROR: can't install tools: ${dev_tools}"
-            exit 1
-        fi
-    fi
-}
+__ORIGIN_PATH__="$PWD"
+script_path="${0%/*}"  # remove the script name ,get the path
+script_path=${script_path/\./$(pwd)} # if path start with . , replace with $PWD
+source "${script_path}/../common-scripts/common.sh"
 
 # jenkins job debug variables
 function init_build_option() {
@@ -144,20 +136,6 @@ function show_properties() {
     cat ${WORKSPACE}/env.properties
 }
 
-function print_time() {
-    init_timefile
-    echo  $@ `date "+%Y-%m-%d %H:%M:%S"` >> $timefile
-}
-
-function init_timefile() {
-    timefile=${WORKSPACE}/timestamp.log
-    if [ -f $timefile ]; then
-        rm -fr $timefile
-    else
-        touch $timefile
-    fi
-}
-
 function prepare_repo_tool() {
     pushd $WORK_DIR
     export PATH=${WORK_DIR}/bin:$PATH;
@@ -202,8 +180,7 @@ function sync_code() {
 
     repo status
 
-    print_time "the end time of finishing downloading estuary is "
-
+    print_time "time_build_download_estuary_end"
     popd
 }
 
@@ -271,7 +248,7 @@ function do_build() {
         fi
     fi
 
-    print_time "the end time of estuary build is "
+    print_time "time_build_build_end"
 
     popd
 
@@ -480,7 +457,9 @@ function main() {
     parse_input "$@"
     source_properties_file
 
-    prepare_tools
+    init_timefile build
+
+    prepare_tools "python-yaml"
 
     init_build_option
     init_workspace
@@ -495,7 +474,7 @@ function main() {
 
     generate_failed_mail
 
-    print_time "the begin time is "
+    print_time "time_build_build_begin"
     prepare_repo_tool
 
     # if GIT_DESCRIBE have exist, skip build.
