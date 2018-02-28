@@ -24,6 +24,7 @@ rm -rf /etc/gitconfig
 # save last gitconfig
 mv -f ~/.gitconfig ~/.gitconfig.edit
 
+mkdir -p ${SUBDIR}
 cd ${SUBDIR}
 if [ -d "${DIR_NAME}" ];then
     git fetch --all
