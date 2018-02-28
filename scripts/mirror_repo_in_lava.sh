@@ -5,6 +5,12 @@ mkdir -p ${MIRROR_ROOT}
 
 cd ${MIRROR_ROOT}
 
+# get sub dir from url
+temp=${TEST_REPO:8}
+temp=${temp%/*}
+temp=${temp#*/}
+SUBDIR=${temp}
+
 if [[ ! "${TEST_REPO}" =~ .git$ ]];then
     TEST_REPO=${TEST_REPO}".git"
 fi
@@ -17,14 +23,15 @@ rm -rf /etc/gitconfig
 
 # save last gitconfig
 mv -f ~/.gitconfig ~/.gitconfig.edit
-if [ -d "${DIR_NAME}" ];then
-    rm -rf ${DIR_NAME}
-    echo "" > ~/.gitconfig.edit
-fi
 
-git clone ${TEST_REPO} --mirror
-echo "[url \"${MIRROR_ROOT}/${DIR_NAME}\"]" >> ~/.gitconfig.edit
-echo "    insteadOf = ${TEST_REPO}" >> ~/.gitconfig.edit
+cd ${DIR_NAME}
+if [ -d "${DIR_NAME}" ];then
+    git fetch --all
+else
+    git clone ${TEST_REPO} --mirror
+    echo "[url \"${MIRROR_ROOT}/${SUBDIR}/${DIR_NAME}\"]" >> ~/.gitconfig.edit
+    echo "    insteadOf = ${TEST_REPO}" >> ~/.gitconfig.edit
+fi
 
 mv -f ~/.gitconfig.edit ~/.gitconfig
 
