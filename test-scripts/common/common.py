@@ -6,11 +6,6 @@ import re
 import yaml
 from lib import utils
 
-TEST_DIR_BASE_NAME = "auto-test"
-PLAN_DIR_BASE_NAME = "plans"
-
-
-
 def find_all_test_case_by_search(testDir):
     test_case_yaml_file_list = []
     for root, dirs, files in os.walk(testDir):
@@ -42,8 +37,8 @@ def find_all_test_case_by_test_plan(testDir, planDir, plan):
         print "Errors: wrong yaml syntax :\n %s" % (planDir + "/" + plan + ".yaml")
         exit(1)
     for test in plan_yaml["tests"]["automated"]:
-        test_case_yaml_file_list.append(testDir + "/" + test["path"])
-
+        # the test path contains auto-test or automated, so need remove the string in testDir
+        test_case_yaml_file_list.append(os.path.dirname(testDir) + "/" + test["path"])
     return test_case_yaml_file_list
 
 
@@ -136,5 +131,3 @@ def filter_test_definitions(distro, device_type, test_scope, test_level,
                             key=lambda x: x['metadata']['level'] if 'level' in x['metadata'] else 5,
                             reverse=True)
     return work_test_list
-
-
