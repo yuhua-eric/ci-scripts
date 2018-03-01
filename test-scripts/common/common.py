@@ -24,9 +24,28 @@ def find_all_test_case_by_search(testDir):
 
 
 def find_all_test_case_by_test_plan(testDir, planDir, plan):
+    test_plan_yaml_file_list = []
+    for root, dirs, files in os.walk(planDir):
+        # exclude dirs
+        dirs[:] = [os.path.join(root, d) for d in dirs]
+        dirs[:] = [d for d in dirs if not re.match('.*\.git$', d)]
+        # exclude/include files
+        files = [os.path.join(root, f) for f in files]
+        files = [f for f in files if not re.match('(.*\.sh$)|(.*\.bash$)', f)]
+        files = [f for f in files if re.match('(.*' + plan + '\.yaml$)|(.*' + plan + '\.yml$)', f)]
+        for fname in files:
+            test_plan_yaml_file_list.append(fname)
+
+    if len(test_plan_yaml_file_list) == 0:
+        print "Warning : no test definition in this plan!"
+        return []
+
+    if len(test_plan_yaml_file_list) > 1:
+        print "Warning : more than 1 test plan finded!"
+
     load_yaml = utils.load_yaml
     try:
-        plan_yaml = load_yaml(planDir + "/" + plan + ".yaml")
+        plan_yaml = load_yaml(test_plan_yaml_file_list[0])
     except(yaml.parser.ParserError, yaml.scanner.ScannerError) as e:
         print "Errors: wrong yaml syntax :\n %s" % e
         exit(1)
