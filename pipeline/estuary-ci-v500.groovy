@@ -103,6 +103,9 @@ node('ci-compile') {
         unstash 'paramsResult'
     }
 
+    def props = readProperties  file: 'env.properties'
+    def GIT_DESCRIBE = props['GIT_DESCRIBE']
+
     clone2local(getGitUrl(), getGitBranchName(), './local/ci-scripts')
     // load functions
     def functions = load "./local/ci-scripts/pipeline/functions.groovy"
