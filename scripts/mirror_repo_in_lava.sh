@@ -27,6 +27,7 @@ mv -f ~/.gitconfig ~/.gitconfig.edit
 mkdir -p ${SUBDIR}
 cd ${SUBDIR}
 if [ -d "${DIR_NAME}" ];then
+    cd ${DIR_NAME}
     git fetch --all
 else
     git clone ${TEST_REPO} --mirror
