@@ -68,9 +68,9 @@ export_vars() {
 init_timefile() {
     local target_name=$1
     if [ -z "${target_name}" ];then
-        timefile=${WORKSPACE}/timestamp.log
+        timefile=${WORKSPACE}/timestamp.properties
     else
-        timefile=${WORKSPACE}/timestamp_${target_name}.log
+        timefile=${WORKSPACE}/timestamp_${target_name}.properties
     fi
     if [ -f $timefile ]; then
         rm -fr $timefile

@@ -329,7 +329,7 @@ function parse_arch_map(){
 #             |   |   `-- Ubuntu_ARM64.tar.gz.sum -> ../../arm64/Ubuntu_ARM64.tar.gz.sum
 #             |   `-- toolchain
 #             |       `-- gcc-linaro-aarch64-linux-gnu-4.9-2014.09_linux.tar.xz -> ../../arm64/gcc-linaro-aarch64-linux-gnu-4.9-2014.09_linux.tar.xz
-#             `-- timestamp.log
+#             `-- timestamp.properties
 function cp_image() {
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
