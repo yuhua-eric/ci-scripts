@@ -81,6 +81,8 @@ node ('compile'){
         return
     }
 
+    def props = readProperties  file: 'env.properties'
+    def GIT_DESCRIBE = props['GIT_DESCRIBE']
 
     def test_result = 0
     stage('Test') {
