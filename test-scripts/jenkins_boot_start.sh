@@ -234,7 +234,6 @@ function trigger_lava_build() {
                 # pxe install in previous step.use ssh to do the pxe test.
                 # BOOT_ISO
                 # boot from ISO
-                print_time "time_test_${boot_plan}_start"
                 generate_jobs $boot_plan $DISTRO
 
                 if [ -d ${JOBS_DIR} ]; then
@@ -248,12 +247,10 @@ function trigger_lava_build() {
                         fi
                     fi
                 fi
-                print_time "time_test_${boot_plan}_end"
             elif [ "$boot_plan" = "BOOT_PXE" ]; then
                 # pxe install in previous step.use ssh to do the pxe test.
                 # BOOT_PXE
                 # boot from PXE
-                print_time "time_test_${boot_plan}_start"
                 generate_jobs $boot_plan $DISTRO
 
                 if [ -d ${JOBS_DIR} ]; then
@@ -267,11 +264,9 @@ function trigger_lava_build() {
                         fi
                     fi
                 fi
-                print_time "time_test_${boot_plan}_end"
             else
                 # BOOT_NFS
                 # boot from NFS
-                print_time "time_test_${boot_plan}_start"
                 generate_jobs $boot_plan $DISTRO
 
                 if [ -d ${JOBS_DIR} ]; then
@@ -285,7 +280,6 @@ function trigger_lava_build() {
                         fi
                     fi
                 fi
-                print_time "time_test_${boot_plan}_end"
             fi
         done
         if [ ! -d $GIT_DESCRIBE/${RESULTS_DIR}/${DISTRO} ];then
@@ -659,6 +653,8 @@ function main() {
 
     trigger_lava_build
     collect_result
+
+    print_time "time_test_test_end"
     generate_success_mail
 
     save_to_properties
