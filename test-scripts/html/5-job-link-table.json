@@ -4,7 +4,7 @@
     "地址"
   ],
   "Row" : [
-    ["编译工程地址:", "${JOB_LINK_COMPILE}"],
+    ["编译工程地址", "${JOB_LINK_COMPILE}"],
     ["镜像访问地址", "${JOB_LINK_RESULT}"],
     ["测试用例地址", "${JOB_LINK_TEST_CASE}"]
   ]
