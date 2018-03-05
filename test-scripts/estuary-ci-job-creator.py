@@ -11,9 +11,6 @@ import urlparse
 from lib import configuration
 from common import common
 
-TEST_DIR_BASE_NAME = "auto-test"
-PLAN_DIR_BASE_NAME = "plans"
-
 base_url = None
 kernel = None
 CONFIG = None
@@ -88,7 +85,7 @@ def get_nfs_url(distro_url, device_type):
 def generate_test_definition(test_path, name, test_case_definition_url):
     test_definition = "      - repository: \"" + test_case_definition_url +"\"\n"
     test_definition += "        from: git\n"
-    test_definition += "        path: \"" + TEST_DIR_BASE_NAME + "/" + test_path + "\"\n"
+    test_definition += "        path: \"" + common.TEST_DIR_BASE_NAME + "/" + test_path + "\"\n"
     test_definition += "        name: \"" + name + "\"\n"
     return test_definition
 
@@ -442,8 +439,8 @@ def main(args):
 
     CONFIG = configuration.get_config(args)
 
-    test_case_definition_dir = CONFIG.get("testDir") + "/" + TEST_DIR_BASE_NAME
-    test_plan_definition_dir = CONFIG.get("testDir") + "/" + PLAN_DIR_BASE_NAME
+    test_case_definition_dir = CONFIG.get("testDir") + "/" + common.TEST_DIR_BASE_NAME
+    test_plan_definition_dir = CONFIG.get("testDir") + "/" + common.PLAN_DIR_BASE_NAME
     test_case_definition_file_list = common.find_all_test_case(CONFIG.get("plan"),
                                                                test_case_definition_dir,
                                                                test_plan_definition_dir)

@@ -92,8 +92,15 @@ function init_boot_env() {
     JOBS_DIR=jobs
     RESULTS_DIR=results
 
+    # 2. 今日构建结果
     WHOLE_SUM='whole_summary.txt'
+
+    # 3. 测试数据统计
+    SCOPE_SUMMARY_NAME='scope_summary.txt'
+
+    # 6. 详细测试结果
     DETAILS_SUM='details_summary.txt'
+
 
     PDF_FILE='resultfile.pdf'
 }
@@ -174,6 +181,8 @@ function run_and_move_result() {
 
     [ -e ${WHOLE_SUM} ] && mv ${WHOLE_SUM} ${dest_dir}/
     [ -e ${DETAILS_SUM} ] && mv ${DETAILS_SUM} ${dest_dir}/
+
+    [ -e ${SCOPE_SUMMARY_NAME} ] && mv ${SCOPE_SUMMARY_NAME} ${dest_dir}/
     [ -e ${PDF_FILE} ] && mv ${PDF_FILE} ${dest_dir}/
 
     [ -d ${JOBS_DIR} ] && mv ${JOBS_DIR} ${dest_dir}/${JOBS_DIR}_${test_name}
@@ -211,8 +220,11 @@ function parse_arch_map() {
 
 function clean_workspace() {
     ##### remove all file from the workspace #####
-    rm -rf ${CI_SCRIPTS_DIR}/uef* test_result.tar.gz||true
-    rm -rf ${WORKSPACE}/*.txt||true
+    rm -rf ${CI_SCRIPTS_DIR}/uef* || true
+
+    rm -rf test_result.tar.gz || true
+    rm -rf ${WORKSPACE}/*.txt || true
+    rm -rf ${WORKSPACE}/*.log || true
 
     ### reset CI scripts ####
     cd ${CI_SCRIPTS_DIR}/; git clean -fdx; cd -
@@ -291,28 +303,36 @@ function trigger_lava_build() {
     popd
 }
 
+function tar_test_result() {
+    pushd ${WORKSPACE}/local/ci-scripts/test-scripts
+    tar czf test_result.tar.gz ${GIT_DESCRIBE}/*
+    cp test_result.tar.gz  ${WORKSPACE}
+    popd
+}
+
 function collect_result() {
     # push the binary files to the ftpserver
     pushd ${WORKSPACE}/local/ci-scripts/test-scripts
     DES_DIR=${FTP_DIR}/${TREE_NAME}/${GIT_DESCRIBE}/
     [ ! -d $DES_DIR ] && echo "Don't have the images and dtbs" && exit -1
 
-    tar czf test_result.tar.gz ${GIT_DESCRIBE}/*
-    cp test_result.tar.gz  ${WORKSPACE}
-
-    if [  -e  ${WORKSPACE}/${WHOLE_SUM} ]; then
+    if [ -e  ${WORKSPACE}/${WHOLE_SUM} ]; then
         rm -rf  ${WORKSPACE}/${WHOLE_SUM}
     fi
 
-    if [  -e  ${WORKSPACE}/${DETAILS_SUM} ]; then
+    if [ -e  ${WORKSPACE}/${DETAILS_SUM} ]; then
         rm -rf  ${WORKSPACE}/${DETAILS_SUM}
     fi
 
-    if [  -e  ${WORKSPACE}/${PDF_FILE} ]; then
+    if [ -e  ${WORKSPACE}/${PDF_FILE} ]; then
         rm -rf  ${WORKSPACE}/${PDF_FILE}
     fi
 
-    if [  -e  ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} ]; then
+    if [ -e  ${WORKSPACE}/${SCOPE_SUMMARY_NAME} ]; then
+        rm -rf  ${WORKSPACE}/${SCOPE_SUMMARY_NAME}
+    fi
+
+    if [ -e  ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} ]; then
         rm -rf  ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
     fi
 
@@ -331,14 +351,12 @@ function collect_result() {
 
         cat ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${WHOLE_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
         cat ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
-        # cp -f ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${PDF_FILE} ${GIT_DESCRIBE}/${RESULTS_DIR}/${PDF_FILE}
     done
 
     # apt-get install pdftk
     # pdftk file1.pdf file2.pdf cat output output.pdf
     cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} ${WORKSPACE}/${WHOLE_SUM}
     cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} ${WORKSPACE}/${DETAILS_SUM}
-    #cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${PDF_FILE} ${WORKSPACE}/${PDF_FILE}
 
     cp -rf ${timefile} ${WORKSPACE} || true
 
@@ -445,6 +463,7 @@ function generate_success_mail(){
     echo "------------------------------------------------------------"
 
     cd ${WORKSPACE}/local/ci-scripts/test-scripts/
+    # the result dir path ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
 
     echo "Estuary CI Auto-test Daily Report (${TODAY}) - ${JOB_RESULT}" > ${WORKSPACE}/MAIL_SUBJECT.txt
 
@@ -467,9 +486,9 @@ function generate_success_mail(){
     echo "<b>2. 今日构建结果</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     JOB_RESULT_VERSION="Estuary V5.0"
     JOB_RESULT_DATA=$(cat <<-END
-    ["Ubuntu", "fail", "100", "50%", "50", "50", "0"],
-    ["Debian", "fail", "100", "50%", "50", "50", "0"],
-    ["CentOS", "fail", "100", "50%", "50", "50", "0"]
+    ["Ubuntu", "pass", "100", "50%", "50", "50", "0"],
+    ["Debian", "pass", "100", "50%", "50", "50", "0"],
+    ["CentOS", "pass", "100", "50%", "50", "50", "0"]
 END
                    )
     export_vars JOB_RESULT_VERSION JOB_RESULT_DATA
@@ -479,77 +498,20 @@ END
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "<b>3. 测试数据统计</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "3.1 Ubuntu版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    DISTRO_RESULT_DATA=$(cat <<-END
-    "kernel", [
-        ["xxx","developer","tester","total","pass rate","pass num","fail num","block num"]
-    ],
-    "virtualization",[
-        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"]
-    ],
-    "distribution",[
-        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx4","developer","tester","total","pass rate","pass num","fail num","block num"]
-    ]
-END
-                      )
-    export_vars DISTRO_RESULT_DATA
-    envsubst < ./html/3-distro-result-table.json > ./html/3-distro-result-table.json.tmp
-    python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
-    rm -f ./html/3-distro-result-table.json.tmp
-    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-
-    echo "3.2 Debian版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    DISTRO_RESULT_DATA=$(cat <<-END
-    "kernel", [
-        ["xxx","developer","tester","total","pass rate","pass num","fail num","block num"]
-    ],
-    "virtualization",[
-        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"]
-    ],
-    "distribution",[
-        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx4","developer","tester","total","pass rate","pass num","fail num","block num"]
-    ]
-END
-                      )
-    export_vars DISTRO_RESULT_DATA
-    envsubst < ./html/3-distro-result-table.json > ./html/3-distro-result-table.json.tmp
-    python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
-    rm -f ./html/3-distro-result-table.json.tmp
-    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-
-    echo "3.3 CentOS版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
-        DISTRO_RESULT_DATA=$(cat <<-END
-    "kernel", [
-        ["xxx","developer","tester","total","pass rate","pass num","fail num","block num"]
-    ],
-    "virtualization",[
-        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"]
-    ],
-    "distribution",[
-        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"],
-        ["xxx4","developer","tester","total","pass rate","pass num","fail num","block num"]
-    ]
-END
-                      )
-    export_vars DISTRO_RESULT_DATA
-    envsubst < ./html/3-distro-result-table.json > ./html/3-distro-result-table.json.tmp
-    python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
-    rm -f ./html/3-distro-result-table.json.tmp
-    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    for DISTRO in $SHELL_DISTRO; do
+        # if don't exist this scope result file skip it.
+        if [ ! -e ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${SCOPE_SUMMARY_NAME} ];
+           echo "Waining: ${SCOPE_SUMMARY_NAME} don't exist"
+           continue
+        fi
+        echo "${DISTRO} 版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
+        DISTRO_RESULT_DATA=$(cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${SCOPE_SUMMARY_NAME})
+        export_vars DISTRO_RESULT_DATA
+        envsubst < ./html/3-distro-result-table.json > ./html/3-distro-result-table.json.tmp
+        python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
+        rm -f ./html/3-distro-result-table.json.tmp
+        echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    done
 
     echo "<b>4. ${MONTH}月版本健康度统计</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     HEALTH_RATE_VERSION="Estuary V5.0"
@@ -573,6 +535,8 @@ END
     rm -f ./html/5-job-link-table.json.tmp
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
+    # TODO : refactor to 2
+    :<<-EOF
     ## 统计结果
     echo "<b>6. 统计结果:</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' >> ${WORKSPACE}/MAIL_CONTENT.txt
@@ -581,10 +545,12 @@ END
         awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td><td>" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+EOF
 
     ## 详细测试结果
+    # TODO : the style need set in TD
     echo  ""
-    echo "<b>7. 详细测试结果:</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>6. 详细测试结果:</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:0px,40px"><th>Distro</th><th>Job ID</th><th>Suite Name</th><th>Case Name</th><th>Case Result</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat ${GIT_DESCRIBE}/${RESULTS_DIR}/details_summary.txt |
@@ -593,7 +559,7 @@ END
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     ##  编译结果
-    echo "<b>8. 编译结果</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>7. 编译结果</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     cd -
 
     echo "######################################## generate mail success ########################################"

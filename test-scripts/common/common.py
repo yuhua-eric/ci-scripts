@@ -6,6 +6,9 @@ import re
 import yaml
 from lib import utils
 
+TEST_DIR_BASE_NAME = "auto-test"
+PLAN_DIR_BASE_NAME = "plans"
+
 def find_all_test_case_by_search(testDir):
     test_case_yaml_file_list = []
     for root, dirs, files in os.walk(testDir):
@@ -19,7 +22,7 @@ def find_all_test_case_by_search(testDir):
         files = [f for f in files if re.match('(.*\.yaml$)|(.*\.yml$)', f)]
         for fname in files:
             test_case_yaml_file_list.append(fname)
-            print fname
+            # print fname
     return test_case_yaml_file_list
 
 

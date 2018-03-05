@@ -30,12 +30,15 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
 
-
 # for test report
-whole_summary_name = 'whole_summary.txt'
+WHOLE_SUMMARY_NAME = 'whole_summary.txt'
+DETAILS_SUMMARY_NAME = 'details_summary.txt'
+
 # TODO: add scope data pass result
-scope_summary_name = 'scope_summary.txt'
-details_summary_name = 'details_summary.txt'
+SCOPE_SUMMARY_NAME = 'scope_summary.txt'
+
+TEST_RESULT_FILE_NAME = "test_result_dict.txt"
+RESULT_PDF_FILENAME = 'resultfile.pdf'
 
 job_result_dict = {}
 
@@ -221,6 +224,7 @@ def print_scope_info_bar_chart(result_dict, description):
     plt.savefig("baseinfo_bar.jpg", dpi=120)
     plt.close()
 
+
 def create_test_report_pdf(job_result_dict):
     # print job_result_dict
     story = []
@@ -319,7 +323,7 @@ def create_test_report_pdf(job_result_dict):
     story.append(barimg)
 
     # generate pdf
-    doc = SimpleDocTemplate('resultfile.pdf')
+    doc = SimpleDocTemplate(RESULT_PDF_FILENAME)
     doc.build(story)
 
 
@@ -377,8 +381,8 @@ def generate_current_test_report():
     create_test_report_pdf(job_result_dict)
 
     current_test_result_dir = os.getcwd()
-    test_result_file_name = "test_result_dict.txt"
-    test_result_file = os.path.join(current_test_result_dir, test_result_file_name)
+
+    test_result_file = os.path.join(current_test_result_dir, TEST_RESULT_FILE_NAME)
     if os.path.exists(test_result_file):
         os.remove(test_result_file)
     with open(test_result_file, 'w') as wfp:
@@ -718,7 +722,7 @@ def generate_email_test_report():
             case_dict[item['suite']].append(item)
     #try to write summary file
     summary_dir = os.getcwd()
-    summary_file = os.path.join(summary_dir, whole_summary_name)
+    summary_file = os.path.join(summary_dir, WHOLE_SUMMARY_NAME)
     if os.path.exists(summary_file):
         os.remove(summary_file)
     for key in sorted(case_dict.keys()):
@@ -756,7 +760,7 @@ def generate_email_test_report():
 
     ## try to write details file
     details_dir = os.getcwd()
-    details_file = os.path.join(details_dir, details_summary_name)
+    details_file = os.path.join(details_dir, DETAILS_SUMMARY_NAME)
     if os.path.exists(details_file):
         os.remove(details_file)
 
@@ -769,6 +773,31 @@ def generate_email_test_report():
     print "--------------now end get testjob result ------------------------------"
 
 
+def generate_scope_test_report():
+    template = """
+    "kernel", [
+        ["xxx","developer","tester","total","pass rate","pass num","fail num","block num"]
+    ],
+    "virtualization",[
+        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"]
+    ],
+    "distribution",[
+        ["xxx1","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"],
+        ["xxx4","developer","tester","total","pass rate","pass num","fail num","block num"]
+    ]
+    """
+    test_dir = os.getcwd()
+    scope_file = os.path.join(test_dir, SCOPE_SUMMARY_NAME)
+    if os.path.exists(scope_file):
+        os.remove(scope_file)
+    with open(scope_file, 'w') as wfp:
+        wfp.write(str(template) + "\n")
+
+
 def main(args):
     config = configuration.get_config(args)
 
@@ -779,6 +808,7 @@ def main(args):
         boot_report(config)
         generate_current_test_report()
         generate_email_test_report()
+        generate_scope_test_report()
         generate_history_test_report()
 
     exit(0)
