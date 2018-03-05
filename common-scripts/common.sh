@@ -81,8 +81,8 @@ init_timefile() {
 
 print_time() {
     local time_variable_name=$1
-    echo "${time_variable_name}="$(date "+%Y-%m-%d %H:%M:%S") >> $timefile
-    echo "${time_variable_name}_second="$(date "+%s") >> $timefile
+    echo "${time_variable_name}=\""$(date "+%Y-%m-%d %H:%M:%S")"\"" >> $timefile
+    echo "${time_variable_name}_second=\""$(date "+%s")"\"" >> $timefile
 }
 
 #
