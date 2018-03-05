@@ -128,6 +128,12 @@ node('ci-compile') {
 
     def test_result = 0
     stage('Testing') {
+        try {
+            build job: 'remote-erp-test-liuchunfeng', parameters: [[$class: 'StringParameterValue', name: 'TREE_NAME', value:  "$TREE_NAME"], [$class: 'StringParameterValue', name: 'GIT_DESCRIBE', value: "$GIT_DESCRIBE"]], wait: false
+        } catch (Exception err) {
+        } finally {
+        }
+
         test_result = sh script: "./local/ci-scripts/test-scripts/jenkins_boot_start.sh -p env.properties 2>&1 " , returnStatus: true
     }
     echo "test_result : ${test_result}"
