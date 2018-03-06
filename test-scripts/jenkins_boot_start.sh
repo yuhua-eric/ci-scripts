@@ -552,9 +552,9 @@ EOF
     echo  ""
     echo "<b>6. 详细测试结果:</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:0px,40px"><th>Distro</th><th>Job ID</th><th>Suite Name</th><th>Case Name</th><th>Case Result</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:10px"><th style=\"padding:10px;\">Distro</th><th style=\"padding:10px;\">Job ID</th><th style=\"padding:10px;\">Suite Name</th><th style=\"padding:10px;\">Case Name</th><th style=\"padding:10px;\">Case Result</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat ${GIT_DESCRIBE}/${RESULTS_DIR}/details_summary.txt |
-        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">" "<td>" $1 "</td><td><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a><td>" substr($3,3,length($3)) "</td><td>" $4 "</td><td>" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
+        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">" "<td style=\"padding:10px;\">" $1 "</td><td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a><td style=\"padding:10px;\">" substr($3,3,length($3)) "</td><td style=\"padding:10px;\">" $4 "</td><td style=\"padding:10px;\">" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
