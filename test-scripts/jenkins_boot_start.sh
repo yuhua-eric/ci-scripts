@@ -500,7 +500,7 @@ END
     echo "<b>3. 测试数据统计</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     for DISTRO in $SHELL_DISTRO; do
         # if don't exist this scope result file skip it.
-        if [ ! -e ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${SCOPE_SUMMARY_NAME} ];
+        if [ ! -e ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${SCOPE_SUMMARY_NAME} ];then
            echo "Waining: ${SCOPE_SUMMARY_NAME} don't exist"
            continue
         fi
