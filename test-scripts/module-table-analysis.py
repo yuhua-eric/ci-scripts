@@ -41,7 +41,7 @@ def get_name_from_yaml(path_list, dir_name_lists, owner, test_case_definition_di
                     submodule = paths[2]
                     owner_detail = get_owner_detail(owner, submodule)
                     if owner_detail is not -1:
-                        dir_name_lists[module][submodule]["developer"] = owner[owner_detail][2],
+                        dir_name_lists[module][submodule]["developer"] = owner[owner_detail][2]
                         dir_name_lists[module][submodule]["tester"] = owner[owner_detail][3]
                         dir_name_lists[module][submodule][data['metadata']['name']]  = {}
                     else:
