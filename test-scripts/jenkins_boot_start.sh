@@ -472,7 +472,7 @@ function generate_success_mail(){
 
     echo "Estuary CI Auto-test Daily Report (${TODAY}) <br>" > ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "<b>1、构建信息</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>1. 构建信息</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     JOB_INFO_VERSION="Estuary V5.0 - ${TODAY}"
     # TODO : the start time need read from file.
