@@ -111,7 +111,7 @@ def get_all_dir_names(dir_list, test_case_definition_dir):
 
 
 def main():
-    # ./module-table-analysis.py -f /home/qinshulei/projects/huawei/githubs/test_result_dict.txt -t /home/qinshulei/projects/huawei/githubs/test-definitions
+    # ./module-table-analysis.py -f /home/qinshulei/projects/huawei/githubs/test_result_dict.json -t /home/qinshulei/projects/huawei/githubs/test-definitions
 
     # get args
     parser = argparse.ArgumentParser(prog='PROG')
@@ -136,10 +136,11 @@ def main():
     dir_name_lists = get_all_dir_names(dir_list, test_case_definition_dir)
     owner = get_owner_data(owner_file)
 
+    # pre process ,from " to '
     dataform = ''
     with open(result_file, 'r') as f:
-        dataform = str(f.readline()).replace('\'', '\"')
-
+        for line in f:
+            dataform += str(line).replace('\'', '\"')
     with open(result_file, 'w') as f:
         f.write(dataform)
 

@@ -37,7 +37,7 @@ DETAILS_SUMMARY_NAME = 'details_summary.txt'
 # TODO: add scope data pass result
 SCOPE_SUMMARY_NAME = 'scope_summary.txt'
 
-TEST_RESULT_FILE_NAME = "test_result_dict.txt"
+TEST_RESULT_FILE_NAME = "test_result_dict.json"
 RESULT_PDF_FILENAME = 'resultfile.pdf'
 
 job_result_dict = {}
@@ -385,8 +385,7 @@ def generate_current_test_report():
     test_result_file = os.path.join(current_test_result_dir, TEST_RESULT_FILE_NAME)
     if os.path.exists(test_result_file):
         os.remove(test_result_file)
-    with open(test_result_file, 'w') as wfp:
-        wfp.write(str(job_result_dict))
+    utils.write_json(TEST_RESULT_FILE_NAME, current_test_result_dir, job_result_dict)
 
 
 def count_scope_pass_number(test_suite_scope_dict, path, result):
