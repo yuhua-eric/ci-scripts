@@ -101,6 +101,7 @@ function init_boot_env() {
     # 6. 详细测试结果
     DETAILS_SUM='details_summary.txt'
 
+    RESULT_JSON="test_result_dict.json"
 
     PDF_FILE='resultfile.pdf'
 }
@@ -184,6 +185,8 @@ function run_and_move_result() {
 
     [ -e ${SCOPE_SUMMARY_NAME} ] && mv ${SCOPE_SUMMARY_NAME} ${dest_dir}/
     [ -e ${PDF_FILE} ] && mv ${PDF_FILE} ${dest_dir}/
+
+    [ -e ${RESULT_JSON} ] && mv ${RESULT_JSON} ${dest_dir}/
 
     [ -d ${JOBS_DIR} ] && mv ${JOBS_DIR} ${dest_dir}/${JOBS_DIR}_${test_name}
     [ -d ${RESULTS_DIR} ] && mv ${RESULTS_DIR} ${dest_dir}/${RESULTS_DIR}_${test_name}
