@@ -758,7 +758,7 @@ def generate_email_test_report(distro):
         wfp.write("\"%.2f%%\", " % (1.0 * test_success / test_total))
         wfp.write("\"%s\", " % str(test_success))
         wfp.write("\"%s\", " % str(test_fail))
-        wfp.write("\"%s\", " % str(test_total - test_success - test_fail))
+        wfp.write("\"%s\"" % str(test_total - test_success - test_fail))
         wfp.write("]")
 
     ## try to write details file

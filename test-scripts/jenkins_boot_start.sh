@@ -496,7 +496,7 @@ function generate_success_mail(){
     for DISTRO in $SHELL_DISTRO; do
         JOB_RESULT_DATA=$(< ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM})",${JOB_RESULT_DATA}"
     done
-    JOB_RESULT_DATA=${JOB_RESULT_DATA%,}
+    JOB_RESULT_DATA="${JOB_RESULT_DATA%,}"
     export_vars JOB_RESULT_VERSION JOB_RESULT_DATA
     envsubst < ./html/2-job-result-table.json > ./html/2-job-result-table.json.tmp
     python ./html/html-table.py -f ./html/2-job-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
