@@ -855,7 +855,12 @@ def generate_module_result(result_json_dict, test_dir):
     yaml_list = common.find_all_test_case_by_search(test_case_definition_dir)
     dir_list = os.listdir(test_case_definition_dir)
     dir_name_lists = get_all_dir_names(dir_list, test_case_definition_dir)
-    owner = get_owner_data(owner_file)
+
+    # prepare owner data, allow empty owner file
+    owner = []
+    if os.path.exists(owner_file):
+        owner = get_owner_data(owner_file)
+
     name_dict = get_name_from_yaml(yaml_list, dir_name_lists, owner, test_case_definition_dir)
     for job_key in result_json_dict:
         result = result_json_dict[job_key]
