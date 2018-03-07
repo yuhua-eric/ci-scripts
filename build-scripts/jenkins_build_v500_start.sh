@@ -366,6 +366,8 @@ function source_properties_file() {
 }
 
 function main() {
+    set_timezone_china
+
     parse_input "$@"
     source_properties_file
 

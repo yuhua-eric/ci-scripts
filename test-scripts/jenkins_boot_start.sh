@@ -583,6 +583,8 @@ function workaround_pop_devices_config() {
 }
 
 function main() {
+    set_timezone_china
+
     parse_input "$@"
     source_properties_file
 

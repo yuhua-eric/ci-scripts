@@ -65,6 +65,10 @@ export_vars() {
     done
 }
 
+set_timezone_china() {
+    export TZ='Asia/Shanghai'
+}
+
 init_timefile() {
     local target_name=$1
     if [ -z "${target_name}" ];then
