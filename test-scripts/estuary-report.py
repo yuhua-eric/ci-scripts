@@ -755,7 +755,7 @@ def generate_email_test_report(distro):
         else:
             wfp.write('"fail", ')
         wfp.write("\"%s\", " % str(test_total))
-        wfp.write("\"%.2f%%\", " % (1.0 * test_success / test_total))
+        wfp.write("\"%.2f%%\", " % (100.0 * test_success / test_total))
         wfp.write("\"%s\", " % str(test_success))
         wfp.write("\"%s\", " % str(test_fail))
         wfp.write("\"%s\"" % str(test_total - test_success - test_fail))
@@ -918,7 +918,7 @@ def generate_module_result(result_json_dict, test_dir):
                           name_dict[name_key][sub_key]["developer"], \
                           name_dict[name_key][sub_key]["tester"], \
                           str(name_dict[name_key][sub_key]["total"]), \
-                          1.0 * name_dict[name_key][sub_key]["pass"] / name_dict[name_key][sub_key]["total"], \
+                          100.0 * name_dict[name_key][sub_key]["pass"] / name_dict[name_key][sub_key]["total"], \
                           str(name_dict[name_key][sub_key]["pass"]), \
                           str(name_dict[name_key][sub_key]["fail"]), \
                           str(name_dict[name_key][sub_key]["total"] - name_dict[name_key][sub_key]["fail"] -
