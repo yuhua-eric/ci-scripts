@@ -85,6 +85,10 @@ print_time() {
     echo "${time_variable_name}_second=\""$(date "+%s")"\"" >> $timefile
 }
 
+current_time() {
+    echo "$(date "+%Y-%m-%d %H:%M:%S")"
+}
+
 #
 # These functions can be used for timing how long (a) command(s) take to
 # execute.

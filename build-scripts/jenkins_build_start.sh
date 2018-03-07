@@ -64,6 +64,8 @@ function init_input_params() {
     PACKAGES=${PACKAGES:-""}
     # all setup types
     SETUP_TYPE=${SETUP_TYPE:-""}
+
+    JENKINS_JOB_START_TIME=${JENKINS_JOB_START_TIME:-$(current_time)}
 }
 
 function parse_params() {

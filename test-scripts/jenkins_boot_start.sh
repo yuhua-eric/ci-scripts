@@ -21,6 +21,7 @@ function init_workspace() {
 }
 
 function init_input_params() {
+
     TREE_NAME=${TREE_NAME:-"open-estuary"}
 
     VERSION=${VERSION:-""}
@@ -28,6 +29,8 @@ function init_input_params() {
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
 
     JENKINS_JOB_INFO=$(expr "${BUILD_URL}" : '^http.*/job/\(.*\)/$' | sed "s#/#-#g")
+
+    JENKINS_JOB_START_TIME=${JENKINS_JOB_START_TIME:-$(current_time)}
 }
 
 function parse_params() {
@@ -478,8 +481,8 @@ function generate_success_mail(){
     # TODO : the start time need read from file.
     JOB_INFO_SHA1="${GIT_DESCRIBE}"
     JOB_INFO_RESULT=${JOB_RESULT}
-    JOB_INFO_START_TIME=$(date +"%Y/%m/%d %H:%M:%S")
-    JOB_INFO_END_TIME=$(date +"%Y/%m/%d %H:%M:%S")
+    JOB_INFO_START_TIME="${JENKINS_JOB_START_TIME}"
+    JOB_INFO_END_TIME=$(current_time)
     export_vars JOB_INFO_VERSION JOB_INFO_SHA1 JOB_INFO_RESULT JOB_INFO_START_TIME JOB_INFO_END_TIME
     envsubst < ./html/1-job-info-table.json > ./html/1-job-info-table.json.tmp
     python ./html/html-table.py -f ./html/1-job-info-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
