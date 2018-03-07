@@ -543,7 +543,7 @@ END
     :<<-EOF
     ## 统计结果
     echo "<b>6. 统计结果:</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo '<table cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo '<table width="90%" cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:0px,40px"><th>Distro</th><th>Type</th><th>Total Number</th><th>Failed Number</th><th>Success Number</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat ${GIT_DESCRIBE}/${RESULTS_DIR}/whole_summary.txt |
         awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td><td>" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
@@ -555,7 +555,7 @@ EOF
     # TODO : the style need set in TD
     echo  ""
     echo "<b>6. 详细测试结果:</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo '<table cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo '<table width="90%" cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:10px"><th style=\"padding:10px;\">发行版</th><th style=\"padding:10px;\">LAVA任务ID</th><th style=\"padding:10px;\">测试集</th><th style=\"padding:10px;\">测试用例</th><th style=\"padding:10px;\">测试结果</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat ${GIT_DESCRIBE}/${RESULTS_DIR}/details_summary.txt |
         awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">" "<td style=\"padding:10px;\">" $1 "</td><td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a><td style=\"padding:10px;\">" substr($3,3,length($3)) "</td><td style=\"padding:10px;\">" $4 "</td><td style=\"padding:10px;\">" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
