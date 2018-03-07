@@ -694,7 +694,7 @@ def boot_report(config):
                              result['result']))
 
 
-def generate_email_test_report():
+def generate_email_test_report(distro):
     print "--------------now begin get testjob: result ------------------------------"
 
     suite_list = []  #all test suite list
@@ -746,17 +746,20 @@ def generate_email_test_report():
                     test_fail += 1
                 else:
                     test_total += 1
-    with open(summary_file, 'w') as wfp:
-        wfp.write("boot ")
-        wfp.write(str(boot_total) + " ")
-        wfp.write(str(boot_fail) + " ")
-        wfp.write(str(boot_success) + "\n")
 
-    with open(summary_file, "ab") as wfp:
-        wfp.write("test ")
-        wfp.write(str(test_total) + " ")
-        wfp.write(str(test_fail) + " ")
-        wfp.write(str(test_success) + "\n")
+    with open(summary_file, 'w') as wfp:
+        # ["Ubuntu", "pass", "100", "50%", "50", "50", "0"],
+        wfp.write("[\"%s\", " % distro)
+        if test_fail == 0:
+            wfp.write('"pass", ')
+        else:
+            wftp.write('"fail", ')
+        wfp.write("\"%s\", " % str(test_total))
+        wfp.write("\"%.2f%%\", " % 1.0 * test_success / test_fail)
+        wfp.write("\"%s\", " % str(test_success))
+        wfp.write("\"%s\", " % str(test_fail))
+        wfp.write("\"%s\", " % str(test_total - test_success - test_fail))
+        wfp.write("]")
 
     ## try to write details file
     details_dir = os.getcwd()
@@ -944,11 +947,12 @@ def main(args):
 
     global TEST_CASE_DEFINITION_DIR
     TEST_CASE_DEFINITION_DIR = config.get("testDir")
+    distro = config.get("distro")
 
     if config.get("boot"):
         boot_report(config)
         generate_current_test_report()
-        generate_email_test_report()
+        generate_email_test_report(distro)
         generate_scope_test_report(TEST_CASE_DEFINITION_DIR)
         generate_history_test_report()
 
@@ -959,6 +963,8 @@ if __name__ == '__main__':
     parser.add_argument("--boot", help="creates a kernel-ci boot report from a given json file")
     parser.add_argument("--lab", help="lab id")
     parser.add_argument("--testDir", required=True, help="specific test case dir")
-
+    parser.add_argument("--distro", choices=['Ubuntu', 'Debian', 'CentOS',
+                                             'OpenSuse', 'Fedora'],
+                        help="distro for sata deploying")
     args = vars(parser.parse_args())
     main(args)

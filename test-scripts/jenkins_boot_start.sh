@@ -107,8 +107,9 @@ function init_boot_env() {
 }
 
 function generate_jobs() {
-    test_name=$1
-    distro=$2
+    local test_name=$1
+    local distro=$2
+
     pwd
     for PLAT in $SHELL_PLATFORM; do
         board_arch=${dict[$PLAT]}
@@ -127,6 +128,12 @@ function generate_jobs() {
 }
 
 function run_and_report_jobs() {
+    local distro=$1
+    if [ x"$distro" == x"" ]; then
+        echo "distro can't be null! Aborting"
+        return -1
+    fi
+
     if [ x"$SKIP_LAVA_RUN" = x"false" ];then
         pushd ${JOBS_DIR}
         python ../estuary-job-runner.py --username $LAVA_USER --token $LAVA_TOKEN --server $LAVA_SERVER --stream $LAVA_STREAM --poll POLL
@@ -140,7 +147,7 @@ function run_and_report_jobs() {
             cat ${JOBS_DIR}/${RESULTS_DIR}/POLL
         fi
 
-        python estuary-report.py --boot ${JOBS_DIR}/${RESULTS_DIR}/POLL --lab $LAVA_USER --testDir "${TEST_CASE_DIR}"
+        python estuary-report.py --boot ${JOBS_DIR}/${RESULTS_DIR}/POLL --lab $LAVA_USER --testDir "${TEST_CASE_DIR}" --distro "$distro"
         if [ ! -d ${RESULTS_DIR} ]; then
             echo "running jobs error! Aborting"
             return -1
@@ -170,7 +177,7 @@ function run_and_move_result() {
     dest_dir=$2
     ret_val=0
 
-    if ! run_and_report_jobs ;then
+    if ! run_and_report_jobs "${dest_dir}";then
         ret_val=-1
     fi
 
@@ -339,26 +346,19 @@ function collect_result() {
         rm -rf  ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
     fi
 
-    # echo '' | tee ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} | tee ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
-
     cd ${GIT_DESCRIBE}/${RESULTS_DIR}
     distro_dirs=$(ls -d */ | cut -f1 -d'/')
     cd -
 
     for distro_name in ${distro_dirs};do
-        # echo "##### distro : ${distro_name} ######" | tee -a ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} | tee -a ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
-
         # add distro info in txt file
-        sed -i -e 's/^/'"${distro_name}"' /' ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${WHOLE_SUM}
         sed -i -e 's/^/'"${distro_name}"' /' ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM}
 
-        cat ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${WHOLE_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM}
         cat ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
     done
 
     # apt-get install pdftk
     # pdftk file1.pdf file2.pdf cat output output.pdf
-    cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${WHOLE_SUM} ${WORKSPACE}/${WHOLE_SUM}
     cp ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} ${WORKSPACE}/${DETAILS_SUM}
 
     cp -rf ${timefile} ${WORKSPACE} || true
@@ -376,7 +376,6 @@ function collect_result() {
     popd    # restore current work directory
 
     cat ${timefile}
-    cat ${WORKSPACE}/${WHOLE_SUM}
 }
 
 function init_env() {
@@ -489,12 +488,11 @@ function generate_success_mail(){
 
     echo "<b>2. 今日构建结果</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     JOB_RESULT_VERSION="Estuary V5.0"
-    JOB_RESULT_DATA=$(cat <<-END
-    ["Ubuntu", "pass", "100", "50%", "50", "50", "0"],
-    ["Debian", "pass", "100", "50%", "50", "50", "0"],
-    ["CentOS", "pass", "100", "50%", "50", "50", "0"]
-END
-                   )
+    JOB_RESULT_DATA=""
+    for DISTRO in $SHELL_DISTRO; do
+        JOB_RESULT_DATA=$(< ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM})",${JOB_RESULT_DATA}"
+    done
+    JOB_RESULT_DATA=${JOB_RESULT_DATA%,}
     export_vars JOB_RESULT_VERSION JOB_RESULT_DATA
     envsubst < ./html/2-job-result-table.json > ./html/2-job-result-table.json.tmp
     python ./html/html-table.py -f ./html/2-job-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
@@ -538,18 +536,6 @@ END
     python ./html/html-table.py -f ./html/5-job-link-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     rm -f ./html/5-job-link-table.json.tmp
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-
-    # TODO : refactor to 2
-    :<<-EOF
-    ## 统计结果
-    echo "<b>6. 统计结果:</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo '<table width="90%" cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:0px,40px"><th>Distro</th><th>Type</th><th>Total Number</th><th>Failed Number</th><th>Success Number</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    cat ${GIT_DESCRIBE}/${RESULTS_DIR}/whole_summary.txt |
-        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">" "<td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td><td>" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-EOF
 
     ## 详细测试结果
     # TODO : the style need set in TD
