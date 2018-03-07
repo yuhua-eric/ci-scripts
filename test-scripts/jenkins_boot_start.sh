@@ -470,7 +470,8 @@ function generate_success_mail(){
 
     echo "Estuary CI Auto-test Daily Report (${TODAY}) - ${JOB_RESULT}" > ${WORKSPACE}/MAIL_SUBJECT.txt
 
-    echo "Estuary CI Auto-test Daily Report (${TODAY}) <br>" > ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>Estuary CI Auto-test Daily Report (${TODAY})</b><br>" > ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<b>1. 构建信息</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
