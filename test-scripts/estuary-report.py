@@ -750,10 +750,8 @@ def generate_email_test_report(distro):
     with open(summary_file, 'w') as wfp:
         # ["Ubuntu", "pass", "100", "50%", "50", "50", "0"],
         wfp.write("[\"%s\", " % distro)
-        if test_fail == 0:
-            wfp.write('"pass", ')
-        else:
-            wfp.write('"fail", ')
+        # always pass for compile result
+        wfp.write('"pass", ')
         wfp.write("\"%s\", " % str(test_total))
         wfp.write("\"%.2f%%\", " % (100.0 * test_success / test_total))
         wfp.write("\"%s\", " % str(test_success))
