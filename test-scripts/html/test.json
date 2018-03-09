@@ -27,6 +27,9 @@
         ["xxx2","developer","tester","total","pass rate","pass num","fail num","block num"],
         ["xxx3","developer","tester","total","pass rate","pass num","fail num","block num"],
         ["xxx4","developer","tester","total","pass rate","pass num","fail num","block num"]
+    ],
+    "middleware", [
+      ["language","liuxinliang","liucaili","59","49.15%",{"data": "29", "color": "#b5f1ce"},{"data": "30", "color": "#f9a29b"},{"data": "0", "color": "#f5d595"}]
     ]
   ]
 }

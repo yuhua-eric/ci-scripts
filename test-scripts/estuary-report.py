@@ -32,9 +32,9 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
 
 # color
-PASS_COLOR = "#b5f1ce"
-FAIL_COLOR = "#f9a29b"
-BLOCK_COLOR = "#f5d595"
+PASS_COLOR = "green"
+FAIL_COLOR = "red"
+BLOCK_COLOR = "yellow"
 
 # for test report
 WHOLE_SUMMARY_NAME = 'whole_summary.txt'
@@ -942,6 +942,7 @@ def generate_module_result(result_json_dict, test_dir):
 
 def main2():
     # ./module-table-analysis.py -f /home/qinshulei/projects/huawei/githubs/test_result_dict.json -t /home/qinshulei/projects/huawei/githubs/test-definitions
+    # generate_module_result(result_json_dict, test_dir)
     # get args
     parser = argparse.ArgumentParser(prog='PROG')
     parser.add_argument('-f', '--file', required=True,
