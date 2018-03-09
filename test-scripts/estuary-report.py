@@ -31,6 +31,11 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
 
+# color
+PASS_COLOR = "#b5f1ce"
+FAIL_COLOR = "#f9a29b"
+BLOCK_COLOR = "#f5d595"
+
 # for test report
 WHOLE_SUMMARY_NAME = 'whole_summary.txt'
 DETAILS_SUMMARY_NAME = 'details_summary.txt'
@@ -751,12 +756,16 @@ def generate_email_test_report(distro):
         # ["Ubuntu", "pass", "100", "50%", "50", "50", "0"],
         wfp.write("[\"%s\", " % distro)
         # always pass for compile result
-        wfp.write('"pass", ')
+        wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}, " %
+                  ("pass", PASS_COLOR))
         wfp.write("\"%s\", " % str(test_total))
         wfp.write("\"%.2f%%\", " % (100.0 * test_success / test_total))
-        wfp.write("\"%s\", " % str(test_success))
-        wfp.write("\"%s\", " % str(test_fail))
-        wfp.write("\"%s\"" % str(test_total - test_success - test_fail))
+        wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}, " %
+                  (str(test_success), PASS_COLOR))
+        wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}, " %
+                  (str(test_fail), FAIL_COLOR))
+        wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}" %
+                  (str(test_total - test_success - test_fail), BLOCK_COLOR))
         wfp.write("]")
 
     ## try to write details file
@@ -769,9 +778,10 @@ def generate_email_test_report(distro):
         for job_id in sorted(job_result_dict.keys()):
             for item in sorted(job_result_dict[job_id], key=lambda x: x['suite']):
                 if item['suite'] != 'lava':
-                    wfp.write(job_id + "\t" + item['suite'] + '\t' + item['name'] + '\t\t' + item['result'] + '\n')
+                    wfp.write(job_id + "\t" + item['suite'] + '\t' +
+                              item['name'] + '\t\t' + item['result'] + '\n')
 
-    print "--------------now end get testjob result ------------------------------"
+    print "--------------now end get testjob result --------------------------"
 
 
 def generate_scope_test_report(test_dir):
@@ -800,7 +810,7 @@ def get_name_from_yaml(path_list, dir_name_lists, owner, test_case_definition_di
                     if owner_detail is not -1:
                         dir_name_lists[module][submodule]["developer"] = owner[owner_detail][2]
                         dir_name_lists[module][submodule]["tester"] = owner[owner_detail][3]
-                        dir_name_lists[module][submodule][data['metadata']['name']]  = {}
+                        dir_name_lists[module][submodule][data['metadata']['name']] = {}
                     else:
                         dir_name_lists[module][submodule]["developer"] = ""
                         dir_name_lists[module][submodule]["tester"] = ""
@@ -814,6 +824,7 @@ def get_owner_detail(nlist, test_case):
             return n
     return -1
 
+
 def get_owner_data(file):
     with open(file, 'r') as f:
         data = f.readlines()
@@ -821,12 +832,12 @@ def get_owner_data(file):
     for l in range(len(data)):
         index = data[l].find('| :')
         if index is not -1:
-            if l+1 <len(data):
-                data = data[l+1: ]
+            if l+1 < len(data):
+                data = data[l+1:]
             break
     owner = []
     for item in data:
-        s = item.replace(' ','')
+        s = item.replace(' ', '')
         s = s.split('|')[1:]
         owner.append(s)
     return owner
@@ -911,16 +922,17 @@ def generate_module_result(result_json_dict, test_dir):
                 continue
             if name_dict[name_key][sub_key]["total"] == 0:
                 continue
-            result += "    [\"%s\",\"%s\",\"%s\",\"%s\",\"%.2f%%\",\"%s\",\"%s\",\"%s\"],\n" \
+
+            result += "    [\"%s\",\"%s\",\"%s\",\"%s\",\"%.2f%%\",{\"data\": \"%s\", \"color\": \"%s\"},{\"data\": \"%s\", \"color\": \"%s\"},{\"data\": \"%s\", \"color\": \"%s\"}],\n" \
                       % ( sub_key,
-                          name_dict[name_key][sub_key]["developer"], \
-                          name_dict[name_key][sub_key]["tester"], \
-                          str(name_dict[name_key][sub_key]["total"]), \
-                          100.0 * name_dict[name_key][sub_key]["pass"] / name_dict[name_key][sub_key]["total"], \
-                          str(name_dict[name_key][sub_key]["pass"]), \
-                          str(name_dict[name_key][sub_key]["fail"]), \
+                          name_dict[name_key][sub_key]["developer"],
+                          name_dict[name_key][sub_key]["tester"],
+                          str(name_dict[name_key][sub_key]["total"]),
+                          100.0 * name_dict[name_key][sub_key]["pass"] / name_dict[name_key][sub_key]["total"],
+                          str(name_dict[name_key][sub_key]["pass"]), PASS_COLOR,
+                          str(name_dict[name_key][sub_key]["fail"]), FAIL_COLOR,
                           str(name_dict[name_key][sub_key]["total"] - name_dict[name_key][sub_key]["fail"] -
-                              name_dict[name_key][sub_key]["pass"]) )
+                              name_dict[name_key][sub_key]["pass"]), BLOCK_COLOR)
         result = result.rstrip(",\n")
         result += "],\n"
     if len(result) > 0:
