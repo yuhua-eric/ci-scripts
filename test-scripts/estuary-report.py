@@ -759,7 +759,10 @@ def generate_email_test_report(distro):
         wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}, " %
                   ("pass", PASS_COLOR))
         wfp.write("\"%s\", " % str(test_total))
-        wfp.write("\"%.2f%%\", " % (100.0 * test_success / test_total))
+        if test_total == 0:
+            wfp.write("\"%.2f%%\", " % (0.0))
+        else:
+            wfp.write("\"%.2f%%\", " % (100.0 * test_success / test_total))
         wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}, " %
                   (str(test_success), PASS_COLOR))
         wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}, " %
