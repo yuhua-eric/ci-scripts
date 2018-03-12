@@ -546,9 +546,25 @@ function generate_success_mail(){
     echo  ""
     echo "<b>6. 详细测试结果:</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo '<table width="90%" cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:10px"><th style=\"padding:10px;\">发行版</th><th style=\"padding:10px;\">日志</th><th style=\"padding:10px;\">测试集</th><th style=\"padding:10px;\">测试用例</th><th style=\"padding:10px;\">测试结果</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:10px">
+              <th style="padding:10px;">发行版</th>
+              <th style="padding:10px;">日志</th>
+              <th style="padding:10px;">测试集</th>
+              <th style="padding:10px;">测试用例</th>
+              <th style="padding:10px;">测试结果</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
     cat ${GIT_DESCRIBE}/${RESULTS_DIR}/details_summary.txt |
-        awk -F" " '{print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">" "<td style=\"padding:10px;\">" $1 "</td><td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a><td style=\"padding:10px;\">" substr($3,3,length($3)) "</td><td style=\"padding:10px;\">" $4 "</td><td style=\"padding:10px;\">" $5 "</td></tr>"}' >> ${WORKSPACE}/MAIL_CONTENT.txt
+        awk -F" " '{
+                    print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
+                    print "<td style=\"padding:10px;\">" $1 "</td>";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a></td>";
+                    print "<td style=\"padding:10px;\">" substr($3,3,length($3)) "</td>";
+                    print "<td style=\"padding:10px;\">" $4 "</td>";
+                    print "<td style=\"padding:10px;\">";
+                    if ($5 == "pass")
+                        print "<font color=\"green\">" $5 "</font>";
+                    else
+                        print "<font color=\"red\">" $5 "</font>";
+                    print "</td></tr>"; }' >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
