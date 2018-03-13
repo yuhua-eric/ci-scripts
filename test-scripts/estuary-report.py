@@ -874,6 +874,9 @@ def generate_module_result(result_json_dict, test_dir):
         owner = get_owner_data(owner_file)
 
     name_dict = get_name_from_yaml(yaml_list, dir_name_lists, owner, test_case_definition_dir)
+
+    # use index to fix the duplicate case name
+    index = 0
     for job_key in result_json_dict:
         result = result_json_dict[job_key]
         for item in result:
@@ -884,7 +887,12 @@ def generate_module_result(result_json_dict, test_dir):
                         for suite_key in name_dict[key][sub_key].keys():
                             if suite_key != "tester" and suite_key != "developer":
                                 if suite_key == suit_name:
-                                    name_dict[key][sub_key][suite_key][item["name"]] = item["result"]
+                                    index += 1
+                                    if item["name"] in name_dict[key][sub_key][suite_key]:
+                                        print "WARNING: duplicate item name " + suite_key + " " + item["name"]
+                                        name_dict[key][sub_key][suite_key][item["name"] + str(index)] = item["result"]
+                                    else:
+                                        name_dict[key][sub_key][suite_key][item["name"]] = item["result"]
     for job_key in result_json_dict:
         result = result_json_dict[job_key]
         # print owner
@@ -910,9 +918,12 @@ def generate_module_result(result_json_dict, test_dir):
                                 if name_dict[key][sub_key][suite_key][case_key] == "pass":
                                     name_dict[key][sub_key]["pass"] += 1
                                     name_dict[key]["pass"] += 1
-                                if name_dict[key][sub_key][suite_key][case_key] == "fail":
+                                elif name_dict[key][sub_key][suite_key][case_key] == "fail":
                                     name_dict[key][sub_key]["fail"] += 1
                                     name_dict[key]["fail"] += 1
+                                else:
+                                    print "WARNING: the result not pass or fail" + name_dict[key][sub_key][suite_key][case_key]
+
     result = ""
     for name_key in name_dict.keys():
         if name_key == "tester" or name_key == "developer" or name_key == "total" or name_key == "pass" or name_key == "fail":
