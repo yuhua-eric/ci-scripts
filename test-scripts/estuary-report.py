@@ -931,7 +931,7 @@ def generate_module_result(result_json_dict, test_dir):
                           name_dict[name_key][sub_key]["developer"],
                           name_dict[name_key][sub_key]["tester"],
                           str(name_dict[name_key][sub_key]["total"]),
-                          100.0 * name_dict[name_key][sub_key]["pass"] / name_dict[name_key][sub_key]["total"] if name_dict[name_key][sub_key]["total"] == 0 else 0.0,
+                          (100.0 * name_dict[name_key][sub_key]["pass"] / name_dict[name_key][sub_key]["total"]) if name_dict[name_key][sub_key]["total"] > 0 else 0.0,
                           str(name_dict[name_key][sub_key]["pass"]), PASS_COLOR,
                           str(name_dict[name_key][sub_key]["fail"]), FAIL_COLOR,
                           str(name_dict[name_key][sub_key]["total"] - name_dict[name_key][sub_key]["fail"] -
