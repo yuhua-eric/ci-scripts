@@ -212,10 +212,10 @@ function run_and_move_result() {
 #######  Begining the tests ######
 
 function init_summaryfile() {
-    if [ -f ${WORKSPACE}/whole_summary.txt ]; then
-        rm -rf ${WORKSPACE}/whole_summary.txt
+    if [ -f ${WORKSPACE}/${WHOLE_SUM} ]; then
+        rm -rf ${WORKSPACE}/${WHOLE_SUM}
     else
-        touch ${WORKSPACE}/whole_summary.txt
+        touch ${WORKSPACE}/${WHOLE_SUM}
     fi
 }
 
@@ -459,17 +459,32 @@ function generate_success_mail(){
     fi
     TODAY=$(date +"%Y/%m/%d")
     MONTH=$(date +"%Y%m")
-    # JOB_RESULT --> DISTRO_RESULT --> MODULE_RESULT --> SUITE_RESULT --> CASE_RESULT
-    # TODO : depends on all distro's result. PASS/FAIL
-    JOB_RESULT=FAIL
+
+    cd ${WORKSPACE}/local/ci-scripts/test-scripts/
+
+    # the result dir path ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
+
+    # set job result by
+    JOB_RESULT=PASS
+    if [ -e ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} ];then
+        if cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} | grep -q "\(fail\|FAIL\)$";then
+            JOB_RESULT=FAIL
+        fi
+
+        if cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} | grep -q "\(pass\|PASS\)$";then
+            :
+        else
+            JOB_RESULT=FAIL
+        fi
+    else
+        JOB_RESULT=FAIL
+    fi
 
     # echo all mail releated info
     echo_vars TODAY GIT_DESCRIBE JOB_RESULT TREE_NAME BOOT_PLAN BUILD_URL FTP_SERVER TEST_REPO
 
     echo "------------------------------------------------------------"
 
-    cd ${WORKSPACE}/local/ci-scripts/test-scripts/
-    # the result dir path ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
 
     echo "Estuary CI Auto-test Daily Report (${TODAY}) - ${JOB_RESULT}" > ${WORKSPACE}/MAIL_SUBJECT.txt
 
@@ -552,7 +567,7 @@ function generate_success_mail(){
               <th style="padding:10px;">测试集</th>
               <th style="padding:10px;">测试用例</th>
               <th style="padding:10px;">测试结果</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    cat ${GIT_DESCRIBE}/${RESULTS_DIR}/details_summary.txt |
+    cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} |
         awk -F" " '{
                     print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
                     print "<td style=\"padding:10px;\">" $1 "</td>";
