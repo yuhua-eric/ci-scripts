@@ -34,7 +34,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Tabl
 # color
 PASS_COLOR = "green"
 FAIL_COLOR = "red"
-BLOCK_COLOR = "yellow"
+BLOCK_COLOR = "orange"
 
 # for test report
 WHOLE_SUMMARY_NAME = 'whole_summary.txt'
