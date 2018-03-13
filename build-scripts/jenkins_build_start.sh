@@ -465,6 +465,7 @@ function main() {
     init_timefile build
 
     prepare_tools "python-yaml"
+    ensure_services_start "docker"
 
     init_build_option
     init_workspace

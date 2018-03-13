@@ -154,3 +154,29 @@ function prepare_tools() {
         apt-get install -y ${dev_tools} || true
     fi
 }
+
+#################### system ####################
+
+# ensure_services_start ssh docker
+function ensure_services_start() {
+    services="$@"
+    for service in ${services};do
+        if (( $(ps -ef | grep -v grep | grep $service | wc -l) > 0 )); then
+            echo "$service is running!!!"
+        else
+            service $service start
+        fi
+    done
+}
+
+# ensure_services_stop apache2
+function ensure_services_stop() {
+    services="$@"
+    for service in ${services};do
+        if (( $(ps -ef | grep -v grep | grep $service | wc -l) > 0 )); then
+            service $service stop
+        else
+            echo "$service is not running!!!"
+        fi
+    done
+}
