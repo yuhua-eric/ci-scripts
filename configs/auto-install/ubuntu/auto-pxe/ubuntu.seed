@@ -23,6 +23,7 @@ d-i base-installer/kernel/image string linux-image-estuary
 
 
 d-i mirror/country string manual
+# hard code
 d-i mirror/http/hostname string 192.168.50.122:8083
 d-i mirror/http/directory string /estuary_v500/Ubuntu/mirror/
 #d-i mirror/http/hostname string 192.168.1.107:80
@@ -64,6 +65,7 @@ d-i apt-setup/restricted boolean true
 d-i apt-setup/universe boolean true
 d-i apt-setup/backports boolean true
 d-i apt-setup/services-select multiselect security
+# TODO : hard code
 d-i apt-setup/security_host string 192.168.50.122:8083
 d-i apt-setup/security_path string /estuary_v500/Ubuntu/mirror/
 #d-i apt-setup/security_host string 192.168.1.107:80
