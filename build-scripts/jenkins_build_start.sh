@@ -285,9 +285,8 @@ function get_version_info() {
         GIT_DESCRIBE=${UEFI_GIT_DESCRIBE}_${GURB_GIT_DESCRIBE}_${KERNEL_GIT_DESCRIBE}
     fi
 
-    echo $GIT_DESCRIBE
-
     popd
+    echo $GIT_DESCRIBE
 }
 
 

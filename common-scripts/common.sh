@@ -93,6 +93,10 @@ current_time() {
     echo "$(date "+%Y-%m-%d %H:%M:%S")"
 }
 
+current_day() {
+    echo "$(date "+%Y%m%d")"
+}
+
 #
 # These functions can be used for timing how long (a) command(s) take to
 # execute.
