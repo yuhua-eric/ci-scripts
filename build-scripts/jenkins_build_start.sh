@@ -147,7 +147,7 @@ function prepare_repo_tool() {
     else
         echo "download repo"
         mkdir -p bin;
-        wget -c http://download.open-estuary.org/AllDownloads/DownloadsEstuary/utils/repo -O bin/repo
+        wget -q -c http://download.open-estuary.org/AllDownloads/DownloadsEstuary/utils/repo -O bin/repo
         chmod a+x bin/repo;
     fi
     popd
@@ -190,7 +190,7 @@ function sync_code() {
 # master don't have arch/arm64/configs/estuary_defconfig file
 function hotfix_download_estuary_defconfig() {
     cd $OPEN_ESTUARY_DIR/kernel/arch/arm64/configs
-    wget https://raw.githubusercontent.com/open-estuary/kernel/v3.1/arch/arm64/configs/estuary_defconfig -o estuary_defconfig
+    wget -c -q https://raw.githubusercontent.com/open-estuary/kernel/v3.1/arch/arm64/configs/estuary_defconfig -o estuary_defconfig
     cd -
 }
 

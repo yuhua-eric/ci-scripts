@@ -51,7 +51,7 @@ function config_tftp_pxe() {
                 # replave netboot
                 rm -rf netboot netboot.tar.gz || true
                 init_os_dict
-                wget ${FTP_SERVER}/open-estuary/${version_name}/"${os_dict[$distro_name]}"/netboot.tar.gz
+                wget -c -q ${FTP_SERVER}/open-estuary/${version_name}/"${os_dict[$distro_name]}"/netboot.tar.gz
                 tar -xzvf netboot.tar.gz
             fi
         fi
@@ -70,7 +70,7 @@ function config_tftp_iso() {
             # replave iso
             rm -rf *.iso || true
             init_os_dict
-            wget ${FTP_SERVER}/open-estuary/${version_name}/"${os_dict[$distro_name]}"/auto-install.iso
+            wget -c -q ${FTP_SERVER}/open-estuary/${version_name}/"${os_dict[$distro_name]}"/auto-install.iso
         fi
     fi
 }
