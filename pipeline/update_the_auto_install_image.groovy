@@ -25,12 +25,6 @@ node ('ci-v500-compile'){
 
         // prepare variables.
         sh 'env'
-
-        // save the properties
-        sh 'echo "" > env.properties'
-
-        sh "echo GIT_DESCRIBE=\\\"${GIT_DESCRIBE}\\\" >> env.properties"
-        sh "echo BEBUG=\\\"${BEBUG}\\\" >> env.properties"
     }
     // load functions
     def functions = load "./local/ci-scripts/pipeline/functions.groovy"
