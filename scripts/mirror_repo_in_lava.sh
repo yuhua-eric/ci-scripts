@@ -18,24 +18,16 @@ fi
 DIR_NAME=${TEST_REPO##*/}
 touch ~/.gitconfig
 
-# remove old gitconfig
-rm -rf /etc/gitconfig
-
-# save last gitconfig
-mv -f ~/.gitconfig ~/.gitconfig.edit
-
 mkdir -p ${SUBDIR}
 cd ${SUBDIR}
 if [ -d "${DIR_NAME}" ];then
     cd ${DIR_NAME}
-    git fetch --all
+    HOME=/dev/null GIT_CONFIG_NOSYSTEM=1 git fetch --all
 else
-    git clone ${TEST_REPO} --mirror
-    echo "[url \"${MIRROR_ROOT}/${SUBDIR}/${DIR_NAME}\"]" >> ~/.gitconfig.edit
-    echo "    insteadOf = ${TEST_REPO}" >> ~/.gitconfig.edit
+    HOME=/dev/null GIT_CONFIG_NOSYSTEM=1 git clone ${TEST_REPO} --mirror
+    echo "[url \"${MIRROR_ROOT}/${SUBDIR}/${DIR_NAME}\"]" >> ~/.gitconfig
+    echo "    insteadOf = ${TEST_REPO}" >> ~/.gitconfig
 fi
-
-mv -f ~/.gitconfig.edit ~/.gitconfig
 
 # overwrite system gitconfig
 cp -f ~/.gitconfig /etc/gitconfig
