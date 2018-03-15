@@ -242,7 +242,7 @@ function get_version_info() {
         cd -
 
         echo "ESTUARY_GIT_DESCRIBE=${ESTUARY_GIT_DESCRIBE}" > ${WORKSPACE}/version.properties
-        echo "KERNEL_GIT_DESCRIBE=${KERNEL_GIT_DESCRIBE}" > ${WORKSPACE}/version.properties
+        echo "KERNEL_GIT_DESCRIBE=${KERNEL_GIT_DESCRIBE}" >> ${WORKSPACE}/version.properties
     fi
 
     popd
