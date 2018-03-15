@@ -556,7 +556,6 @@ function generate_success_mail(){
     rm -f ./html/5-job-link-table.json.tmp
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-
     touch ${WORKSPACE}/build.html
     touch ${WORKSPACE}/test.html
 
