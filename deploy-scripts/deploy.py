@@ -21,7 +21,11 @@ def boot_device(DEPLOY_TYPE, BMC_HOST, BMC_USER, BMC_PASS):
 
     if DEPLOY_TYPE == "BOOT_PXE":
         shell.run_command(pxe_boot_command.split(' '), allow_fail=True)
+        time.sleep(5)
+        shell.run_command(pxe_boot_command.split(' '), allow_fail=True)
     elif DEPLOY_TYPE == "BOOT_ISO":
+        shell.run_command(iso_boot_command.split(' '), allow_fail=True)
+        time.sleep(5)
         shell.run_command(iso_boot_command.split(' '), allow_fail=True)
     else:
         print "ERROR: don't support this BOOT TYPE " + DEPLOY_TYPE
