@@ -80,7 +80,7 @@ node ('compile'){
     }
 
     stage('Mail & Report') {
-        functions.send_mail()
         functions.publish_html()
+        functions.send_mail()
     }
 }
