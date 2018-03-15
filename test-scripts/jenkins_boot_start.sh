@@ -562,7 +562,7 @@ function generate_success_mail(){
     ## 详细测试结果
     # TODO : the style need set in TD
     echo  ""
-    echo "<b>6. <a href=\"${BUILD_URL}/BuildReport\">详细测试结果:</a></b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>6. <a href=\"${BUILD_URL}TestReport\">详细测试结果:</a></b> ${BUILD_URL}TestReport <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo '<table width="90%" cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' > ${WORKSPACE}/test.html
     echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:10px">
@@ -589,7 +589,7 @@ function generate_success_mail(){
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     ##  编译结果
-    echo "<b>7. <a href=\"${BUILD_URL}/BuildReport\">编译结果</a></b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>7. <a href=\"${BUILD_URL}BuildReport\">编译结果: </a></b> ${BUILD_URL}BuildReport <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     # TODO : add build result into the build.html
     cd -
 
