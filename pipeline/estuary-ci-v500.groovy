@@ -146,7 +146,8 @@ node('ci-compile') {
         return
     }
 
-    stage('Send Mail') {
+    stage('Mail & Report') {
         functions.send_mail()
+        functions.publish_html()
     }
 }

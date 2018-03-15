@@ -98,8 +98,8 @@ node ('compile'){
         return
     }
 
-
-    stage('Result') {
+    stage('Mail & Report') {
         functions.send_mail()
+        functions.publish_html()
     }
 }

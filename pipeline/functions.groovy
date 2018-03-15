@@ -10,4 +10,10 @@ def send_mail() {
     //, attachmentsPattern: '**/*resultfile.pdf'
 }
 
+def publish_html() {
+    publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '', reportFiles: 'daily.html', reportName: 'DailyReport', reportTitles: 'Estuary CI Auto-test Daily Report '])
+    publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '', reportFiles: 'build.html', reportName: 'BuildReport', reportTitles: '编译结果'])
+    publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '', reportFiles: 'test.html', reportName: 'TestReport', reportTitles: '详细测试结果'])
+}
+
 return this

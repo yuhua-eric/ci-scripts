@@ -556,17 +556,22 @@ function generate_success_mail(){
     rm -f ./html/5-job-link-table.json.tmp
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
+
+    touch ${WORKSPACE}/build.html
+    touch ${WORKSPACE}/test.html
+
     ## 详细测试结果
     # TODO : the style need set in TD
     echo  ""
-    echo "<b>6. 详细测试结果:</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo '<table width="90%" cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>6. <a href=\"${BUILD_URL}/BuildReport\">详细测试结果:</a></b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+
+    echo '<table width="90%" cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' > ${WORKSPACE}/test.html
     echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:10px">
               <th style="padding:10px;">发行版</th>
               <th style="padding:10px;">日志</th>
               <th style="padding:10px;">测试集</th>
               <th style="padding:10px;">测试用例</th>
-              <th style="padding:10px;">测试结果</th></tr>' >> ${WORKSPACE}/MAIL_CONTENT.txt
+              <th style="padding:10px;">测试结果</th></tr>' >> ${WORKSPACE}/test.html
     cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} |
         awk -F" " '{
                     print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
@@ -579,14 +584,17 @@ function generate_success_mail(){
                         print "<font color=\"green\">" $5 "</font>";
                     else
                         print "<font color=\"red\">" $5 "</font>";
-                    print "</td></tr>"; }' >> ${WORKSPACE}/MAIL_CONTENT.txt
-    echo "</table>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+                    print "</td></tr>"; }' >> ${WORKSPACE}/test.html
+    echo "</table>" >> ${WORKSPACE}/test.html
+
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     ##  编译结果
-    echo "<b>7. 编译结果</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    echo "<b>7. <a href=\"${BUILD_URL}/BuildReport\">编译结果</a></b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    # TODO : add build result into the build.html
     cd -
 
+    cp ${WORKSPACE}/MAIL_CONTENT.txt ${WORKSPACE}/daily.html
     echo "######################################## generate mail success ########################################"
 }
 
