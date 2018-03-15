@@ -5,6 +5,11 @@ import argparse
 import time
 import re
 
+# TODO : depends on the boot type and boot os ,set the autoinstall time.
+# DEPLOY_TIME_OUT = 3000
+# set 25 minutes, so that it can retry the deploy
+DEPLOY_TIME_OUT = 1500
+
 def boot_device(DEPLOY_TYPE, BMC_HOST, BMC_USER, BMC_PASS):
     connection_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol activate' % (BMC_HOST, BMC_USER, BMC_PASS)
     disconnction_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol deactivate' % (BMC_HOST, BMC_USER, BMC_PASS)
@@ -37,7 +42,7 @@ def boot_device(DEPLOY_TYPE, BMC_HOST, BMC_USER, BMC_PASS):
 
     print "start ipmi connection !"
     # set the install timeout 50 minutes. because lava action timeout is 1 hour
-    connection = shell.ipmi_connection(connection_command, 3000)
+    connection = shell.ipmi_connection(connection_command, DEPLOY_TIME_OUT)
     # wait longer to wait connection stable
     time.sleep(10)
     # connection.prompt_str = ['seconds to stop automatical booting']
