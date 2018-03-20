@@ -63,7 +63,9 @@ function parse_params() {
     popd    # restore current work directory
 }
 
-function save_to_properties() {
+function save_properties_and_result() {
+    local test_result=$1
+
     cat << EOF > ${WORKSPACE}/env.properties
 TREE_NAME=${TREE_NAME}
 GIT_DESCRIBE=${GIT_DESCRIBE}
@@ -78,6 +80,8 @@ ARCH_MAP="${ARCH_MAP}"
 EOF
     # EXECUTE_STATUS="Failure"x
     cat ${WORKSPACE}/env.properties
+
+    echo "${test_result}" > ${WORKSPACE}/test_result.txt
 }
 
 function prepare_tools() {
@@ -405,7 +409,7 @@ function parse_input() {
                 show_help
                 exit 0
                 ;;
-            p)  properties_file=$OPTARG
+            p)  PROPERTIES_FILE=$OPTARG
                 ;;
         esac
     done
@@ -415,15 +419,6 @@ function parse_input() {
     [ "$1" = "--" ] && shift
 
     echo "properties_file='$properties_file', Leftovers: $@"
-}
-
-# used to load paramters in pipeline job.
-function source_properties_file() {
-    if [ -n "${properties_file}" ];then
-        if [ -e "${properties_file}" ];then
-            source "${properties_file}"
-        fi
-    fi
 }
 
 function generate_failed_mail(){
@@ -597,34 +592,11 @@ function generate_success_mail(){
     echo "######################################## generate mail success ########################################"
 }
 
-function workaround_stash_devices_config() {
-    if [ -n "${CI_ENV}" ];then
-        :
-    else
-        CI_ENV=dev
-    fi
-    if [ -e "${CI_SCRIPTS_DIR}/configs/${CI_ENV}/devices.yaml" ];then
-        cp -f "${CI_SCRIPTS_DIR}/configs/${CI_ENV}/devices.yaml" /tmp/devices.yaml
-    fi
-}
-
-function workaround_pop_devices_config() {
-    if [ -n "${CI_ENV}" ];then
-        :
-    else
-        CI_ENV=dev
-    fi
-
-    if [ -e "/tmp/devices.yaml" ];then
-        cp -f /tmp/devices.yaml "${CI_SCRIPTS_DIR}/configs/${CI_ENV}/devices.yaml"
-    fi
-}
-
 function main() {
     set_timezone_china
 
     parse_input "$@"
-    source_properties_file
+    source_properties_file "${PROPERTIES_FILE}"
 
     init_timefile test
 
@@ -638,6 +610,7 @@ function main() {
     parse_params
 
     generate_failed_mail
+    save_properties_and_result fail
 
     prepare_tools
 
@@ -655,9 +628,10 @@ function main() {
     collect_result
 
     print_time "time_test_test_end"
-    generate_success_mail
 
-    save_to_properties
+    save_properties_and_result pass
+
+    generate_success_mail
 }
 
 main "$@"

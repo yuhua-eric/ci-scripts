@@ -159,6 +159,41 @@ function prepare_tools() {
     fi
 }
 
+
+# used to load paramters in pipeline job.
+function source_properties_file() {
+    local properties_file="$@"
+
+    if [ -n "${properties_file}" ];then
+        if [ -e "${properties_file}" ];then
+            source "${properties_file}"
+        fi
+    fi
+}
+
+function workaround_stash_devices_config() {
+    if [ -n "${CI_ENV}" ];then
+        :
+    else
+        CI_ENV=dev
+    fi
+    if [ -e "${CI_SCRIPTS_DIR}/configs/${CI_ENV}/devices.yaml" ];then
+        cp -f "${CI_SCRIPTS_DIR}/configs/${CI_ENV}/devices.yaml" /tmp/devices.yaml
+    fi
+}
+
+function workaround_pop_devices_config() {
+    if [ -n "${CI_ENV}" ];then
+        :
+    else
+        CI_ENV=dev
+    fi
+
+    if [ -e "/tmp/devices.yaml" ];then
+        cp -f /tmp/devices.yaml "${CI_SCRIPTS_DIR}/configs/${CI_ENV}/devices.yaml"
+    fi
+}
+
 #################### system ####################
 
 # ensure_services_start ssh docker

@@ -16,4 +16,8 @@ def publish_html() {
     publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '', reportFiles: 'test.html', reportName: 'TestReport', reportTitles: '详细测试结果'])
 }
 
+def archive_result() {
+    archiveArtifacts artifacts: '*result.txt', allowEmptyArchive: true
+}
+
 return this

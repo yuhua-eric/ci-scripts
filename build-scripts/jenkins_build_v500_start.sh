@@ -133,7 +133,9 @@ Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}<
 EOF
 }
 
-function save_to_properties() {
+function save_properties_and_result() {
+    local build_result=$1
+
     cat << EOF > ${WORKSPACE}/env.properties
 TREE_NAME=${TREE_NAME}
 GIT_DESCRIBE=${GIT_DESCRIBE}
@@ -149,6 +151,8 @@ ARCH_MAP="${ARCH_MAP}"
 EOF
     # EXECUTE_STATUS="Failure"x
     cat ${WORKSPACE}/env.properties
+
+    echo "${build_result}" > ${WORKSPACE}/build_result.txt
 }
 
 function show_properties() {
@@ -349,7 +353,7 @@ function parse_input() {
                 show_help
                 exit 0
                 ;;
-            p)  properties_file=$OPTARG
+            p)  PROPERTIES_FILE=$OPTARG
                 ;;
         esac
     done
@@ -361,20 +365,11 @@ function parse_input() {
     echo "properties_file='$properties_file', Leftovers: $@"
 }
 
-# used to load paramters in pipeline job.
-function source_properties_file() {
-    if [ -n "${properties_file}" ];then
-        if [ -e "${properties_file}" ];then
-            source "${properties_file}"
-        fi
-    fi
-}
-
 function main() {
     set_timezone_china
 
     parse_input "$@"
-    source_properties_file
+    source_properties_file "${PROPERTIES_FILE}"
 
     init_timefile build
 
@@ -389,7 +384,7 @@ function main() {
     init_input_params
     parse_params
 
-    save_to_properties
+    save_properties_and_result fail
     show_properties
 
     generate_failed_mail
@@ -416,9 +411,9 @@ function main() {
             exit -1
         fi
     fi
+    save_properties_and_result pass
 
     generate_success_mail
-    save_to_properties
 }
 
 main "$@"

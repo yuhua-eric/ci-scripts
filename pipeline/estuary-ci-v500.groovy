@@ -149,5 +149,6 @@ node('ci-compile') {
     stage('Mail & Report') {
         functions.publish_html()
         functions.send_mail()
+        functions.archive_result()
     }
 }
