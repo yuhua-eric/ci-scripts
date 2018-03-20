@@ -198,9 +198,6 @@ function sync_code() {
 function do_build() {
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
-    # TODO : config cfg files.
-    cat $BUILD_CFG_FILE
-
     # remove all containers
     containers=$(docker ps -a -q)
     if [ -n "${containers}" ];then
