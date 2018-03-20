@@ -41,5 +41,5 @@ actions:
     definitions:
       - repository: "https://github.com/open-estuary/test-definitions.git"
         from: git
-        path: "auto-test/middleware/language/python/python.yaml"
-        name: "python"
+        path: "auto-test/kernel/smoke/smoke.yaml"
+        name: "smoke"
