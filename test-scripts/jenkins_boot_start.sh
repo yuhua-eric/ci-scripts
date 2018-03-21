@@ -590,6 +590,8 @@ function detail_html_generate() {
     local target_html=$2
     local distro=$3
 
+    mkdir -p ${WORKSPACE}/html/
+
     if [ -z "${distro}" ];then
         # total
         detail_html_header "${target_html}.html"
