@@ -362,7 +362,7 @@ function collect_result() {
 
     for distro_name in ${distro_dirs};do
         # add distro info in txt file
-        sed -i -e 's/^/'"${distro_name}"' /' ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM}
+        # sed -i -e 's/^/'"${distro_name}"' /' ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM}
 
         cat ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
     done
@@ -598,15 +598,15 @@ function detail_html_generate() {
         cat ${source_data} |
             awk -F" " '{
                     print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
-                    print "<td style=\"padding:10px;\">" $1 "</td>";
-                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a></td>";
-                    print "<td style=\"padding:10px;\">" substr($3,3,length($3)) "</td>";
-                    print "<td style=\"padding:10px;\">" $4 "</td>";
+                    print "<td style=\"padding:10px;\">" $3 "</td>";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
+                    print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
+                    print "<td style=\"padding:10px;\">" $6 "</td>";
                     print "<td style=\"padding:10px;\">";
-                    if ($5 == "pass")
-                        print "<font color=\"green\">" $5 "</font>";
+                    if ($7 == "pass")
+                        print "<font color=\"green\">" $7 "</font>";
                     else
-                        print "<font color=\"red\">" $5 "</font>";
+                        print "<font color=\"red\">" $7 "</font>";
                     print "</td></tr>"; }' >> "${target_html}.html"
         detail_html_footer "${target_html}.html"
 
@@ -615,15 +615,15 @@ function detail_html_generate() {
         cat ${source_data} | grep pass |
             awk -F" " '{
                     print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
-                    print "<td style=\"padding:10px;\">" $1 "</td>";
-                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a></td>";
-                    print "<td style=\"padding:10px;\">" substr($3,3,length($3)) "</td>";
-                    print "<td style=\"padding:10px;\">" $4 "</td>";
+                    print "<td style=\"padding:10px;\">" $3 "</td>";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
+                    print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
+                    print "<td style=\"padding:10px;\">" $6 "</td>";
                     print "<td style=\"padding:10px;\">";
-                    if ($5 == "pass")
-                        print "<font color=\"green\">" $5 "</font>";
+                    if ($7 == "pass")
+                        print "<font color=\"green\">" $7 "</font>";
                     else
-                        print "<font color=\"red\">" $5 "</font>";
+                        print "<font color=\"red\">" $7 "</font>";
                     print "</td></tr>"; }' >> "${target_html}_pass.html"
         detail_html_footer "${target_html}_pass.html"
 
@@ -632,15 +632,15 @@ function detail_html_generate() {
         cat ${source_data} | grep fail |
             awk -F" " '{
                     print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
-                    print "<td style=\"padding:10px;\">" $1 "</td>";
-                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a></td>";
-                    print "<td style=\"padding:10px;\">" substr($3,3,length($3)) "</td>";
-                    print "<td style=\"padding:10px;\">" $4 "</td>";
+                    print "<td style=\"padding:10px;\">" $3 "</td>";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
+                    print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
+                    print "<td style=\"padding:10px;\">" $6 "</td>";
                     print "<td style=\"padding:10px;\">";
-                    if ($5 == "pass")
-                        print "<font color=\"green\">" $5 "</font>";
+                    if ($7 == "pass")
+                        print "<font color=\"green\">" $7 "</font>";
                     else
-                        print "<font color=\"red\">" $5 "</font>";
+                        print "<font color=\"red\">" $7 "</font>";
                     print "</td></tr>"; }' >> "${target_html}_fail.html"
         detail_html_footer "${target_html}_fail.html"
     else
@@ -649,15 +649,15 @@ function detail_html_generate() {
         cat ${source_data} | grep "${distro}" |
             awk -F" " '{
                     print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
-                    print "<td style=\"padding:10px;\">" $1 "</td>";
-                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a></td>";
-                    print "<td style=\"padding:10px;\">" substr($3,3,length($3)) "</td>";
-                    print "<td style=\"padding:10px;\">" $4 "</td>";
+                    print "<td style=\"padding:10px;\">" $3 "</td>";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
+                    print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
+                    print "<td style=\"padding:10px;\">" $6 "</td>";
                     print "<td style=\"padding:10px;\">";
-                    if ($5 == "pass")
-                        print "<font color=\"green\">" $5 "</font>";
+                    if ($7 == "pass")
+                        print "<font color=\"green\">" $7 "</font>";
                     else
-                        print "<font color=\"red\">" $5 "</font>";
+                        print "<font color=\"red\">" $7 "</font>";
                     print "</td></tr>"; }' >> "${target_html}_${distro}.html"
         detail_html_footer "${target_html}_${distro}.html"
 
@@ -666,15 +666,15 @@ function detail_html_generate() {
         cat ${source_data} | grep "${distro}" | grep pass |
             awk -F" " '{
                     print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
-                    print "<td style=\"padding:10px;\">" $1 "</td>";
-                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a></td>";
-                    print "<td style=\"padding:10px;\">" substr($3,3,length($3)) "</td>";
-                    print "<td style=\"padding:10px;\">" $4 "</td>";
+                    print "<td style=\"padding:10px;\">" $3 "</td>";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
+                    print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
+                    print "<td style=\"padding:10px;\">" $6 "</td>";
                     print "<td style=\"padding:10px;\">";
-                    if ($5 == "pass")
-                        print "<font color=\"green\">" $5 "</font>";
+                    if ($7 == "pass")
+                        print "<font color=\"green\">" $7 "</font>";
                     else
-                        print "<font color=\"red\">" $5 "</font>";
+                        print "<font color=\"red\">" $7 "</font>";
                     print "</td></tr>"; }' >> "${target_html}_${distro}_pass.html"
         detail_html_footer "${target_html}_${distro}_pass.html"
 
@@ -683,15 +683,15 @@ function detail_html_generate() {
         cat ${source_data} | grep "${distro}" | grep fail |
             awk -F" " '{
                     print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
-                    print "<td style=\"padding:10px;\">" $1 "</td>";
-                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a></td>";
-                    print "<td style=\"padding:10px;\">" substr($3,3,length($3)) "</td>";
-                    print "<td style=\"padding:10px;\">" $4 "</td>";
+                    print "<td style=\"padding:10px;\">" $3 "</td>";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
+                    print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
+                    print "<td style=\"padding:10px;\">" $6 "</td>";
                     print "<td style=\"padding:10px;\">";
-                    if ($5 == "pass")
-                        print "<font color=\"green\">" $5 "</font>";
+                    if ($7 == "pass")
+                        print "<font color=\"green\">" $7 "</font>";
                     else
-                        print "<font color=\"red\">" $5 "</font>";
+                        print "<font color=\"red\">" $7 "</font>";
                     print "</td></tr>"; }' >> "${target_html}_${distro}_fail.html"
         detail_html_footer "${target_html}_${distro}_fail.html"
     fi

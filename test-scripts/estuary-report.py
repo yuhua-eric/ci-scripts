@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
 # <variable> = required
 # Usage ./lava-report.py <option> [json]
 # pip install matplotlib
@@ -19,6 +18,8 @@ matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
 import numpy as np
+
+# sys.path.append(os.path.abspath(os.path.curdir)+ "/test-scripts")
 from lib import configuration
 from lib import utils
 from common import common
@@ -699,7 +700,7 @@ def boot_report(config):
                              result['result']))
 
 
-def generate_email_test_report(distro):
+def generate_email_test_report(distro, module_dict):
     print "--------------now begin get testjob: result ------------------------------"
 
     suite_list = []  #all test suite list
@@ -777,18 +778,41 @@ def generate_email_test_report(distro):
     if os.path.exists(details_file):
         os.remove(details_file)
 
+    # TODO : append the module info at the end of test detail.
     with open(details_file, "wt") as wfp:
         for job_id in sorted(job_result_dict.keys()):
             for item in sorted(job_result_dict[job_id], key=lambda x: x['suite']):
                 if item['suite'] != 'lava':
-                    wfp.write(job_id + "\t" + item['suite'] + '\t' +
-                              item['name'] + '\t\t' + item['result'] + '\n')
+                    module_info = get_module_name_from_module_dict(module_dict, item['suite'])
+                    wfp.write(distro + '\t' + module_info[0] + '\t' + module_info[1] + '\t' +
+                              job_id + "\t" + item['suite'] + '\t' +
+                              item['name'] + '\t' + item['result'] +
+                              '\n')
 
     print "--------------now end get testjob result --------------------------"
 
+def check_special_module_dict_key(key):
+    return key == "tester" or key == "developer" or key == "total" or key == "pass" or key == "fail"
 
-def generate_scope_test_report(test_dir):
-    template = generate_module_result(job_result_dict, test_dir)
+def get_module_name_from_module_dict(module_dict, suite):
+    module = "none"
+    sub_module = "none"
+
+    suite = suite[2:]
+    for module_key in module_dict.keys():
+        if check_special_module_dict_key(module_key):
+            continue
+        for sub_module_key in module_dict[module_key].keys():
+            if check_special_module_dict_key(sub_module_key):
+                continue
+            for suite_name in module_dict[module_key][sub_module_key].keys():
+                if suite == suite_name:
+                    module = module_key
+                    sub_module = sub_module_key
+    return (module, sub_module)
+
+def generate_scope_test_report(test_dir, module_dict):
+    template = print_scope_result(module_dict)
     test_dir = os.getcwd()
     scope_file = os.path.join(test_dir, SCOPE_SUMMARY_NAME)
     if os.path.exists(scope_file):
@@ -860,7 +884,7 @@ def get_all_dir_names(dir_list, test_case_definition_dir):
     return dir_name
 
 
-def generate_module_result(result_json_dict, test_dir):
+def generate_module_dict(result_json_dict, test_dir):
     test_case_definition_dir = os.path.realpath(test_dir + "/" + common.TEST_DIR_BASE_NAME)
     test_plan_definition_dir = os.path.realpath(test_dir + "/" + common.PLAN_DIR_BASE_NAME)
     owner_file = test_dir + "/owner/owner.md"
@@ -904,13 +928,13 @@ def generate_module_result(result_json_dict, test_dir):
                     name_dict[key]["pass"] = 0
                     name_dict[key]["fail"] = 0
                     for sub_key in name_dict[key].keys():
-                        if sub_key == "tester" or sub_key == "developer" or sub_key == "total" or sub_key == "pass" or sub_key == "fail":
+                        if check_special_module_dict_key(sub_key):
                             continue
                         name_dict[key][sub_key]["total"] = 0
                         name_dict[key][sub_key]["pass"] = 0
                         name_dict[key][sub_key]["fail"] = 0
                         for suite_key in name_dict[key][sub_key].keys():
-                            if suite_key == "tester" or suite_key == "developer" or suite_key == "total" or suite_key == "pass" or suite_key == "fail":
+                            if check_special_module_dict_key(suite_key):
                                 continue
                             for case_key in name_dict[key][sub_key][suite_key].keys():
                                 name_dict[key][sub_key]["total"] += 1
@@ -923,7 +947,9 @@ def generate_module_result(result_json_dict, test_dir):
                                     name_dict[key]["fail"] += 1
                                 else:
                                     print "WARNING: the result not pass or fail" + name_dict[key][sub_key][suite_key][case_key]
+    return name_dict
 
+def print_scope_result(name_dict):
     result = ""
     for name_key in name_dict.keys():
         if name_key == "tester" or name_key == "developer" or name_key == "total" or name_key == "pass" or name_key == "fail":
@@ -956,7 +982,9 @@ def generate_module_result(result_json_dict, test_dir):
 
 def main2():
     # ./module-table-analysis.py -f /home/qinshulei/projects/huawei/githubs/test_result_dict.json -t /home/qinshulei/projects/huawei/githubs/test-definitions
-    # generate_module_result(result_json_dict, test_dir)
+    # test_dir = '/home/qinshulei/projects/huawei/githubs/test-definitions'
+    # result_file = '/home/qinshulei/projects/huawei/githubs/test_result_dict.json'
+    # generate_module_dict(result_json_dict, test_dir)
     # get args
     parser = argparse.ArgumentParser(prog='PROG')
     parser.add_argument('-f', '--file', required=True,
@@ -970,7 +998,9 @@ def main2():
     # test_result_dict.json
     result_file = config.get("file")
     result_json_dict = utils.load_json(result_file)
-    print generate_module_result(result_json_dict, test_dir)
+    # job_result_dict = result_json_dict
+    module_dict = generate_module_dict(result_json_dict, test_dir)
+    print print_scope_result(module_dict)
 
 def main(args):
     config = configuration.get_config(args)
@@ -981,9 +1011,10 @@ def main(args):
 
     if config.get("boot"):
         boot_report(config)
+        module_dict = generate_module_dict(job_result_dict, TEST_CASE_DEFINITION_DIR)
+        generate_scope_test_report(TEST_CASE_DEFINITION_DIR, module_dict)
         generate_current_test_report()
-        generate_email_test_report(distro)
-        generate_scope_test_report(TEST_CASE_DEFINITION_DIR)
+        generate_email_test_report(distro, module_dict)
         generate_history_test_report()
 
     exit(0)
