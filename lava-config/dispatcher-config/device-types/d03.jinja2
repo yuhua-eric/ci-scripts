@@ -1,0 +1,35 @@
+{% extends 'base.jinja2' %}
+{% block body %}
+
+device_type: d03
+{% set console_device = console_device | default('ttyS0') %}
+{% set baud_rate = baud_rate | default(115200) %}
+{% set OUR_SERVER_IP = "192.168.50.122" %}
+
+actions:
+  deploy:
+    methods:
+      tftp:
+      ssh:
+        options:
+{{ ssh_options }}
+        host: '{{ ssh_host|default('') }}'
+        user: {{ ssh_user|default('root') }}
+        port: {{ ssh_port|default(22) }}
+        identity_file: {{ ssh_identity_file }}
+  boot:
+    connections:
+      serial:
+      ssh:
+    methods:
+      grub:
+        parameters:
+          interrupt_prompt: "GNU GRUB"
+          interrupt_char: 'c'
+          bootloader_prompt: {{ grub_efi_bootloader_prompt|default('grub>') }}
+        nfs:
+          commands:
+            - "linux (tftp,{{OUR_SERVER_IP}})/{KERNEL} pcie_aspm=off pci=pcie_bus_perf rootwait root=/dev/nfs rw nfsrootdebug nfsroot={{OUR_SERVER_IP}}:{NFSROOTFS},nfsvers=3 ip=dhcp "
+            - boot
+
+{% endblock body %}
