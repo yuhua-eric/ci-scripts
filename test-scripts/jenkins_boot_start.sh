@@ -244,6 +244,7 @@ function clean_workspace() {
     rm -rf ${WORKSPACE}/*.txt || true
     rm -rf ${WORKSPACE}/*.log || true
     rm -rf ${WORKSPACE}/*.html || true
+    rm -rf ${WORKSPACE}/html/*.html || true
 
     ### reset CI scripts ####
     cd ${CI_SCRIPTS_DIR}/; git clean -fdx; cd -
@@ -552,40 +553,48 @@ function generate_success_mail(){
     rm -f ./html/5-job-link-table.json.tmp
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-    touch ${WORKSPACE}/build.html
+
 
     ## 详细测试结果
     # TODO : the style need set in TD
     echo  ""
     echo "<b>6. <a href=\"${BUILD_URL}TestReport\">详细测试结果:</a></b> ${BUILD_URL}TestReport <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    genreate_detail_html "${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}" "${WORKSPACE}/test.html"
+
+    # generate html
+    detail_html_generate "${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}" "${WORKSPACE}/html/test"
+
+    # generate distro html
+    for DISTRO in $SHELL_DISTRO; do
+        detail_html_generate "${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}" "${WORKSPACE}/html/test_${DISTRO}" "${DISTRO}"
+    done
 
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
+
     ##  编译结果
+    touch ${WORKSPACE}/html/build.html
+
     echo "<b>7. <a href=\"${BUILD_URL}BuildReport\">编译结果: </a></b> ${BUILD_URL}BuildReport <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     # TODO : add build result into the build.html
     cd -
 
-    cp ${WORKSPACE}/MAIL_CONTENT.txt ${WORKSPACE}/daily.html
+    cp ${WORKSPACE}/MAIL_CONTENT.txt ${WORKSPACE}/html/daily.html
     echo "######################################## generate mail success ########################################"
 }
 
-# genreate_detail_html ${source_data} ${target_html}
-function genreate_detail_html() {
+# detail_html_generate ${type} ${source_data} ${target_html}
+# type : total pass fail block
+# will automaticlly add html
+function detail_html_generate() {
     local source_data=$1
     local target_html=$2
+    local distro=$3
 
-    touch ${target_html}
-    echo '<table width="90%" cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' > ${target_html}
-    echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:10px">
-              <th style="padding:10px;">发行版</th>
-              <th style="padding:10px;">日志</th>
-              <th style="padding:10px;">测试集</th>
-              <th style="padding:10px;">测试用例</th>
-              <th style="padding:10px;">测试结果</th></tr>' >> ${target_html}
-    cat  ${source_data} |
-        awk -F" " '{
+    if [ -z "${distro}" ];then
+        # total
+        detail_html_header "${target_html}.html"
+        cat ${source_data} |
+            awk -F" " '{
                     print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
                     print "<td style=\"padding:10px;\">" $1 "</td>";
                     print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a></td>";
@@ -596,7 +605,110 @@ function genreate_detail_html() {
                         print "<font color=\"green\">" $5 "</font>";
                     else
                         print "<font color=\"red\">" $5 "</font>";
-                    print "</td></tr>"; }' >> ${target_html}
+                    print "</td></tr>"; }' >> "${target_html}.html"
+        detail_html_footer "${target_html}.html"
+
+        # pass
+        detail_html_header "${target_html}_pass.html"
+        cat ${source_data} | grep pass |
+            awk -F" " '{
+                    print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
+                    print "<td style=\"padding:10px;\">" $1 "</td>";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a></td>";
+                    print "<td style=\"padding:10px;\">" substr($3,3,length($3)) "</td>";
+                    print "<td style=\"padding:10px;\">" $4 "</td>";
+                    print "<td style=\"padding:10px;\">";
+                    if ($5 == "pass")
+                        print "<font color=\"green\">" $5 "</font>";
+                    else
+                        print "<font color=\"red\">" $5 "</font>";
+                    print "</td></tr>"; }' >> "${target_html}_pass.html"
+        detail_html_footer "${target_html}_pass.html"
+
+        # fail
+        detail_html_header "${target_html}_fail.html"
+        cat ${source_data} | grep fail |
+            awk -F" " '{
+                    print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
+                    print "<td style=\"padding:10px;\">" $1 "</td>";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a></td>";
+                    print "<td style=\"padding:10px;\">" substr($3,3,length($3)) "</td>";
+                    print "<td style=\"padding:10px;\">" $4 "</td>";
+                    print "<td style=\"padding:10px;\">";
+                    if ($5 == "pass")
+                        print "<font color=\"green\">" $5 "</font>";
+                    else
+                        print "<font color=\"red\">" $5 "</font>";
+                    print "</td></tr>"; }' >> "${target_html}_fail.html"
+        detail_html_footer "${target_html}_fail.html"
+    else
+        # total
+        detail_html_header "${target_html}_${distro}.html"
+        cat ${source_data} | grep "${distro}" |
+            awk -F" " '{
+                    print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
+                    print "<td style=\"padding:10px;\">" $1 "</td>";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a></td>";
+                    print "<td style=\"padding:10px;\">" substr($3,3,length($3)) "</td>";
+                    print "<td style=\"padding:10px;\">" $4 "</td>";
+                    print "<td style=\"padding:10px;\">";
+                    if ($5 == "pass")
+                        print "<font color=\"green\">" $5 "</font>";
+                    else
+                        print "<font color=\"red\">" $5 "</font>";
+                    print "</td></tr>"; }' >> "${target_html}_${distro}.html"
+        detail_html_footer "${target_html}_${distro}.html"
+
+        # pass
+        detail_html_header "${target_html}_${distro}_pass.html"
+        cat ${source_data} | grep "${distro}" | grep pass |
+            awk -F" " '{
+                    print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
+                    print "<td style=\"padding:10px;\">" $1 "</td>";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a></td>";
+                    print "<td style=\"padding:10px;\">" substr($3,3,length($3)) "</td>";
+                    print "<td style=\"padding:10px;\">" $4 "</td>";
+                    print "<td style=\"padding:10px;\">";
+                    if ($5 == "pass")
+                        print "<font color=\"green\">" $5 "</font>";
+                    else
+                        print "<font color=\"red\">" $5 "</font>";
+                    print "</td></tr>"; }' >> "${target_html}_${distro}_pass.html"
+        detail_html_footer "${target_html}_${distro}_pass.html"
+
+        # fail
+        detail_html_header "${target_html}_${distro}_fail.html"
+        cat ${source_data} | grep "${distro}" | grep fail |
+            awk -F" " '{
+                    print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
+                    print "<td style=\"padding:10px;\">" $1 "</td>";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $2 "\">" $2 "</a></td>";
+                    print "<td style=\"padding:10px;\">" substr($3,3,length($3)) "</td>";
+                    print "<td style=\"padding:10px;\">" $4 "</td>";
+                    print "<td style=\"padding:10px;\">";
+                    if ($5 == "pass")
+                        print "<font color=\"green\">" $5 "</font>";
+                    else
+                        print "<font color=\"red\">" $5 "</font>";
+                    print "</td></tr>"; }' >> "${target_html}_${distro}_fail.html"
+        detail_html_footer "${target_html}_${distro}_fail.html"
+    fi
+}
+
+function detail_html_header() {
+    local target_html=$1
+    touch ${target_html}
+    echo '<table width="90%" cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' > ${target_html}
+    echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:10px">
+              <th style="padding:10px;">发行版</th>
+              <th style="padding:10px;">日志</th>
+              <th style="padding:10px;">测试集</th>
+              <th style="padding:10px;">测试用例</th>
+              <th style="padding:10px;">测试结果</th></tr>' >> ${target_html}
+}
+
+function detail_html_footer() {
+    local target_html=$1
     echo "</table>" >> ${target_html}
 }
 

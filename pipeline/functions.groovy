@@ -10,10 +10,22 @@ def send_mail() {
     //, attachmentsPattern: '**/*resultfile.pdf'
 }
 
+@NonCPS
+def getAllFiles(rootPath) {
+    def list = []
+    for (subPath in rootPath.list()) {
+        list << subPath.getName()
+        // in case you don't want extension
+        // list << FilenameUtils.removeExtension(subPath.getName())
+    }
+    return list
+}
+
 def publish_html() {
-    publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '', reportFiles: 'daily.html', reportName: 'DailyReport', reportTitles: 'Estuary CI Auto-test Daily Report '])
-    publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '', reportFiles: 'build.html', reportName: 'BuildReport', reportTitles: '编译结果'])
-    publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '', reportFiles: 'test.html', reportName: 'TestReport', reportTitles: '详细测试结果'])
+    html_files = getAllFiles("./html")
+    for (int i = 0; i < html_files.size(); i++) {
+        publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '', reportFiles: html_files[i], reportName: '', reportTitles: html_files[i]])
+    }
 }
 
 def archive_result() {
