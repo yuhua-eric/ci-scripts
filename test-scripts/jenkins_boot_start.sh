@@ -243,6 +243,7 @@ function clean_workspace() {
     rm -rf test_result.tar.gz || true
     rm -rf ${WORKSPACE}/*.txt || true
     rm -rf ${WORKSPACE}/*.log || true
+    rm -rf ${WORKSPACE}/*.html || true
 
     ### reset CI scripts ####
     cd ${CI_SCRIPTS_DIR}/; git clean -fdx; cd -
@@ -552,21 +553,38 @@ function generate_success_mail(){
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     touch ${WORKSPACE}/build.html
-    touch ${WORKSPACE}/test.html
 
     ## 详细测试结果
     # TODO : the style need set in TD
     echo  ""
     echo "<b>6. <a href=\"${BUILD_URL}TestReport\">详细测试结果:</a></b> ${BUILD_URL}TestReport <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    genreate_detail_html "${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}" "${WORKSPACE}/test.html"
 
-    echo '<table width="90%" cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' > ${WORKSPACE}/test.html
+    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+
+    ##  编译结果
+    echo "<b>7. <a href=\"${BUILD_URL}BuildReport\">编译结果: </a></b> ${BUILD_URL}BuildReport <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+    # TODO : add build result into the build.html
+    cd -
+
+    cp ${WORKSPACE}/MAIL_CONTENT.txt ${WORKSPACE}/daily.html
+    echo "######################################## generate mail success ########################################"
+}
+
+# genreate_detail_html ${source_data} ${target_html}
+function genreate_detail_html() {
+    local source_data=$1
+    local target_html=$2
+
+    touch ${target_html}
+    echo '<table width="90%" cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' > ${target_html}
     echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:10px">
               <th style="padding:10px;">发行版</th>
               <th style="padding:10px;">日志</th>
               <th style="padding:10px;">测试集</th>
               <th style="padding:10px;">测试用例</th>
-              <th style="padding:10px;">测试结果</th></tr>' >> ${WORKSPACE}/test.html
-    cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} |
+              <th style="padding:10px;">测试结果</th></tr>' >> ${target_html}
+    cat  ${source_data} |
         awk -F" " '{
                     print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
                     print "<td style=\"padding:10px;\">" $1 "</td>";
@@ -578,18 +596,8 @@ function generate_success_mail(){
                         print "<font color=\"green\">" $5 "</font>";
                     else
                         print "<font color=\"red\">" $5 "</font>";
-                    print "</td></tr>"; }' >> ${WORKSPACE}/test.html
-    echo "</table>" >> ${WORKSPACE}/test.html
-
-    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-
-    ##  编译结果
-    echo "<b>7. <a href=\"${BUILD_URL}BuildReport\">编译结果: </a></b> ${BUILD_URL}BuildReport <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    # TODO : add build result into the build.html
-    cd -
-
-    cp ${WORKSPACE}/MAIL_CONTENT.txt ${WORKSPACE}/daily.html
-    echo "######################################## generate mail success ########################################"
+                    print "</td></tr>"; }' >> ${target_html}
+    echo "</table>" >> ${target_html}
 }
 
 function main() {
