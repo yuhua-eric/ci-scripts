@@ -10,6 +10,11 @@ def send_mail() {
     //, attachmentsPattern: '**/*resultfile.pdf'
 }
 
+def archive_result() {
+    archiveArtifacts artifacts: '*result.txt', allowEmptyArchive: true
+}
+
+
 @NonCPS
 def getAllFiles(rootPath) {
     def list = []
@@ -18,18 +23,25 @@ def getAllFiles(rootPath) {
         // in case you don't want extension
         // list << FilenameUtils.removeExtension(subPath.getName())
     }
-    return list
+    return list.sort()
 }
 
-def publish_html() {
-    html_files = getAllFiles("./html")
-    for (int i = 0; i < html_files.size(); i++) {
-        publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '', reportFiles: html_files[i], reportName: '', reportTitles: html_files[i]])
+// Helps if slave servers are in picture
+def createFilePath(def path) {
+    if (env['NODE_NAME'].equals("master")) {
+        File localPath = new File(path)
+        return new hudson.FilePath(localPath);
+    } else {
+        return new hudson.FilePath(Jenkins.getInstance().getComputer(env['NODE_NAME']).getChannel(), path);
     }
 }
 
-def archive_result() {
-    archiveArtifacts artifacts: '*result.txt', allowEmptyArchive: true
+def publish_html() {
+    html_files = getAllFiles(createFilePath("${workspace}/html"))
+    for (int i = 0; i < html_files.size(); i++) {
+        def name = html_files[i].split("\\.")[0]
+        publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'html', reportFiles: html_files[i], reportName:  name, reportTitles:name])
+    }
 }
 
 return this
