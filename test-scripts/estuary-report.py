@@ -917,6 +917,18 @@ def generate_module_dict(result_json_dict, test_dir):
                                         name_dict[key][sub_key][suite_key][item["name"] + str(index)] = item["result"]
                                     else:
                                         name_dict[key][sub_key][suite_key][item["name"]] = item["result"]
+    # prepare init value
+    for key in name_dict.keys():
+        name_dict[key]["total"] = 0
+        name_dict[key]["pass"] = 0
+        name_dict[key]["fail"] = 0
+        for sub_key in name_dict[key].keys():
+            if check_special_module_dict_key(sub_key):
+                continue
+            name_dict[key][sub_key]["total"] = 0
+            name_dict[key][sub_key]["pass"] = 0
+            name_dict[key][sub_key]["fail"] = 0
+
     for job_key in result_json_dict:
         result = result_json_dict[job_key]
         # print owner
@@ -924,15 +936,9 @@ def generate_module_dict(result_json_dict, test_dir):
             if item.has_key('suite') and item['suite'] != 'lava':
                 suit_name = item['suite'][2:]
                 for key in name_dict.keys():
-                    name_dict[key]["total"] = 0
-                    name_dict[key]["pass"] = 0
-                    name_dict[key]["fail"] = 0
                     for sub_key in name_dict[key].keys():
                         if check_special_module_dict_key(sub_key):
                             continue
-                        name_dict[key][sub_key]["total"] = 0
-                        name_dict[key][sub_key]["pass"] = 0
-                        name_dict[key][sub_key]["fail"] = 0
                         for suite_key in name_dict[key][sub_key].keys():
                             if check_special_module_dict_key(suite_key):
                                 continue
