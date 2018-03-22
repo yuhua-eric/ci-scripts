@@ -565,7 +565,7 @@ function generate_success_mail(){
 
     # generate distro html
     for DISTRO in $SHELL_DISTRO; do
-        detail_html_generate "${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}" "${WORKSPACE}/html/test_${DISTRO}" "${DISTRO}"
+        detail_html_generate "${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}" "${WORKSPACE}/html/test" "${DISTRO}"
     done
 
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
