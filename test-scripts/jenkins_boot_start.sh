@@ -592,13 +592,9 @@ function detail_html_generate() {
 
     mkdir -p ${WORKSPACE}/html/
 
-    if [ -z "${distro}" ];then
-        # total
-        detail_html_header "${target_html}.html"
-        cat ${source_data} |
-            awk -F" " '{
+    AWK_SCRIPT='{
                     print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
-                    print "<td style=\"padding:10px;\">" $3 "</td>";
+                    print "<td style=\"padding:10px;\">" $1 "</td>";
                     print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
                     print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
                     print "<td style=\"padding:10px;\">" $6 "</td>";
@@ -607,93 +603,66 @@ function detail_html_generate() {
                         print "<font color=\"green\">" $7 "</font>";
                     else
                         print "<font color=\"red\">" $7 "</font>";
-                    print "</td></tr>"; }' >> "${target_html}.html"
+                    print "</td></tr>"; }'
+
+    if [ -z "${distro}" ];then
+        # total
+        detail_html_header "${target_html}.html"
+        cat ${source_data} |
+            awk -F" " "${AWK_SCRIPT}" >> "${target_html}.html"
         detail_html_footer "${target_html}.html"
 
         # pass
         detail_html_header "${target_html}_pass.html"
         cat ${source_data} | grep pass |
-            awk -F" " '{
-                    print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
-                    print "<td style=\"padding:10px;\">" $3 "</td>";
-                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
-                    print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
-                    print "<td style=\"padding:10px;\">" $6 "</td>";
-                    print "<td style=\"padding:10px;\">";
-                    if ($7 == "pass")
-                        print "<font color=\"green\">" $7 "</font>";
-                    else
-                        print "<font color=\"red\">" $7 "</font>";
-                    print "</td></tr>"; }' >> "${target_html}_pass.html"
+            awk -F" " "${AWK_SCRIPT}" >> "${target_html}_pass.html"
         detail_html_footer "${target_html}_pass.html"
 
         # fail
         detail_html_header "${target_html}_fail.html"
         cat ${source_data} | grep fail |
-            awk -F" " '{
-                    print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
-                    print "<td style=\"padding:10px;\">" $3 "</td>";
-                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
-                    print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
-                    print "<td style=\"padding:10px;\">" $6 "</td>";
-                    print "<td style=\"padding:10px;\">";
-                    if ($7 == "pass")
-                        print "<font color=\"green\">" $7 "</font>";
-                    else
-                        print "<font color=\"red\">" $7 "</font>";
-                    print "</td></tr>"; }' >> "${target_html}_fail.html"
+            awk -F" " "${AWK_SCRIPT}" >> "${target_html}_fail.html"
         detail_html_footer "${target_html}_fail.html"
     else
+        distro_source_data=$(cat ${source_data} | grep "^${distro}")
         # total
         detail_html_header "${target_html}_${distro}.html"
-        cat ${source_data} | grep "${distro}" |
-            awk -F" " '{
-                    print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
-                    print "<td style=\"padding:10px;\">" $3 "</td>";
-                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
-                    print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
-                    print "<td style=\"padding:10px;\">" $6 "</td>";
-                    print "<td style=\"padding:10px;\">";
-                    if ($7 == "pass")
-                        print "<font color=\"green\">" $7 "</font>";
-                    else
-                        print "<font color=\"red\">" $7 "</font>";
-                    print "</td></tr>"; }' >> "${target_html}_${distro}.html"
+        echo "${distro_source_data}" |
+            awk -F" " "${AWK_SCRIPT}" >> "${target_html}_${distro}.html"
         detail_html_footer "${target_html}_${distro}.html"
 
         # pass
         detail_html_header "${target_html}_${distro}_pass.html"
-        cat ${source_data} | grep "${distro}" | grep pass |
-            awk -F" " '{
-                    print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
-                    print "<td style=\"padding:10px;\">" $3 "</td>";
-                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
-                    print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
-                    print "<td style=\"padding:10px;\">" $6 "</td>";
-                    print "<td style=\"padding:10px;\">";
-                    if ($7 == "pass")
-                        print "<font color=\"green\">" $7 "</font>";
-                    else
-                        print "<font color=\"red\">" $7 "</font>";
-                    print "</td></tr>"; }' >> "${target_html}_${distro}_pass.html"
+        echo "${distro_source_data}" | grep pass |
+            awk -F" " "${AWK_SCRIPT}" >> "${target_html}_${distro}_pass.html"
         detail_html_footer "${target_html}_${distro}_pass.html"
 
         # fail
         detail_html_header "${target_html}_${distro}_fail.html"
-        cat ${source_data} | grep "${distro}" | grep fail |
-            awk -F" " '{
-                    print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
-                    print "<td style=\"padding:10px;\">" $3 "</td>";
-                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
-                    print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
-                    print "<td style=\"padding:10px;\">" $6 "</td>";
-                    print "<td style=\"padding:10px;\">";
-                    if ($7 == "pass")
-                        print "<font color=\"green\">" $7 "</font>";
-                    else
-                        print "<font color=\"red\">" $7 "</font>";
-                    print "</td></tr>"; }' >> "${target_html}_${distro}_fail.html"
+        echo "${distro_source_data}" | grep fail |
+            awk -F" " "${AWK_SCRIPT}" >> "${target_html}_${distro}_fail.html"
         detail_html_footer "${target_html}_${distro}_fail.html"
+
+        all_modules=$(echo "${distro_source_data}" | awk -F" " '{print $3}' | uniq )
+        for module in ${all_modules};do
+            # total
+            detail_html_header "${target_html}_${distro}_${module}.html"
+            echo "${distro_source_data}" | grep -P '^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t' |
+                awk -F" " "${AWK_SCRIPT}" >> "${target_html}_${distro}_${module}.html"
+            detail_html_footer "${target_html}_${distro}_${module}.html"
+
+            # pass
+            detail_html_header "${target_html}_${distro}_${module}_pass.html"
+            echo "${distro_source_data}" | grep -P '^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t' | grep "pass$"
+                awk -F" " "${AWK_SCRIPT}" >> "${target_html}_${distro}_${module}_pass.html"
+            detail_html_footer "${target_html}_${distro}_${module}_pass.html"
+
+            # fail
+            detail_html_header "${target_html}_${distro}_${module}_fail.html"
+            echo "${distro_source_data}" | grep -P '^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t' |
+                awk -F" " "${AWK_SCRIPT}" >> "${target_html}_${distro}_${module}_fail.html"
+            detail_html_footer "${target_html}_${distro}_${module}_fail.html"
+        done
     fi
 }
 
