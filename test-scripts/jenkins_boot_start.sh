@@ -647,19 +647,19 @@ function detail_html_generate() {
         for module in ${all_modules};do
             # total
             detail_html_header "${target_html}_${distro}_${module}.html"
-            echo "${distro_source_data}" | grep -P '^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t' |
+            echo "${distro_source_data}" | grep -P "^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t" |
                 awk -F" " "${AWK_SCRIPT}" >> "${target_html}_${distro}_${module}.html"
             detail_html_footer "${target_html}_${distro}_${module}.html"
 
             # pass
             detail_html_header "${target_html}_${distro}_${module}_pass.html"
-            echo "${distro_source_data}" | grep -P '^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t' | grep "pass$" |
+            echo "${distro_source_data}" | grep -P "^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t" | grep "pass$" |
                 awk -F" " "${AWK_SCRIPT}" >> "${target_html}_${distro}_${module}_pass.html"
             detail_html_footer "${target_html}_${distro}_${module}_pass.html"
 
             # fail
             detail_html_header "${target_html}_${distro}_${module}_fail.html"
-            echo "${distro_source_data}" | grep -P '^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t' | grep "fail$" |
+            echo "${distro_source_data}" | grep -P "^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t" | grep "fail$" |
                 awk -F" " "${AWK_SCRIPT}" >> "${target_html}_${distro}_${module}_fail.html"
             detail_html_footer "${target_html}_${distro}_${module}_fail.html"
         done
