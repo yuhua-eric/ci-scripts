@@ -759,15 +759,15 @@ def generate_email_test_report(distro, module_dict):
         # always pass for compile result
         wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}, " %
                   ("pass", PASS_COLOR))
-        wfp.write("\"%s\", " % str(test_total))
+        wfp.write("{\"data\": \"%s\", \"link\": \"%s\"}, " % (str(test_total), jenkins_build_url + "ZTestReport_" + distro + ""))
         if test_total == 0:
             wfp.write("\"%.2f%%\", " % (0.0))
         else:
             wfp.write("\"%.2f%%\", " % (100.0 * test_success / test_total))
-        wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}, " %
-                  (str(test_success), PASS_COLOR))
-        wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}, " %
-                  (str(test_fail), FAIL_COLOR))
+        wfp.write("{\"data\": \"%s\", \"color\": \"%s\", \"link\": \"%s\"}, " %
+                  (str(test_success), PASS_COLOR,  jenkins_build_url + "ZTestReport_" + distro + ""))
+        wfp.write("{\"data\": \"%s\", \"color\": \"%s\", \"link\": \"%s\"}, " %
+                  (str(test_fail), FAIL_COLOR,  jenkins_build_url + "ZTestReport_" + distro + ""))
         wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}" %
                   (str(test_total - test_success - test_fail), BLOCK_COLOR))
         wfp.write("]")
@@ -811,8 +811,8 @@ def get_module_name_from_module_dict(module_dict, suite):
                     sub_module = sub_module_key
     return (module, sub_module)
 
-def generate_scope_test_report(test_dir, module_dict):
-    template = print_scope_result(module_dict)
+def generate_scope_test_report(test_dir, module_dict, jenkins_build_url, distro):
+    template = print_scope_result(module_dict, jenkins_build_url, distro)
     test_dir = os.getcwd()
     scope_file = os.path.join(test_dir, SCOPE_SUMMARY_NAME)
     if os.path.exists(scope_file):
@@ -955,7 +955,7 @@ def generate_module_dict(result_json_dict, test_dir):
                                     print "WARNING: the result not pass or fail" + name_dict[key][sub_key][suite_key][case_key]
     return name_dict
 
-def print_scope_result(name_dict):
+def print_scope_result(name_dict, jenkins_build_url, distro):
     result = ""
     for name_key in name_dict.keys():
         if name_key == "tester" or name_key == "developer" or name_key == "total" or name_key == "pass" or name_key == "fail":
@@ -969,14 +969,14 @@ def print_scope_result(name_dict):
             if name_dict[name_key][sub_key]["total"] == 0:
                 continue
 
-            result += "    [\"%s\",\"%s\",\"%s\",\"%s\",\"%.2f%%\",{\"data\": \"%s\", \"color\": \"%s\"},{\"data\": \"%s\", \"color\": \"%s\"},{\"data\": \"%s\", \"color\": \"%s\"}],\n" \
+            result += "    [\"%s\",\"%s\",\"%s\",{\"data\": \"%s\", \"link\": \"%s\"},\"%.2f%%\",{\"data\": \"%s\", \"color\": \"%s\", \"link\": \"%s\"},{\"data\": \"%s\", \"color\": \"%s\", \"link\": \"%s\"},{\"data\": \"%s\", \"color\": \"%s\"}],\n" \
                       % ( sub_key,
                           name_dict[name_key][sub_key]["developer"],
                           name_dict[name_key][sub_key]["tester"],
-                          str(name_dict[name_key][sub_key]["total"]),
+                          str(name_dict[name_key][sub_key]["total"]), jenkins_build_url + "ZZTestReport_" + distro + "_" + sub_key + ""
                           (100.0 * name_dict[name_key][sub_key]["pass"] / name_dict[name_key][sub_key]["total"]) if name_dict[name_key][sub_key]["total"] > 0 else 0.0,
-                          str(name_dict[name_key][sub_key]["pass"]), PASS_COLOR,
-                          str(name_dict[name_key][sub_key]["fail"]), FAIL_COLOR,
+                          str(name_dict[name_key][sub_key]["pass"]), PASS_COLOR, jenkins_build_url + "ZZTestReport_" + distro + "_" + sub_key + "_pass"
+                          str(name_dict[name_key][sub_key]["fail"]), FAIL_COLOR, jenkins_build_url + "ZZTestReport_" + distro + "_" + sub_key + "_fail"
                           str(name_dict[name_key][sub_key]["total"] - name_dict[name_key][sub_key]["fail"] -
                               name_dict[name_key][sub_key]["pass"]), BLOCK_COLOR)
         result = result.rstrip(",\n")
@@ -1010,7 +1010,7 @@ def main2():
 
 def main(args):
     config = configuration.get_config(args)
-
+    jenkins_build_url = os.getenv('BUILD_URL', '')
     global TEST_CASE_DEFINITION_DIR
     TEST_CASE_DEFINITION_DIR = config.get("testDir")
     distro = config.get("distro")
@@ -1018,9 +1018,9 @@ def main(args):
     if config.get("boot"):
         boot_report(config)
         module_dict = generate_module_dict(job_result_dict, TEST_CASE_DEFINITION_DIR)
-        generate_scope_test_report(TEST_CASE_DEFINITION_DIR, module_dict)
+        generate_scope_test_report(TEST_CASE_DEFINITION_DIR, module_dict, jenkins_build_url, distro)
         generate_current_test_report()
-        generate_email_test_report(distro, module_dict)
+        generate_email_test_report(distro, module_dict, jenkins_build_url)
         generate_history_test_report()
 
     exit(0)
