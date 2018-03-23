@@ -69,6 +69,7 @@ function init_input_params() {
 function parse_params() {
     pushd ${CI_SCRIPTS_DIR}
     : ${SHELL_PLATFORM:=`python configs/parameter_parser.py -f config.yaml -s Build -k Platform`}
+    : ${ALL_SHELL_PLATFORM:=`python configs/parameter_parser.py -f config.yaml -s Build -k Platform`}
     : ${SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
 
     : ${BOOT_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Jenkins -k Boot`}
@@ -287,7 +288,9 @@ function cp_image() {
     KERNEL_IMG_FILE=Image
 
     # copy platfom files
-    for PLATFORM in $SHELL_PLATFORM; do
+    # TODO : workaround to prepare all platform image
+    # for PLATFORM in $SHELL_PLATFORM; do
+    for PLATFORM in $ALL_SHELL_PLATFORM; do
         echo $PLATFORM
 
         PLATFORM_L="$(echo $PLATFORM | tr '[:upper:]' '[:lower:]')"

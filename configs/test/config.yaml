@@ -12,7 +12,6 @@ Build:
     Platform:
         - D03
         - D05
-        - D06
 
 DISTRO:
     D03:
@@ -27,7 +26,6 @@ DISTRO:
 Arch:
     d03: arm64
     d05: arm64
-    d06: arm64
 
 # for lava connection
 LAVA:
