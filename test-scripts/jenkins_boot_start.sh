@@ -553,8 +553,6 @@ function generate_success_mail(){
     rm -f ./html/5-job-link-table.json.tmp
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-
-
     ## 详细测试结果
     # TODO : the style need set in TD
     echo  ""
