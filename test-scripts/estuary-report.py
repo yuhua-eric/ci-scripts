@@ -700,7 +700,7 @@ def boot_report(config):
                              result['result']))
 
 
-def generate_email_test_report(distro, module_dict):
+def generate_email_test_report(distro, module_dict, jenkins_build_url):
     print "--------------now begin get testjob: result ------------------------------"
 
     suite_list = []  #all test suite list
