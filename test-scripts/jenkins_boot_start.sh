@@ -624,6 +624,8 @@ function detail_html_generate() {
             awk -F" " "${AWK_SCRIPT}" >> "${target_html}_fail.html"
         detail_html_footer "${target_html}_fail.html"
     else
+        set +x
+        echo "#################### strat generate distro and module html page ####################"
         distro_source_data=$(cat ${source_data} | grep "^${distro}")
         # total
         detail_html_header "${target_html}_${distro}.html"
@@ -663,6 +665,7 @@ function detail_html_generate() {
                 awk -F" " "${AWK_SCRIPT}" >> "${target_html}Z_${distro}_${module}_fail.html"
             detail_html_footer "${target_html}Z_${distro}_${module}_fail.html"
         done
+        set -x
     fi
 }
 
