@@ -759,15 +759,15 @@ def generate_email_test_report(distro, module_dict, jenkins_build_url):
         # always pass for compile result
         wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}, " %
                   ("pass", PASS_COLOR))
-        wfp.write("{\"data\": \"%s\", \"link\": \"%s\"}, " % (str(test_total), jenkins_build_url + "ZTestReport_" + distro + ""))
+        wfp.write("{\"data\": \"%s\", \"link\": \"%s\"}, " % (str(test_total), jenkins_build_url + "TestReport_" + distro + ""))
         if test_total == 0:
             wfp.write("\"%.2f%%\", " % (0.0))
         else:
             wfp.write("\"%.2f%%\", " % (100.0 * test_success / test_total))
         wfp.write("{\"data\": \"%s\", \"color\": \"%s\", \"link\": \"%s\"}, " %
-                  (str(test_success), PASS_COLOR,  jenkins_build_url + "ZTestReport_" + distro + "_pass"))
+                  (str(test_success), PASS_COLOR,  jenkins_build_url + "TestReport_" + distro + "_pass"))
         wfp.write("{\"data\": \"%s\", \"color\": \"%s\", \"link\": \"%s\"}, " %
-                  (str(test_fail), FAIL_COLOR,  jenkins_build_url + "ZTestReport_" + distro + "_fail"))
+                  (str(test_fail), FAIL_COLOR,  jenkins_build_url + "TestReport_" + distro + "_fail"))
         wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}" %
                   (str(test_total - test_success - test_fail), BLOCK_COLOR))
         wfp.write("]")
@@ -969,10 +969,10 @@ def print_scope_result(name_dict, jenkins_build_url, distro):
                       % ( sub_key,
                           name_dict[name_key][sub_key]["developer"],
                           name_dict[name_key][sub_key]["tester"],
-                          str(name_dict[name_key][sub_key]["total"]), jenkins_build_url + "ZTestReportZ_" + distro + "_" + sub_key + "",
+                          str(name_dict[name_key][sub_key]["total"]), jenkins_build_url + "TestReport_Z_" + distro + "_" + sub_key + "",
                           (100.0 * name_dict[name_key][sub_key]["pass"] / name_dict[name_key][sub_key]["total"]) if name_dict[name_key][sub_key]["total"] > 0 else 0.0,
-                          str(name_dict[name_key][sub_key]["pass"]), PASS_COLOR, jenkins_build_url + "ZTestReportZ_" + distro + "_" + sub_key + "_pass",
-                          str(name_dict[name_key][sub_key]["fail"]), FAIL_COLOR, jenkins_build_url + "ZTestReportZ_" + distro + "_" + sub_key + "_fail",
+                          str(name_dict[name_key][sub_key]["pass"]), PASS_COLOR, jenkins_build_url + "TestReport_Z_" + distro + "_" + sub_key + "_pass",
+                          str(name_dict[name_key][sub_key]["fail"]), FAIL_COLOR, jenkins_build_url + "TestReport_Z_" + distro + "_" + sub_key + "_fail",
                           str(name_dict[name_key][sub_key]["total"] - name_dict[name_key][sub_key]["fail"] -
                               name_dict[name_key][sub_key]["pass"]), BLOCK_COLOR)
         result = result.rstrip(",\n")

@@ -533,7 +533,7 @@ function generate_success_mail(){
 
     echo "<b>4. ${MONTH}月版本健康度统计</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     HEALTH_RATE_VERSION="Estuary V5.0"
-    HEALTH_RATE_COMPILE="100%"
+    HEALTH_RATE_COMPILE="{\"data\": \"100%\", \"link\": \"${BUILD_URL}BuildReport\"}"
     HEALTH_RATE_TEST="0%"
     HEALTH_RATE_LINT="100%"
     HEALTH_RATE_TOTAL="0%"
@@ -553,17 +553,9 @@ function generate_success_mail(){
     rm -f ./html/5-job-link-table.json.tmp
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-    ## 详细测试结果
-    # TODO : the style need set in TD
-    echo  ""
-    echo "<b>6. <a href=\"${BUILD_URL}TestReport\">详细测试结果:</a></b> ${BUILD_URL}TestReport <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-
-    # generate html
-    detail_html_generate "${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}" "${WORKSPACE}/html/TestReport"
-
     # generate distro html
     for DISTRO in $SHELL_DISTRO; do
-        detail_html_generate "${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}" "${WORKSPACE}/html/ZTestReport" "${DISTRO}"
+        detail_html_generate "${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}" "${WORKSPACE}/html/TestReport" "${DISTRO}"
     done
 
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
@@ -571,8 +563,6 @@ function generate_success_mail(){
 
     ##  编译结果
     touch ${WORKSPACE}/html/BuildReport.html
-
-    echo "<b>7. <a href=\"${BUILD_URL}BuildReport\">编译结果: </a></b> ${BUILD_URL}BuildReport <br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     # TODO : add build result into the build.html
     cd -
 
@@ -646,22 +636,22 @@ function detail_html_generate() {
         all_modules=$(echo "${distro_source_data}" | awk -F" " '{print $3}' | uniq )
         for module in ${all_modules};do
             # total
-            detail_html_header "${target_html}Z_${distro}_${module}.html"
+            detail_html_header "${target_html}_Z_${distro}_${module}.html"
             echo "${distro_source_data}" | grep -P "^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t" |
-                awk -F" " "${AWK_SCRIPT}" >> "${target_html}Z_${distro}_${module}.html"
-            detail_html_footer "${target_html}Z_${distro}_${module}.html"
+                awk -F" " "${AWK_SCRIPT}" >> "${target_html}_Z_${distro}_${module}.html"
+            detail_html_footer "${target_html}_Z_${distro}_${module}.html"
 
             # pass
-            detail_html_header "${target_html}Z_${distro}_${module}_pass.html"
+            detail_html_header "${target_html}_Z_${distro}_${module}_pass.html"
             echo "${distro_source_data}" | grep -P "^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t" | grep "pass$" |
-                awk -F" " "${AWK_SCRIPT}" >> "${target_html}Z_${distro}_${module}_pass.html"
-            detail_html_footer "${target_html}Z_${distro}_${module}_pass.html"
+                awk -F" " "${AWK_SCRIPT}" >> "${target_html}_Z_${distro}_${module}_pass.html"
+            detail_html_footer "${target_html}_Z_${distro}_${module}_pass.html"
 
             # fail
-            detail_html_header "${target_html}Z_${distro}_${module}_fail.html"
+            detail_html_header "${target_html}_Z_${distro}_${module}_fail.html"
             echo "${distro_source_data}" | grep -P "^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t" | grep "fail$" |
-                awk -F" " "${AWK_SCRIPT}" >> "${target_html}Z_${distro}_${module}_fail.html"
-            detail_html_footer "${target_html}Z_${distro}_${module}_fail.html"
+                awk -F" " "${AWK_SCRIPT}" >> "${target_html}_Z_${distro}_${module}_fail.html"
+            detail_html_footer "${target_html}_Z_${distro}_${module}_fail.html"
         done
         set -x
     fi
