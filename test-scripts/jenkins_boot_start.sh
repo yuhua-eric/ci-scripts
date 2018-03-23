@@ -582,11 +582,12 @@ function detail_html_generate() {
 
     AWK_SCRIPT='{
                     print "<tr style=\"text-align: center;justify-content: center;font-size:12px;\">";
-                    print "<td style=\"padding:10px;\">" $1 "</td>";
+                    print "<td style=\"padding:10px;\">" NR "</td>";
                     print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
                     print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
                     print "<td style=\"padding:10px;\">" $6 "</td>";
                     print "<td style=\"padding:10px;\">";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" LINK "</a></td>";
                     if ($7 == "pass")
                         print "<font color=\"green\">" $7 "</font>";
                     else
@@ -662,11 +663,12 @@ function detail_html_header() {
     touch ${target_html}
     echo '<table width="90%" cellspacing="0px" cellpadding="10px" border="1"  style="border: solid 1px black; border-collapse:collapse; word-break:keep-all; text-align:center;">' > ${target_html}
     echo '<tr style="text-align:center; justify-content:center; background-color:#D2D4D5; text-align:center; font-size:15px; font-weight=bold;padding:10px">
-              <th style="padding:10px;">发行版</th>
-              <th style="padding:10px;">日志</th>
-              <th style="padding:10px;">测试集</th>
-              <th style="padding:10px;">测试用例</th>
-              <th style="padding:10px;">测试结果</th></tr>' >> ${target_html}
+              <th style="padding:10px;">NO</th>
+              <th style="padding:10px;">Job ID</th>
+              <th style="padding:10px;">Suite Name</th>
+              <th style="padding:10px;">Case Name</th>
+              <th style="padding:10px;">Log</th>
+              <th style="padding:10px;">Case Result</th></tr>' >> ${target_html}
 }
 
 function detail_html_footer() {
