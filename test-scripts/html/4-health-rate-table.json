@@ -8,7 +8,7 @@
   ],
   "Row" : [
     "${HEALTH_RATE_VERSION}",
-	  "${HEALTH_RATE_COMPILE}",
+	  ${HEALTH_RATE_COMPILE},
     "${HEALTH_RATE_TEST}",
     "${HEALTH_RATE_LINT}",
     "${HEALTH_RATE_TOTAL}"
