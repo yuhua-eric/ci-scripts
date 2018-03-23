@@ -765,9 +765,9 @@ def generate_email_test_report(distro, module_dict, jenkins_build_url):
         else:
             wfp.write("\"%.2f%%\", " % (100.0 * test_success / test_total))
         wfp.write("{\"data\": \"%s\", \"color\": \"%s\", \"link\": \"%s\"}, " %
-                  (str(test_success), PASS_COLOR,  jenkins_build_url + "ZTestReport_" + distro + ""))
+                  (str(test_success), PASS_COLOR,  jenkins_build_url + "ZTestReport_" + distro + "_pass"))
         wfp.write("{\"data\": \"%s\", \"color\": \"%s\", \"link\": \"%s\"}, " %
-                  (str(test_fail), FAIL_COLOR,  jenkins_build_url + "ZTestReport_" + distro + ""))
+                  (str(test_fail), FAIL_COLOR,  jenkins_build_url + "ZTestReport_" + distro + "_fail"))
         wfp.write("{\"data\": \"%s\", \"color\": \"%s\"}" %
                   (str(test_total - test_success - test_fail), BLOCK_COLOR))
         wfp.write("]")
