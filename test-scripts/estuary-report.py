@@ -943,14 +943,16 @@ def generate_module_dict(result_json_dict, test_dir):
                             if check_special_module_dict_key(suite_key):
                                 continue
                             for case_key in name_dict[key][sub_key][suite_key].keys():
-                                name_dict[key][sub_key]["total"] += 1
-                                name_dict[key]["total"] += 1
                                 if name_dict[key][sub_key][suite_key][case_key] == "pass":
                                     name_dict[key][sub_key]["pass"] += 1
                                     name_dict[key]["pass"] += 1
+                                    name_dict[key][sub_key]["total"] += 1
+                                    name_dict[key]["total"] += 1
                                 elif name_dict[key][sub_key][suite_key][case_key] == "fail":
                                     name_dict[key][sub_key]["fail"] += 1
                                     name_dict[key]["fail"] += 1
+                                    name_dict[key][sub_key]["total"] += 1
+                                    name_dict[key]["total"] += 1
                                 else:
                                     print "WARNING: the result not pass or fail" + name_dict[key][sub_key][suite_key][case_key]
     return name_dict
