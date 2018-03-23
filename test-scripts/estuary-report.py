@@ -973,10 +973,10 @@ def print_scope_result(name_dict, jenkins_build_url, distro):
                       % ( sub_key,
                           name_dict[name_key][sub_key]["developer"],
                           name_dict[name_key][sub_key]["tester"],
-                          str(name_dict[name_key][sub_key]["total"]), jenkins_build_url + "ZZTestReport_" + distro + "_" + sub_key + "",
+                          str(name_dict[name_key][sub_key]["total"]), jenkins_build_url + "ZTestReportZ_" + distro + "_" + sub_key + "",
                           (100.0 * name_dict[name_key][sub_key]["pass"] / name_dict[name_key][sub_key]["total"]) if name_dict[name_key][sub_key]["total"] > 0 else 0.0,
-                          str(name_dict[name_key][sub_key]["pass"]), PASS_COLOR, jenkins_build_url + "ZZTestReport_" + distro + "_" + sub_key + "_pass",
-                          str(name_dict[name_key][sub_key]["fail"]), FAIL_COLOR, jenkins_build_url + "ZZTestReport_" + distro + "_" + sub_key + "_fail",
+                          str(name_dict[name_key][sub_key]["pass"]), PASS_COLOR, jenkins_build_url + "ZTestReportZ_" + distro + "_" + sub_key + "_pass",
+                          str(name_dict[name_key][sub_key]["fail"]), FAIL_COLOR, jenkins_build_url + "ZTestReportZ_" + distro + "_" + sub_key + "_fail",
                           str(name_dict[name_key][sub_key]["total"] - name_dict[name_key][sub_key]["fail"] -
                               name_dict[name_key][sub_key]["pass"]), BLOCK_COLOR)
         result = result.rstrip(",\n")
