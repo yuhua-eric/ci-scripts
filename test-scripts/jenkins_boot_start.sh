@@ -586,7 +586,7 @@ function detail_html_generate() {
                     print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" $4 "</a></td>";
                     print "<td style=\"padding:10px;\">" substr($5,3,length($5)) "</td>";
                     print "<td style=\"padding:10px;\">" $6 "</td>";
-                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\">" LINK "</a></td>";
+                    print "<td style=\"padding:10px;\"><a href=\"" "'"${LAVA_DISPLAY_URL}/results/"'" $4 "\"> LINK </a></td>";
                     print "<td style=\"padding:10px;\">";
                     if ($7 == "pass")
                         print "<font color=\"green\">" $7 "</font>";
