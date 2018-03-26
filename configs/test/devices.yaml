@@ -77,6 +77,15 @@ d05ssh07:
   next-server: 192.168.50.122
   filename: "estuary_install/grubaa64.efi"
 
+# v500 d05编译机器
+d05ssh08:
+  type: D05
+  bmc: 192.168.2.169
+  ip: 192.168.50.201
+  mac: c0:a8:02:a9:00:04
+  next-server: 192.168.50.122
+  filename: "estuary_install/grubaa64.efi"
+
 # DUT
 d03ssh01:
   type: D03
@@ -106,6 +115,23 @@ d03ssh03:
   next-server: 192.168.50.122
   filename: "estuary_install/grubaa64.efi"
 
+# 主力 d03 测试机器
+d03ssh04:
+  type: D03
+  bmc: 192.168.2.210
+  ip: 192.168.50.202
+  mac: c0:a8:02:d2:00:04
+  next-server: 192.168.50.122
+  filename: "estuary_install/grubaa64.efi"
+
+d03ssh05:
+  type: D03
+  bmc: 192.168.2.246
+  ip: 192.168.50.222
+  mac: c0:a8:02:f6:00:04
+  next-server: 192.168.50.122
+  filename: "estuary_install/grubaa64.efi"
+
 # v500 compile server
 d05compile01:
   type: D05
@@ -117,6 +143,7 @@ d05compile01:
 
 # 20180209 New Device
 # v500 compile server
+# TODO : use this device backup all data.
 d05compile02:
   type: D05
   bmc: 192.168.2.193
