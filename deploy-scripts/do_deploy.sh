@@ -61,7 +61,7 @@ function do_deploy() {
     python deploy.py --host ${BMC_IP} --type ${BOOT_PLAN}
 
     # wait the sshd service restart
-    sleep 10
+    sleep 20
     copy_ssh_id
 
     if [ "${BOOT_PLAN}" = "BOOT_PXE" ];then
