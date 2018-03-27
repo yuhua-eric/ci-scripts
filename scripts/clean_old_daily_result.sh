@@ -11,3 +11,5 @@ function clean_last_n_day_dir() {
 }
 
 clean_last_n_day_dir "/fileserver/open-estuary" 7
+clean_last_n_day_dir "/tftp/pxe_install/arm64/estuary" 7
+clean_last_n_day_dir "/tftp/iso_install/arm64/estuary" 7
