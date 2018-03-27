@@ -38,22 +38,16 @@ function config_tftp_pxe() {
     if [ "${tree_name}" = 'linaro' ];then
         :
     elif [ "${tree_name}" = 'open-estuary' ];then
-        # TODO : for all version , do kernel replace. like if [ "${version_name}" != "v5.0-template" ];then
-        if [ "${version_name}" != "v5.0" ];then
-            if [[ "${version_name}" =~ "estuary_" ]];then
-                if [ ! -d "/tftp/pxe_install/arm64/estuary/${version_name}" ];then
-                    cp -r "/tftp/pxe_install/arm64/estuary/v5.0" "/tftp/pxe_install/arm64/estuary/${version_name}"
-                fi
-                cd "/tftp/pxe_install/arm64/estuary/${version_name}"
-                cd "${distro_name}"
-                cd "${DEVICE_TYPE,,}"
-
-                # replave netboot
-                rm -rf netboot netboot.tar.gz || true
-                init_os_dict
-                wget -c -q ${FTP_SERVER}/open-estuary/${version_name}/"${os_dict[$distro_name]}"/netboot.tar.gz
-                tar -xzvf netboot.tar.gz
-            fi
+        if [ ! -e "/tftp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/" ];then
+            mkdir -p "/tftp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/"
+            cd "/tftp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/"
+            # replave netboot
+            init_os_dict
+            # TODO : download config from fileserver and git repo
+            cp -rf "/tftp/pxe_install/arm64/estuary/v5.0/${distro_name}/${DEVICE_TYPE,,}/*" "/tftp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/"
+            rm -rf netboot netboot.tar.gz || true
+            wget -c -q ${FTP_SERVER}/open-estuary/${version_name}/"${os_dict[$distro_name]}"/netboot.tar.gz
+            tar -xzvf netboot.tar.gz
         fi
     fi
 }
