@@ -32,6 +32,7 @@ BOOT_PLAN=${5:-"BOOT_PXE"}
 function config_dhcp() {
     # TODO : think generate diffrent dhcp config by tree name
     cd ..;
+    # TODO : it may cause fail when update the devices info
     workaround_pop_devices_config
     if [ "${tree_name}" = 'linaro' ];then
         # config dhcp
