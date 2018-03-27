@@ -44,7 +44,7 @@ function config_tftp_pxe() {
             # replave netboot
             init_os_dict
             # TODO : download config from fileserver and git repo
-            cp -rf "/tftp/pxe_install/arm64/estuary/template/${distro_name}/${DEVICE_TYPE,,}/*" "/tftp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/"
+            cp -rf "/tftp/pxe_install/arm64/estuary/template/${distro_name}/${DEVICE_TYPE,,}/"* "/tftp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/"
             rm -rf netboot netboot.tar.gz || true
             wget -c -q ${FTP_SERVER}/open-estuary/${version_name}/"${os_dict[$distro_name]}"/netboot.tar.gz
             tar -xzvf netboot.tar.gz
