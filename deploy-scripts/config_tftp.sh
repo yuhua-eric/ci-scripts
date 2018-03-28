@@ -45,7 +45,7 @@ function config_tftp_pxe() {
             init_os_dict
             # TODO : download config from fileserver and git repo
             # template magic dir. save the grub.cfg fonts NBP files. for pxe install ,we need copy these files
-            cp -rf "/tftp/pxe_install/arm64/estuary/template/${distro_name}/${DEVICE_TYPE,,}/"* "/tftp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/"
+            cd "/tftp/pxe_install/arm64/estuary/template/${distro_name}/${DEVICE_TYPE,,}/" && cp -rf * "/tftp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/" && cd -
             rm -rf netboot netboot.tar.gz || true
             wget -c -q ${FTP_SERVER}/open-estuary/${version_name}/"${os_dict[$distro_name]}"/netboot.tar.gz
             tar -xzvf netboot.tar.gz
