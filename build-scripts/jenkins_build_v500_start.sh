@@ -71,6 +71,7 @@ function parse_params() {
     : ${SHELL_PLATFORM:=`python configs/parameter_parser.py -f config.yaml -s Build -k Platform`}
     : ${ALL_SHELL_PLATFORM:=`python configs/parameter_parser.py -f config.yaml -s Build -k Platform`}
     : ${SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
+    : ${ALL_SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Platform`}
 
     : ${BOOT_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Jenkins -k Boot`}
 
@@ -211,16 +212,14 @@ function do_build() {
         # Execute build
         pushd estuary
 
-        #for DISTRO in $SHELL_DISTRO;do
-        #    ./build.sh --build_dir=${BUILD_DIR} -d "${DISTRO,,}" | tee ${WORKSPACE}/${DISTRO}_build.log &
-        #done
-        #wait
+        # TODO : workaround for build all in single machine
+        ./build.sh --build_dir=${BUILD_DIR} -d common &
+        for DISTRO in $ALL_SHELL_DISTRO;do
+            ./build.sh --build_dir=${BUILD_DIR} -d "${DISTRO,,}" &
+        done
+        wait
 
-        ./build.sh --build_dir=${BUILD_DIR}
-        if [ $? -ne 0 ]; then
-            echo "estuary build failed!"
-            exit -1
-        fi
+        # ./build.sh --build_dir=${BUILD_DIR}
         popd
     fi
 
