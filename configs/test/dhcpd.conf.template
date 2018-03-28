@@ -12,10 +12,3 @@ subnet 192.168.50.0 netmask 255.255.255.0 {
   default-lease-time 600;
   max-lease-time 7200;
 }
-
-# host d03ssh01 {
-#   hardware ethernet c0:a8:02:df:00:04;
-#   fixed-address 192.168.50.120;
-#   next-server 192.168.50.122;
-#   filename "sailing_install/grubaa64.efi";
-# }
