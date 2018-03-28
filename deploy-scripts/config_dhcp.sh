@@ -30,11 +30,14 @@ BOOT_PLAN=${5:-"BOOT_PXE"}
 
 function generate_board_dhcp_config() {
     local device=$1
+    local filename=$2
     device_mac=$(python configs/parameter_parser.py -f devices.yaml -s ${device} -k mac)
     device_ip=$(python configs/parameter_parser.py -f devices.yaml -s ${device} -k ip)
     device_next_server=$(python configs/parameter_parser.py -f devices.yaml -s ${device} -k next-server)
+    if [ -z "${filename}" ];then
+        filename=$(python configs/parameter_parser.py -f devices.yaml -s ${device} -k filename)
+    fi
 
-    filename=$(python configs/parameter_parser.py -f devices.yaml -s ${device} -k filename)
     echo "host ${device} {"
     echo "  hardware ethernet ${device_mac};"
     echo "  fixed-address ${device_ip};"
@@ -49,12 +52,12 @@ function replace_board_dhcp_config() {
     local dhcp_file=$3
 
     keyword="host ${device} {"
-    new_board_dhcp_info=$(generate_board_dhcp_config "${device}")
-    if cat dhcpd.conf | grep -q "$keyword";then
+    new_board_dhcp_info=$(generate_board_dhcp_config "${device}" "${nbp_file}")
+    if cat ${dhcp_file} | grep -q "$keyword";then
         # remove old change
-        sed -i '/'"${keyword}"'/,/}/d' dhcpd.conf
+        sed -i '/'"${keyword}"'/,/}/d' ${dhcp_file}
     fi
-    echo "${new_board_dhcp_info}" >> dhcpd.conf
+    echo "${new_board_dhcp_info}" >> ${dhcp_file}
 }
 
 function config_dhcp() {
