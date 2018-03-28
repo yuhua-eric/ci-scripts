@@ -519,8 +519,8 @@ function generate_success_mail(){
     for DISTRO in $SHELL_DISTRO; do
         # if don't exist this scope result file skip it.
         if [ ! -e ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${SCOPE_SUMMARY_NAME} ];then
-           echo "Waining: ${SCOPE_SUMMARY_NAME} don't exist"
-           continue
+            echo "Waining: ${SCOPE_SUMMARY_NAME} don't exist"
+            continue
         fi
         echo "${DISTRO} 版本测试数据统计:" >> ${WORKSPACE}/MAIL_CONTENT.txt
         DISTRO_RESULT_DATA=$(cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${SCOPE_SUMMARY_NAME})
@@ -529,45 +529,45 @@ function generate_success_mail(){
         python ./html/html-table.py -f ./html/3-distro-result-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
         rm -f ./html/3-distro-result-table.json.tmp
         echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    done
+done
 
-    echo "<b>4. ${MONTH}月版本健康度统计</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    HEALTH_RATE_VERSION="Estuary V5.0"
-    HEALTH_RATE_COMPILE="{\"data\": \"100%\", \"link\": \"${BUILD_URL}BuildReport\"}"
-    HEALTH_RATE_TEST="0%"
-    HEALTH_RATE_LINT="100%"
-    HEALTH_RATE_TOTAL="0%"
-    export_vars HEALTH_RATE_VERSION HEALTH_RATE_COMPILE HEALTH_RATE_TEST HEALTH_RATE_LINT HEALTH_RATE_TOTAL
-    envsubst < ./html/4-health-rate-table.json > ./html/4-health-rate-table.json.tmp
-    python ./html/html-table.py -f ./html/4-health-rate-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
-    rm -f ./html/4-health-rate-table.json.tmp
-    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+  echo "<b>4. ${MONTH}月版本健康度统计</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+  HEALTH_RATE_VERSION="Estuary V5.0"
+  HEALTH_RATE_COMPILE="{\"data\": \"100%\", \"link\": \"${BUILD_URL}BuildReport\"}"
+  HEALTH_RATE_TEST="0%"
+  HEALTH_RATE_LINT="100%"
+  HEALTH_RATE_TOTAL="0%"
+  export_vars HEALTH_RATE_VERSION HEALTH_RATE_COMPILE HEALTH_RATE_TEST HEALTH_RATE_LINT HEALTH_RATE_TOTAL
+  envsubst < ./html/4-health-rate-table.json > ./html/4-health-rate-table.json.tmp
+  python ./html/html-table.py -f ./html/4-health-rate-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
+  rm -f ./html/4-health-rate-table.json.tmp
+  echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-    echo "<b>5. 构建结果访问</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    JOB_LINK_COMPILE="${BUILD_URL}console"
-    JOB_LINK_RESULT="${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}"
-    JOB_LINK_TEST_CASE="${TEST_REPO}"
-    export_vars JOB_LINK_COMPILE JOB_LINK_RESULT JOB_LINK_TEST_CASE
-    envsubst < ./html/5-job-link-table.json > ./html/5-job-link-table.json.tmp
-    python ./html/html-table.py -f ./html/5-job-link-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
-    rm -f ./html/5-job-link-table.json.tmp
-    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+  echo "<b>5. 构建结果访问</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+  JOB_LINK_COMPILE="${BUILD_URL}console"
+  JOB_LINK_RESULT="${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}"
+  JOB_LINK_TEST_CASE="${TEST_REPO}"
+  export_vars JOB_LINK_COMPILE JOB_LINK_RESULT JOB_LINK_TEST_CASE
+  envsubst < ./html/5-job-link-table.json > ./html/5-job-link-table.json.tmp
+  python ./html/html-table.py -f ./html/5-job-link-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
+  rm -f ./html/5-job-link-table.json.tmp
+  echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-    # generate distro html
-    for DISTRO in $SHELL_DISTRO; do
-        detail_html_generate "${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}" "${WORKSPACE}/html/TestReport" "${DISTRO}"
-    done
+  # generate distro html
+  for DISTRO in $SHELL_DISTRO; do
+      detail_html_generate "${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}" "${WORKSPACE}/html/TestReport" "${DISTRO}"
+  done
 
-    echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
+  echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
 
-    ##  编译结果
-    touch ${WORKSPACE}/html/BuildReport.html
-    # TODO : add build result into the build.html
-    cd -
+  ##  编译结果
+  touch ${WORKSPACE}/html/BuildReport.html
+  # TODO : add build result into the build.html
+  cd -
 
-    cp ${WORKSPACE}/MAIL_CONTENT.txt ${WORKSPACE}/html/DailyReport.html
-    echo "######################################## generate mail success ########################################"
+  cp ${WORKSPACE}/MAIL_CONTENT.txt ${WORKSPACE}/html/DailyReport.html
+  echo "######################################## generate mail success ########################################"
 }
 
 # detail_html_generate ${type} ${source_data} ${target_html}
@@ -634,26 +634,28 @@ function detail_html_generate() {
             awk -F" " "${AWK_SCRIPT}" >> "${target_html}_${distro}_fail.html"
         detail_html_footer "${target_html}_${distro}_fail.html"
 
-        all_modules=$(echo "${distro_source_data}" | awk -F" " '{print $3}' | uniq )
-        for module in ${all_modules};do
-            # total
-            detail_html_header "${target_html}_Z_${distro}_${module}.html"
-            echo "${distro_source_data}" | grep -P "^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t" |
-                awk -F" " "${AWK_SCRIPT}" >> "${target_html}_Z_${distro}_${module}.html"
-            detail_html_footer "${target_html}_Z_${distro}_${module}.html"
+        all_modules=$(echo "${distro_source_data}" | awk -F" " '{print $3}' | uniq)
+        if [ -n "${all_modules}" ];then
+            for module in ${all_modules};do
+                # total
+                detail_html_header "${target_html}_Z_${distro}_${module}.html"
+                echo "${distro_source_data}" | grep -P "^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t" |
+                    awk -F" " "${AWK_SCRIPT}" >> "${target_html}_Z_${distro}_${module}.html"
+                detail_html_footer "${target_html}_Z_${distro}_${module}.html"
 
-            # pass
-            detail_html_header "${target_html}_Z_${distro}_${module}_pass.html"
-            echo "${distro_source_data}" | grep -P "^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t" | grep "pass$" |
-                awk -F" " "${AWK_SCRIPT}" >> "${target_html}_Z_${distro}_${module}_pass.html"
-            detail_html_footer "${target_html}_Z_${distro}_${module}_pass.html"
+                # pass
+                detail_html_header "${target_html}_Z_${distro}_${module}_pass.html"
+                echo "${distro_source_data}" | grep -P "^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t" | grep "pass$" |
+                    awk -F" " "${AWK_SCRIPT}" >> "${target_html}_Z_${distro}_${module}_pass.html"
+                detail_html_footer "${target_html}_Z_${distro}_${module}_pass.html"
 
-            # fail
-            detail_html_header "${target_html}_Z_${distro}_${module}_fail.html"
-            echo "${distro_source_data}" | grep -P "^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t" | grep "fail$" |
-                awk -F" " "${AWK_SCRIPT}" >> "${target_html}_Z_${distro}_${module}_fail.html"
-            detail_html_footer "${target_html}_Z_${distro}_${module}_fail.html"
-        done
+                # fail
+                detail_html_header "${target_html}_Z_${distro}_${module}_fail.html"
+                echo "${distro_source_data}" | grep -P "^[a-zA-Z0-9]+\t[a-zA-Z0-9]+\t${module}\t" | grep "fail$" |
+                    awk -F" " "${AWK_SCRIPT}" >> "${target_html}_Z_${distro}_${module}_fail.html"
+                detail_html_footer "${target_html}_Z_${distro}_${module}_fail.html"
+            done
+        fi
         set -x
     fi
 }
