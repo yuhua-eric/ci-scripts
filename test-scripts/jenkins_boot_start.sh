@@ -706,8 +706,6 @@ function main() {
     clean_workspace
     print_time "time_preparing_envireonment"
 
-    workaround_stash_devices_config
-
     trigger_lava_build
     collect_result
 

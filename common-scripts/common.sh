@@ -171,29 +171,6 @@ function source_properties_file() {
     fi
 }
 
-function workaround_stash_devices_config() {
-    if [ -n "${CI_ENV}" ];then
-        :
-    else
-        CI_ENV=dev
-    fi
-    if [ -e "${CI_SCRIPTS_DIR}/configs/${CI_ENV}/devices.yaml" ];then
-        cp -f "${CI_SCRIPTS_DIR}/configs/${CI_ENV}/devices.yaml" /tmp/devices.yaml
-    fi
-}
-
-function workaround_pop_devices_config() {
-    if [ -n "${CI_ENV}" ];then
-        :
-    else
-        CI_ENV=dev
-    fi
-
-    if [ -e "/tmp/devices.yaml" ];then
-        cp -f /tmp/devices.yaml "${CI_SCRIPTS_DIR}/configs/${CI_ENV}/devices.yaml"
-    fi
-}
-
 #################### system ####################
 
 # ensure_services_start ssh docker
