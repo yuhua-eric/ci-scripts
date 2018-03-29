@@ -94,14 +94,15 @@ def generate_test_definitions(work_test_list, test_case_definition_url):
     generate the test definitions to string. 5 test case --> 1 lava job
     '''
     all_definitions = []
-
     # put 5 test definition in one lava job.
+    # TODO : change batch_num to 1 for test. normal it's 5
+    batch_num = 1
     i = 0
     current_definition = ""
     for test in work_test_list:
         definition = generate_test_definition(test['metadata']['test_path'], test['metadata']['name'], test_case_definition_url)
         current_definition += definition
-        if i == 4:
+        if i == (batch_num - 1):
             all_definitions.append(current_definition)
             current_definition = ""
             i = 0
