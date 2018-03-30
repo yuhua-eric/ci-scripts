@@ -105,9 +105,9 @@ d-i apt-setup/use_mirror boolean false
 d-i apt-setup/restricted boolean true
 d-i apt-setup/universe boolean true
 d-i apt-setup/backports boolean true
-d-i apt-setup/services-select multiselect security
-d-i apt-setup/security_host string security.ubuntu.com
-d-i apt-setup/security_path string /ubuntu
+#d-i apt-setup/services-select multiselect security
+#d-i apt-setup/security_host string security.ubuntu.com
+#d-i apt-setup/security_path string /ubuntu
 d-i pkgsel/update-policy select none
 
 ##install software
