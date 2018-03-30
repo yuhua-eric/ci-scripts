@@ -236,14 +236,14 @@ function get_version_info() {
     else
         cd estuary
         ESTUARY_GIT_DESCRIBE=$(git log --oneline | head -1 | awk '{print $1}')
-        cd kernel
-        KERNEL_GIT_DESCRIBE=$(git log --oneline | head -1 | awk '{print $1}')
+        # cd kernel
+        # KERNEL_GIT_DESCRIBE=$(git log --oneline | head -1 | awk '{print $1}')
         cd -
         GIT_DESCRIBE=daily_$(current_day)
         cd -
 
         echo "ESTUARY_GIT_DESCRIBE=${ESTUARY_GIT_DESCRIBE}" > ${WORKSPACE}/version.properties
-        echo "KERNEL_GIT_DESCRIBE=${KERNEL_GIT_DESCRIBE}" >> ${WORKSPACE}/version.properties
+        # echo "KERNEL_GIT_DESCRIBE=${KERNEL_GIT_DESCRIBE}" >> ${WORKSPACE}/version.properties
     fi
 
     popd
