@@ -288,8 +288,34 @@
 			"timeout": 172800
 		}
 	},
+	
+	{
+                "command": "lava_test_shell",
+                "parameters": {
+                        "testdef_repos": [
+                        {
+                        	"git-repo": "https://github.com/Luojiaxing1991/ci_job.git",
+				"parameters":{
+			     		"Maintainer": "Luojiaxing"
+					},
+				"testdef": "pre_autotest/pre_autotest.yaml"
+                    	}
+                	],
+                	"timeout": 172800
+                }  
+	},
 
-        {
+
+	{
+		"command": "boot_linaro_image",
+		"parameters": {
+		"options": [
+				"boot_cmds=boot_cmds_disc_selfreboot"
+			]
+		}
+	},
+        
+	{
                 "command": "lava_test_shell",
                 "parameters": {
                         "testdef_repos": [
@@ -368,8 +394,24 @@
                 	"timeout": 172800
                 }  
         },
-
-        {
+        
+	{
+                "command": "lava_test_shell",
+                "parameters": {
+                        "testdef_repos": [
+                        {
+                        	"git-repo": "https://github.com/Luojiaxing1991/ci_job.git",
+				"parameters":{
+			     		"Maintainer": "Luojiaxing"
+					},
+				"testdef": "end_autotest/end_autotest.yaml"
+                    	}
+                	],
+                	"timeout": 172800
+                }  
+        },
+        
+	{
             "command": "submit_results",
             "parameters": {
                 "server": "LAVA_SERVER",
