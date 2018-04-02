@@ -87,6 +87,7 @@ function parse_params() {
 
     : ${FTP_SERVER:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k ftpserver`}
     : ${FTP_DIR:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k FTP_DIR`}
+    : ${FTPSERVER_DISPLAY_URL:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k FTPSERVER_DISPLAY_URL`}
 
     : ${ARCH_MAP:=`python configs/parameter_parser.py -f config.yaml -s Arch`}
 
@@ -131,7 +132,7 @@ Version: ${GIT_DESCRIBE}<br>
 Build Status: success<br>
 Build Log Address: ${BUILD_URL}console<br>
 Build Project Address: $BUILD_URL<br>
-Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}<br>
+Build and Generated Binaries Address:${FTPSERVER_DISPLAY_URL}/open-estuary/${GIT_DESCRIBE}<br>
 EOF
 }
 

@@ -51,6 +51,7 @@ Test:
 # for kernelci access
 Ftpinfo:
     ftpserver: http://192.168.50.122:8083
+    FTPSERVER_DISPLAY_URL: http://120.31.149.194:18083
     FTP_DIR : /fileserver
 
 # mail list

@@ -53,6 +53,7 @@ function parse_params() {
     : ${LAVA_DISPLAY_URL:=`python configs/parameter_parser.py -f config.yaml -s LAVA -k LAVA_DISPLAY_URL`}
 
     : ${FTP_SERVER:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k ftpserver`}
+    : ${FTPSERVER_DISPLAY_URL:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k FTPSERVER_DISPLAY_URL`}
     : ${FTP_DIR:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k FTP_DIR`}
 
     : ${ARCH_MAP:=`python configs/parameter_parser.py -f config.yaml -s Arch`}
@@ -435,7 +436,7 @@ Boot and Test Status: failed <br>
 Deploy Type: ${BOOT_PLAN} <br>
 Build Log Address: ${BUILD_URL}console <br>
 Build Project Address: $BUILD_URL <br>
-Build and Generated Binaries Address:${FTP_SERVER}/open-estuary/${GIT_DESCRIBE} <br>
+Build and Generated Binaries Address:${FTPSERVER_DISPLAY_URL}/open-estuary/${GIT_DESCRIBE} <br>
 The Test Cases Definition Address: ${TEST_REPO}<br>
 <br>
 The boot and test is failed unexpectly. Please check the log and fix it.<br>
@@ -478,7 +479,7 @@ function generate_success_mail(){
     fi
 
     # echo all mail releated info
-    echo_vars TODAY GIT_DESCRIBE JOB_RESULT TREE_NAME BOOT_PLAN BUILD_URL FTP_SERVER TEST_REPO
+    echo_vars TODAY GIT_DESCRIBE JOB_RESULT TREE_NAME BOOT_PLAN BUILD_URL FTPSERVER_DISPLAY_URL TEST_REPO
 
     echo "------------------------------------------------------------"
 
@@ -545,7 +546,7 @@ done
 
   echo "<b>5. 构建结果访问</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
   JOB_LINK_COMPILE="${BUILD_URL}console"
-  JOB_LINK_RESULT="${FTP_SERVER}/open-estuary/${GIT_DESCRIBE}"
+  JOB_LINK_RESULT="${FTPSERVER_DISPLAY_URL}/open-estuary/${GIT_DESCRIBE}"
   JOB_LINK_TEST_CASE="${TEST_REPO}"
   export_vars JOB_LINK_COMPILE JOB_LINK_RESULT JOB_LINK_TEST_CASE
   envsubst < ./html/5-job-link-table.json > ./html/5-job-link-table.json.tmp
