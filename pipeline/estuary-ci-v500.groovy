@@ -91,13 +91,6 @@ node ('ci-v500-compile'){
 }
 
 node('ci-compile') {
-    stage('Upload Build Binary') {
-        // unstash result
-        dir('/fileserver/open-estuary'){
-            unstash 'buildResult'
-        }
-    }
-
     stage('Unstash Build Result') {
         unstash 'mailResult'
         unstash 'paramsResult'
@@ -105,6 +98,15 @@ node('ci-compile') {
 
     def props = readProperties  file: 'env.properties'
     def GIT_DESCRIBE = props['GIT_DESCRIBE']
+
+    stage('Upload Build Binary') {
+        // unstash result
+        dir('/fileserver/open-estuary'){
+            unstash 'buildResult'
+        }
+
+        // TODO : if git_describe exist, clean fileserver pxe_install iso_install
+    }
 
     clone2local(getGitUrl(), getGitBranchName(), './local/ci-scripts')
     // load functions
