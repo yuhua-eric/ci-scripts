@@ -50,6 +50,7 @@ function config_tftp_pxe() {
             # update pxe grub setting
             cp -f "${script_path}/../configs/auto-install/${distro_name}/auto-pxe/grub.cfg" ./
             sed -i 's/${template}/'"${version_name}"'/g' grub.cfg
+            sed -i 's/${device}/'"${DEVICE_TYPE,,}"'/g' grub.cfg
             rm -rf netboot netboot.tar.gz || true
 
             wget -c -q ${FTP_SERVER}/open-estuary/${version_name}/"${os_dict[$distro_name]}"/netboot.tar.gz
