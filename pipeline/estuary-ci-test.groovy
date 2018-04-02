@@ -55,7 +55,9 @@ node ('compile'){
         sh "echo TEST_LEVEL=\\\"${TEST_LEVEL}\\\" >> env.properties"
 
         sh "echo SUCCESS_MAIL_LIST=\\\"${SUCCESS_MAIL_LIST}\\\" >> env.properties"
+        sh "echo SUCCESS_MAIL_CC_LIST=\\\"${SUCCESS_MAIL_CC_LIST}\\\" >> env.properties"
         sh "echo FAILED_MAIL_LIST=\\\"${FAILED_MAIL_LIST}\\\" >> env.properties"
+        sh "echo FAILED_MAIL_CC_LIST=\\\"${FAILED_MAIL_CC_LIST}\\\" >> env.properties"
     }
 
     stage ('mirror') {
