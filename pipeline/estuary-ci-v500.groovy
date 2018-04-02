@@ -45,7 +45,9 @@ node ('ci-v500-compile'){
         sh "echo TEST_LEVEL=\\\"${TEST_LEVEL}\\\" >> env.properties"
 
         sh "echo SUCCESS_MAIL_LIST=\\\"${SUCCESS_MAIL_LIST}\\\" >> env.properties"
+        sh "echo SUCCESS_MAIL_CC_LIST=\\\"${SUCCESS_MAIL_CC_LIST}\\\" >> env.properties"
         sh "echo FAILED_MAIL_LIST=\\\"${FAILED_MAIL_LIST}\\\" >> env.properties"
+        sh "echo FAILED_MAIL_CC_LIST=\\\"${FAILED_MAIL_CC_LIST}\\\" >> env.properties"
     }
     // load functions
     def functions = load "./local/ci-scripts/pipeline/functions.groovy"

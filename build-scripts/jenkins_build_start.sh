@@ -91,7 +91,9 @@ function parse_params() {
     : ${ARCH_MAP:=`python configs/parameter_parser.py -f config.yaml -s Arch`}
 
     : ${SUCCESS_MAIL_LIST:=`python configs/parameter_parser.py -f config.yaml -s Mail -k SUCCESS_LIST`}
+    : ${SUCCESS_MAIL_CC_LIST:=`python configs/parameter_parser.py -f config.yaml -s Mail -k SUCCESS_CC_LIST`}
     : ${FAILED_MAIL_LIST:=`python configs/parameter_parser.py -f config.yaml -s Mail -k FAILED_LIST`}
+    : ${FAILED_MAIL_CC_LIST:=`python configs/parameter_parser.py -f config.yaml -s Mail -k FAILED_CC_LIST`}
 
     popd    # restore current work directory
 }
@@ -99,6 +101,7 @@ function parse_params() {
 function generate_failed_mail(){
     cd ${WORKSPACE}
     echo "${FAILED_MAIL_LIST}" > MAIL_LIST.txt
+    echo "${FAILED_MAIL_CC_LIST}" > MAIL_CC_LIST.txt
     echo "Estuary CI - ${GIT_DESCRIBE} - Failed" > MAIL_SUBJECT.txt
     cat > MAIL_CONTENT.txt <<EOF
 ( This mail is send by Jenkins automatically, don't reply )<br>
