@@ -4,12 +4,13 @@
 #: Author                 : qinsl0106@thundersoft.com
 #: Description            : 生成 centos auto-install.iso
 
+GIT_DESCRIBE=${1:-"None"}
+
 #material_iso="CentOS-7-aarch64-Everything.iso"
 new_iso="auto-install.iso"
 cfg_path="../configs/auto-install/centos/auto-iso/"
 new_grub="grub.cfg"
 new_kickstart="ks-iso.cfg"
-
 
 VERSION=$(ls /fileserver/open-estuary)
 if [ -z ${VERSION} ];then
@@ -42,6 +43,8 @@ cp -rf ./mnt/* ./mnt/.discinfo ./mnt/.treeinfo ./centos/
 
 cp $cfg_path$new_grub ./centos/EFI/BOOT/
 cp $cfg_path$new_kickstart ./centos/
+# TODO: sed grub and cfg info.
+sed -i 's/${template}/'"${GIT_DESCRIBE}"'/g' ./centos/EFI/BOOT/$new_grub || true
 
 genisoimage -e images/efiboot.img -no-emul-boot -T -J -R -c boot.catalog -hide boot.catalog -V "CentOS 7 aarch64" -o ./$new_iso ./centos
 
