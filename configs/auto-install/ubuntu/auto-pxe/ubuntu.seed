@@ -19,18 +19,24 @@ d-i	grub-installer/timeout	string 2
 # Add the network and tasks oem-config steps by default.
 oem-config	oem-config/steps	multiselect language, timezone, keyboard, user, network, tasks
 #d-i  base-installer/kernel/altmeta   string hwe-16.04
-d-i base-installer/kernel/image string linux-image-estuary
+#d-i base-installer/kernel/image string linux-image-estuary
 
 
 d-i mirror/country string manual
-# hard code
-d-i mirror/http/hostname string 192.168.50.122:8083
-d-i mirror/http/directory string /estuary_v500/Ubuntu/mirror/
-#d-i mirror/http/hostname string 192.168.1.107:80
-#d-i mirror/http/directory string /ubuntu-ports/
 d-i mirror/http/proxy string
-d-i mirror/http/mirror select 192.168.50.122:8083
+# hard code Private
+#d-i mirror/http/hostname string 192.168.50.122:8083
+#d-i mirror/http/directory string /estuary_v500/Ubuntu/mirror/
+#d-i mirror/http/mirror select 192.168.50.122:8083
+## 107
+d-i mirror/http/hostname string 192.168.1.107:80
+d-i mirror/http/directory string /ubuntu-ports/
 d-i mirror/http/mirror select 192.168.1.107:80
+## Official
+#d-i mirror/http/hostname string ports.ubuntu.com
+#d-i mirror/http/directory string /ubuntu-ports/
+#d-i mirror/http/mirror select ports.ubuntu.com
+
 
 d-i partman-auto/disk string /dev/sda
 #d-i partman-auto/method string lvm
@@ -55,18 +61,18 @@ d-i partman-auto/method string regular
 #d-i partman/confirm_nooverwrite boolean true
 
 
-
-
-
-
 #d-i apt-setup/use_mirror boolean false
 d-i apt-setup/use_mirror boolean true
 d-i apt-setup/restricted boolean true
 d-i apt-setup/universe boolean true
 d-i apt-setup/backports boolean true
 # d-i apt-setup/services-select multiselect security
-# TODO : hard code
+# TODO : hard code Private
 #d-i apt-setup/security_host string 192.168.50.122:8083
 #d-i apt-setup/security_path string /estuary_v500/Ubuntu/mirror/
-#d-i apt-setup/security_host string 192.168.1.107:80
+##107
+d-i apt-setup/security_host string 192.168.1.107:80
+d-i apt-setup/security_path string /ubuntu-ports/
+## Official
+#d-i apt-setup/security_host string ports.ubuntu.com
 #d-i apt-setup/security_path string /ubuntu-ports/
