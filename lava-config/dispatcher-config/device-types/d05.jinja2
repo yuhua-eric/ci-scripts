@@ -24,7 +24,8 @@ actions:
     methods:
       grub:
         parameters:
-          interrupt_prompt: "GNU GRUB"
+          #interrupt_prompt: "GNU GRUB"
+          interrupt_prompt: "for a command prompt"
           interrupt_char: 'c'
           bootloader_prompt: {{ grub_efi_bootloader_prompt|default('grub>') }}
         nfs:
