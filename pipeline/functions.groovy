@@ -6,8 +6,8 @@ def send_mail() {
     mailContent = readFile 'MAIL_CONTENT.txt'
     // send test result
 
-    emailext mimeType: 'text/html', bcc: '', body: mailContent, cc: mailCC, from: 'qinsl0106@thundersoft.com', replyTo: 'qinsl0106@thundersoft.com', subject: mailSubject, to: mailTo
-    // don't upload the pdf
+    mail mimeType: 'text/html', bcc: '', body: mailContent, cc: mailCC, subject: mailSubject, to: mailTo
+    // don't upload the pdf, emailext, https://jenkins.io/doc/pipeline/steps/email-ext/
     //, attachmentsPattern: '**/*resultfile.pdf'
 }
 
