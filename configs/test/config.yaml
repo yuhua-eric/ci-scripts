@@ -56,10 +56,10 @@ Ftpinfo:
 
 # mail list
 Mail:
-  SUCCESS_LIST: qinsl0106@thundersoft.com,liucaili2@huawei.com
-  SUCCESS_CC_LIST: zhaojunhua@hisilicon.com,xuxj@thundersoft.com,lixiaoping3@huawei.com,peiqiang@huawei.com,z.liuxinliang@hisilicon.com,zhangfeng56@huawei.com,fengliang12@huawei.com
+  SUCCESS_LIST: zhanglu0704@thundersoft.com,liucaili2@huawei.com
+  SUCCESS_CC_LIST: qinsl0106@thundersoft.com
   FAILED_LIST: qinsl0106@thundersoft.com
-  FAILED_CC_LIST: qinsl0106@thundersoft.com,zhanglu0704@thundersoft.com
+  FAILED_CC_LIST: zhanglu0704@thundersoft.com
 
 DHCP:
   ip: 192.168.50.122
