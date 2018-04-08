@@ -3,7 +3,7 @@
 root_dirs=(pxe_install/arm64 iso_install/arm64)
 versions=(estuary/v3.1 estuary/v500 linaro/16.12 estuary/current)
 
-oss=(ubuntu centos debain)
+oss=(ubuntu centos debian)
 boards=(d03 d05)
 
 for root_dir in ${root_dirs[@]};do

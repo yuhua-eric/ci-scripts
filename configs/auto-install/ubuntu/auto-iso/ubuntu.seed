@@ -35,7 +35,7 @@ d-i auto-install/enable boolean true
 #d-i debian-installer/locale string en_US
 d-i debian-installer/language string en
 d-i debian-installer/country string US
-d-i debain-install/locale string en_US.UTF-8
+d-i debian-install/locale string en_US.UTF-8
 # Optionally specify additional locales to be generated.
 #d-i localechooser/supported-locales multiselect zh_CH.UTF-8, C.UTF-8, en_US.UTF-8
 
