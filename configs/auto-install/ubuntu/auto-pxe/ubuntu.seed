@@ -19,6 +19,12 @@ d-i	grub-installer/timeout	string 2
 # Add the network and tasks oem-config steps by default.
 oem-config	oem-config/steps	multiselect language, timezone, keyboard, user, network, tasks
 #d-i  base-installer/kernel/altmeta   string hwe-16.04
+#------------------------------------------------------------------
+# modification
+# Date:2018.4.4
+# info:software installing step failed ,because Conflict with 
+#      installation aplication initrd.
+#------------------------------------------------------------------
 #d-i base-installer/kernel/image string linux-image-estuary
 
 
@@ -61,9 +67,21 @@ d-i partman-auto/method string regular
 #d-i partman/confirm_nooverwrite boolean true
 
 
-#d-i apt-setup/use_mirror boolean false
+d-i apt-setup/use_mirror boolean false
 d-i apt-setup/use_mirror boolean true
-d-i apt-setup/restricted boolean true
+
+#------------------------------------------------------------------
+# modification
+# Date:2018.4.4
+# info:mirror /ubuntu-ports/dists/xenial/restricted/binary-arm64/
+#      in 192.168.1.107 sometimes was corrupt.
+#      So,set as follows to disable the restricted and multiverse 
+#      repositories at the earliest stages of the debian-installer.
+#------------------------------------------------------------------
+#d-i apt-setup/restricted boolean true
+d-i apt-setup/restricted boolean false
+d-i apt-setup/multiverse boolean false
+
 d-i apt-setup/universe boolean true
 d-i apt-setup/backports boolean true
 # d-i apt-setup/services-select multiselect security
