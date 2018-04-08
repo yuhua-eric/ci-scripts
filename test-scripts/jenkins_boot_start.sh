@@ -621,7 +621,7 @@ function detail_html_generate() {
     else
         set +x
         echo "#################### strat generate distro and module html page ####################"
-        distro_source_data=$(cat ${source_data} | grep "^${distro}")
+        distro_source_data=$(cat ${source_data} | grep "^${distro}" || true)
         # total
         detail_html_header "${target_html}_${distro}.html"
         echo "${distro_source_data}" |
