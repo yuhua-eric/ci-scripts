@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "start jenkins!!!!!!!!!!!!!!!!!1"
+cd /usr/share/jenkins && java -jar jenkins.war

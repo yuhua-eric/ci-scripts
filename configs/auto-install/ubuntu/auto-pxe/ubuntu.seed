@@ -1,0 +1,96 @@
+# Suggest LVM by default.
+d-i	partman-auto/init_automatically_partition	string some_device_lvm
+d-i	partman-auto/init_automatically_partition	seen false
+# Install the Ubuntu Server seed.
+tasksel	tasksel/force-tasks	string server
+# Only install basic language packs. Let tasksel ask about tasks.
+d-i	pkgsel/language-pack-patterns	string
+# No language support packages.
+d-i	pkgsel/install-language-support	boolean false
+# Only ask the UTC question if there are other operating systems installed.
+d-i	clock-setup/utc-auto	boolean true
+# Verbose output and no boot splash screen.
+d-i	debian-installer/quiet	boolean false
+d-i	debian-installer/splash	boolean false
+# Install the debconf oem-config frontend (if in OEM mode).
+d-i	oem-config-udeb/frontend	string debconf
+# Wait for two seconds in grub
+d-i	grub-installer/timeout	string 2
+# Add the network and tasks oem-config steps by default.
+oem-config	oem-config/steps	multiselect language, timezone, keyboard, user, network, tasks
+#d-i  base-installer/kernel/altmeta   string hwe-16.04
+#------------------------------------------------------------------
+# modification
+# Date:2018.4.4
+# info:software installing step failed ,because Conflict with 
+#      installation aplication initrd.
+#------------------------------------------------------------------
+#d-i base-installer/kernel/image string linux-image-estuary
+
+
+d-i mirror/country string manual
+d-i mirror/http/proxy string
+# hard code Private
+#d-i mirror/http/hostname string 192.168.50.122:8083
+#d-i mirror/http/directory string /estuary_v500/Ubuntu/mirror/
+#d-i mirror/http/mirror select 192.168.50.122:8083
+## 107
+d-i mirror/http/hostname string 192.168.1.107:80
+d-i mirror/http/directory string /ubuntu-ports/
+d-i mirror/http/mirror select 192.168.1.107:80
+## Official
+#d-i mirror/http/hostname string ports.ubuntu.com
+#d-i mirror/http/directory string /ubuntu-ports/
+#d-i mirror/http/mirror select ports.ubuntu.com
+
+
+d-i partman-auto/disk string /dev/sda
+#d-i partman-auto/method string lvm
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-md/device_remove_md boolean true
+d-i partman-lvm/confirm boolean true
+d-i partman-lvm/confirm_nooverwrite boolean true
+d-i partman-auto/choose_recipe select atomic
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+# Partitioning
+#d-i partman-auto/disk string /dev/sda
+d-i partman-auto/method string regular
+#d-i partman-lvm/device_remove_lvm boolean true
+#d-i partman-md/device_remove_md boolean true
+#d-i partman-auto/choose_recipe select atomic
+#d-i partman/confirm_write_new_label boolean true
+#d-i partman/choose_partition select finish
+#d-i partman/confirm boolean true
+#d-i partman/confirm_nooverwrite boolean true
+
+
+d-i apt-setup/use_mirror boolean false
+d-i apt-setup/use_mirror boolean true
+
+#------------------------------------------------------------------
+# modification
+# Date:2018.4.4
+# info:mirror /ubuntu-ports/dists/xenial/restricted/binary-arm64/
+#      in 192.168.1.107 sometimes was corrupt.
+#      So,set as follows to disable the restricted and multiverse 
+#      repositories at the earliest stages of the debian-installer.
+#------------------------------------------------------------------
+#d-i apt-setup/restricted boolean true
+d-i apt-setup/restricted boolean false
+d-i apt-setup/multiverse boolean false
+
+d-i apt-setup/universe boolean true
+d-i apt-setup/backports boolean true
+# d-i apt-setup/services-select multiselect security
+# TODO : hard code Private
+#d-i apt-setup/security_host string 192.168.50.122:8083
+#d-i apt-setup/security_path string /estuary_v500/Ubuntu/mirror/
+##107
+d-i apt-setup/security_host string 192.168.1.107:80
+d-i apt-setup/security_path string /ubuntu-ports/
+## Official
+#d-i apt-setup/security_host string ports.ubuntu.com
+#d-i apt-setup/security_path string /ubuntu-ports/

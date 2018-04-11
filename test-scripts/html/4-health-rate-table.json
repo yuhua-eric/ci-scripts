@@ -1,0 +1,16 @@
+{
+  "Column" : [
+    "项目",
+    "编译成功率",
+    "测试成功率",
+    "静态检查",
+    "本月CI构建成功率"
+  ],
+  "Row" : [
+    "${HEALTH_RATE_VERSION}",
+	  ${HEALTH_RATE_COMPILE},
+    "${HEALTH_RATE_TEST}",
+    "${HEALTH_RATE_LINT}",
+    "${HEALTH_RATE_TOTAL}"
+  ]
+}

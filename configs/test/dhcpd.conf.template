@@ -1,0 +1,14 @@
+ddns-update-style none;
+default-lease-time 600;
+max-lease-time 7200;
+authoritative;
+log-facility local7;
+
+subnet 192.168.50.0 netmask 255.255.255.0 {
+  range 192.168.50.50 192.168.50.100;
+  option domain-name-servers 192.168.1.107, 114.114.114.114;
+  option subnet-mask 255.255.255.0;
+  option routers 192.168.50.1;
+  default-lease-time 600;
+  max-lease-time 7200;
+}

@@ -1,0 +1,7 @@
+version: "2"
+
+services:
+  androidrom:
+    build: ./
+    volumes:
+      - /home/ts

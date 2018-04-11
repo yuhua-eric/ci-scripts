@@ -1,0 +1,55 @@
+device_type: '{device_type}'
+job_name: '{job_name}'
+priority: medium
+visibility: public
+
+metadata:
+  # please change these fields when modifying this job for your own tests.
+  docs-source: https://github.com/qinshulei/ci-scripts/tree/dev/test-scripts/templates/BOOT_NFS
+  docs-filename: d03-arm64-kernel-ci-boot-nfs-template.yaml
+  kernel_defconfig : {defconfig}
+  kernel_version : {kernel_version}
+  kernel_tree : {tree}
+  kernel_endian : {endian}
+  platform.fastboot : {fastboot}
+  device_tree : {device_type}
+  os: {distro}
+  tree_name: {tree_name}
+
+timeouts:
+  job:
+    minutes: 120
+  action:
+    minutes: 60
+  connection:
+    minutes: 10
+actions:
+- deploy:
+      to: tftp
+      kernel:
+        url: '{kernel_url}'
+      dtb:
+        url: '{dtb_url}'
+      nfsrootfs:
+        url: '{nfs_url}'
+        compression: gz
+      os: {distro}
+- boot:
+    timeout:
+      minutes: 15
+    method: grub
+    commands: nfs
+    auto_login:
+      login_prompt: "login:"
+      username: root
+      password_prompt: "Password:"
+      password: root
+    prompts:
+    - 'root@ubuntu:'
+    - 'root@centos ~'
+    - 'root@debian:~#'
+- test:
+    timeout:
+      minutes: 120
+    definitions:
+{test_definitions}

@@ -1,8 +1,0 @@
-server {
-	listen  8083;
-	server_name  _;
-	root /var/www/images/kernel-ci/;
-	location / {
-		autoindex on;
-	}
-}

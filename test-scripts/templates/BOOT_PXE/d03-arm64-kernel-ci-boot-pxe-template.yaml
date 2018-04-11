@@ -1,0 +1,45 @@
+device_type: '{device_type}'
+job_name: '{job_name}'
+priority: medium
+visibility: public
+
+metadata:
+  # please change these fields when modifying this job for your own tests.
+  docs-source: https://github.com/qinshulei/ci-scripts/tree/master/test-scripts/templates/BOOT_PXE
+  docs-filename: d03-arm64-kernel-ci-boot-pxe-template.yaml
+  kernel_defconfig : {defconfig}
+  kernel_version : {kernel_version}
+  kernel_tree : {tree}
+  kernel_endian : {endian}
+  platform.fastboot : {fastboot}
+  device_tree : {device_type}
+  os: {distro}
+
+timeouts:
+  job:
+    minutes: 120
+  action:
+    minutes: 60
+  connection:
+    minutes: 10
+actions:
+- deploy:
+    timeout:
+      minutes: 60
+    to: ssh
+    os: {distro}
+    tree_name: {tree_name}
+    distro_version: {kernel_version}
+    deploy_type: BOOT_PXE
+- boot:
+    method: ssh
+    connection: ssh
+    failure_retry: 2
+    prompts:
+      - 'root@ubuntu:/#'
+      - 'root@centos ~'
+- test:
+    timeout:
+      minutes: 120
+    definitions:
+{test_definitions}

@@ -1,0 +1,8 @@
+server {
+	listen  8083;
+	server_name  _;
+  root /home/static/;
+	location / {
+		autoindex on;
+	}
+}

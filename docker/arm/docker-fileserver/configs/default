@@ -1,0 +1,7 @@
+server {
+  listen 8083;
+
+  location / {
+    alias /static/;
+  }
+}
