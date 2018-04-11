@@ -1,6 +1,12 @@
+# Estuary Branch 
+
+Estuary CI system Scripts
+
+
 # CI 脚本库
 
 本库为CI的脚本库，包含CI流程脚本。以及安装相关的一些配置.
+
 
 ```
 .
@@ -31,3 +37,4 @@ CI 中包含部分和开发版本耦合内容:
 + 编译依赖源mirror (192.168.1.107)，部署依赖源mirror(192.168.1.107)
 
 + iso和pxe安装的配置文件 [auto-install](configs/auto-install), 其中包含了自动安装的kickstart文件，随着版本的变化，以及依赖的包的变化，可能需要调整
+
