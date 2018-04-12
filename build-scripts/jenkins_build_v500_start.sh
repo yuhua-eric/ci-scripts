@@ -121,13 +121,8 @@ EOF
 
 function generate_success_mail(){
     cd ${WORKSPACE}
-    if [ "${DEBUG}" = "true" ];then
-        echo "${FAILED_MAIL_LIST}" > ${WORKSPACE}/MAIL_LIST.txt
-        echo "${FAILED_MAIL_CC_LIST}" > ${WORKSPACE}/MAIL_CC_LIST.txt
-    else
-        echo "${SUCCESS_MAIL_LIST}" > ${WORKSPACE}/MAIL_LIST.txt
-        echo "${SUCCESS_MAIL_CC_LIST}" > ${WORKSPACE}/MAIL_CC_LIST.txt
-    fi
+    echo "${SUCCESS_MAIL_LIST}" > ${WORKSPACE}/MAIL_LIST.txt
+    echo "${SUCCESS_MAIL_CC_LIST}" > ${WORKSPACE}/MAIL_CC_LIST.txt
 
     echo "Estuary CI - ${GIT_DESCRIBE} - Result" > ${WORKSPACE}/MAIL_SUBJECT.txt
     cat > ${WORKSPACE}/MAIL_CONTENT.txt <<EOF

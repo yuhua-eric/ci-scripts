@@ -379,12 +379,14 @@ function collect_result() {
     #zip -r ${{GIT_DESCRIBE}}_results.zip ${GIT_DESCRIBE}/*
     cp -f ${timefile} ${GIT_DESCRIBE} || true
 
-    if [ -d $DES_DIR/${GIT_DESCRIBE}/results ];then
-        sudo rm -fr $DES_DIR/${GIT_DESCRIBE}/results
-        sudo rm -fr $DES_DIR/${GIT_DESCRIBE}/${timefile}
+    # if DEBUG is set, don't update the result
+    if [ ! "${DEBUG}" = "true" ];then
+        if [ -d $DES_DIR/${GIT_DESCRIBE}/results ];then
+            sudo rm -fr $DES_DIR/${GIT_DESCRIBE}/results
+            sudo rm -fr $DES_DIR/${GIT_DESCRIBE}/${timefile}
+        fi
+        sudo cp -rf ${GIT_DESCRIBE}/* $DES_DIR
     fi
-
-    sudo cp -rf ${GIT_DESCRIBE}/* $DES_DIR
 
     popd    # restore current work directory
 
@@ -453,13 +455,9 @@ function generate_success_mail(){
 
     # prepare parameters
     cd ${WORKSPACE}
-    if [ "${DEBUG}" = "true" ];then
-        echo "${FAILED_MAIL_LIST}" > ${WORKSPACE}/MAIL_LIST.txt
-        echo "${FAILED_MAIL_CC_LIST}" > ${WORKSPACE}/MAIL_CC_LIST.txt
-    else
-        echo "${SUCCESS_MAIL_LIST}" > ${WORKSPACE}/MAIL_LIST.txt
-        echo "${SUCCESS_MAIL_CC_LIST}" > ${WORKSPACE}/MAIL_CC_LIST.txt
-    fi
+    echo "${SUCCESS_MAIL_LIST}" > ${WORKSPACE}/MAIL_LIST.txt
+    echo "${SUCCESS_MAIL_CC_LIST}" > ${WORKSPACE}/MAIL_CC_LIST.txt
+
     TODAY=$(date +"%Y/%m/%d")
     MONTH=$(date +"%Y%m")
 
