@@ -312,7 +312,7 @@ function cp_image() {
         popd
 
         # copy distro files
-        for DISTRO in $SHELL_DISTRO;do
+        for DISTRO in $ALL_SHELL_DISTRO;do
             echo $DISTRO
 
             pushd ${CI_SCRIPTS_DIR}
