@@ -45,7 +45,18 @@ function bmc_vmm_disconnect() {
     sshpass -p ${SSH_PASS} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP} ipmcset -t vmm -d disconnect
 }
 
+# ensure poweroff the device
+function ipmi_power_off() {
+    local IPMI_PASS="Huawei12#$"
+    local IPMI_USER=root
+    local IPMI_IP=${BMC_IP}
+
+    ipmitool -H ${IPMI_IP} -I lanplus -U ${IPMI_USER} -P ${IPMI_PASS} power off
+}
+
 function do_deploy() {
+    # close the device first. so that if install fail , it will not mount the old system
+    ipmi_power_off
     if [ "${BOOT_PLAN}" = "BOOT_PXE" ];then
         :
     elif [ "${BOOT_PLAN}" = "BOOT_ISO" ];then
