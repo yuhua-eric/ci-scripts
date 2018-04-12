@@ -13,6 +13,6 @@ DHCP_CONFIG_DIR=/etc/dhcp
 DHCP_FILENAME=dhcpd.conf
 
 ./scripts/gen_dhcpd_conf.sh > dhcpd.conf;
-sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dhcpd.conf root@${DHCP_SERVER}:/etc/dhcp/dhcpd.conf
-sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${DHCP_SERVER} service isc-dhcp-server restart
+timeout 60 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dhcpd.conf root@${DHCP_SERVER}:/etc/dhcp/dhcpd.conf
+timeout 60 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${DHCP_SERVER} service isc-dhcp-server restart
 cd -

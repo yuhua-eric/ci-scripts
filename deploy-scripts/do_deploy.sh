@@ -32,7 +32,7 @@ function bmc_vmm_connect() {
     local SSH_IP=${BMC_IP}
 
     init_os_dict
-    sshpass -p ${SSH_PASS} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP} \
+    timeout 120 sshpass -p ${SSH_PASS} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP} \
             ipmcset -t vmm -d connect -v nfs://${NFS_BMC_IP}/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/"${distro_name}"/"${DEVICE_TYPE,,}"/auto-install.iso
 }
 
@@ -42,10 +42,21 @@ function bmc_vmm_disconnect() {
     local SSH_USER=root
     local SSH_IP=${BMC_IP}
 
-    sshpass -p ${SSH_PASS} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP} ipmcset -t vmm -d disconnect
+    timeout 120 sshpass -p ${SSH_PASS} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP} ipmcset -t vmm -d disconnect
+}
+
+# ensure poweroff the device
+function ipmi_power_off() {
+    local IPMI_PASS="Huawei12#$"
+    local IPMI_USER=root
+    local IPMI_IP=${BMC_IP}
+
+    ipmitool -H ${IPMI_IP} -I lanplus -U ${IPMI_USER} -P ${IPMI_PASS} power off
 }
 
 function do_deploy() {
+    # close the device first. so that if install fail , it will not mount the old system
+    ipmi_power_off
     if [ "${BOOT_PLAN}" = "BOOT_PXE" ];then
         :
     elif [ "${BOOT_PLAN}" = "BOOT_ISO" ];then
@@ -78,7 +89,7 @@ function copy_ssh_id(){
     local SSH_USER=root
     local SSH_IP=${TARGET_IP}
 
-    sshpass -p ${SSH_PASS} ssh-copy-id -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP}
+    timeout 60 sshpass -p ${SSH_PASS} ssh-copy-id -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP}
 
     sleep 5
 }
