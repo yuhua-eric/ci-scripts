@@ -65,7 +65,7 @@ function config_dhcp() {
     # ./scripts/gen_dhcpd_conf.sh > dhcpd.conf;
 
     cd ..;
-    sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${DHCP_SERVER}:/etc/dhcp/dhcpd.conf dhcpd.conf
+    timeout 60 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${DHCP_SERVER}:/etc/dhcp/dhcpd.conf dhcpd.conf
     if [ "${tree_name}" = 'linaro' ];then
         # config dhcp
         # change filename
@@ -74,8 +74,8 @@ function config_dhcp() {
         replace_board_dhcp_config ${host_name} "pxe_install/arm64/estuary/${version_name}/${distro_name}/${host_name%%ssh*}/grubaa64.efi" dhcpd.conf
     fi
 
-    sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dhcpd.conf root@${DHCP_SERVER}:/etc/dhcp/dhcpd.conf
-    sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${DHCP_SERVER} service isc-dhcp-server restart
+    timeout 60 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null dhcpd.conf root@${DHCP_SERVER}:/etc/dhcp/dhcpd.conf
+    timeout 60 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${DHCP_SERVER} service isc-dhcp-server restart
     cd -
 }
 
