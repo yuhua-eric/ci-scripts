@@ -41,23 +41,53 @@ node ('compile'){
         sh "echo BUILD_URL=\\\"${BUILD_URL}\\\" >> env.properties"
 
         // save jenkins parameters.
-        sh "echo TREE_NAME=\\\"${TREE_NAME}\\\" >> env.properties"
-        sh "echo GIT_DESCRIBE=\\\"${GIT_DESCRIBE}\\\" >> env.properties"
+        if (env.TREE_NAME) {
+            sh "echo TREE_NAME=\\\"${TREE_NAME}\\\" >> env.properties"
+        }
+        if (env.GIT_DESCRIBE) {
+            sh "echo GIT_DESCRIBE=\\\"${GIT_DESCRIBE}\\\" >> env.properties"
+        }
 
-        sh "echo BOOT_PLAN=\\\"${BOOT_PLAN}\\\" >> env.properties"
+        if (env.BOOT_PLAN) {
+            sh "echo BOOT_PLAN=\\\"${BOOT_PLAN}\\\" >> env.properties"
+        }
 
-        sh "echo SHELL_PLATFORM=\\\"${SHELL_PLATFORM}\\\" >> env.properties"
-        sh "echo SHELL_DISTRO=\\\"${SHELL_DISTRO}\\\" >> env.properties"
+        if (env.SHELL_PLATFORM) {
+            sh "echo SHELL_PLATFORM=\\\"${SHELL_PLATFORM}\\\" >> env.properties"
+        }
+        if (env.SHELL_DISTRO) {
+            sh "echo SHELL_DISTRO=\\\"${SHELL_DISTRO}\\\" >> env.properties"
+        }
 
-        sh "echo TEST_REPO=\\\"${TEST_REPO}\\\" >> env.properties"
-        sh "echo TEST_PLAN=\\\"${TEST_PLAN}\\\" >> env.properties"
-        sh "echo TEST_SCOPE=\\\"${TEST_SCOPE}\\\" >> env.properties"
-        sh "echo TEST_LEVEL=\\\"${TEST_LEVEL}\\\" >> env.properties"
+        if (env.TEST_REPO) {
+            sh "echo TEST_REPO=\\\"${TEST_REPO}\\\" >> env.properties"
+        }
+        if (env.TEST_PLAN) {
+            sh "echo TEST_PLAN=\\\"${TEST_PLAN}\\\" >> env.properties"
+        }
+        if (env.TEST_SCOPE) {
+            sh "echo TEST_SCOPE=\\\"${TEST_SCOPE}\\\" >> env.properties"
+        }
+        if (env.TEST_LEVEL) {
+            sh "echo TEST_LEVEL=\\\"${TEST_LEVEL}\\\" >> env.properties"
+        }
 
-        sh "echo SUCCESS_MAIL_LIST=\\\"${SUCCESS_MAIL_LIST}\\\" >> env.properties"
-        sh "echo SUCCESS_MAIL_CC_LIST=\\\"${SUCCESS_MAIL_CC_LIST}\\\" >> env.properties"
-        sh "echo FAILED_MAIL_LIST=\\\"${FAILED_MAIL_LIST}\\\" >> env.properties"
-        sh "echo FAILED_MAIL_CC_LIST=\\\"${FAILED_MAIL_CC_LIST}\\\" >> env.properties"
+        if (env.SUCCESS_MAIL_LIST) {
+            sh "echo SUCCESS_MAIL_LIST=\\\"${SUCCESS_MAIL_LIST}\\\" >> env.properties"
+        }
+        if (env.SUCCESS_MAIL_CC_LIST) {
+            sh "echo SUCCESS_MAIL_CC_LIST=\\\"${SUCCESS_MAIL_CC_LIST}\\\" >> env.properties"
+        }
+        if (env.FAILED_MAIL_LIST) {
+            sh "echo FAILED_MAIL_LIST=\\\"${FAILED_MAIL_LIST}\\\" >> env.properties"
+        }
+        if (env.FAILED_MAIL_CC_LIST) {
+            sh "echo FAILED_MAIL_CC_LIST=\\\"${FAILED_MAIL_CC_LIST}\\\" >> env.properties"
+        }
+
+        if (env.DEBUG) {
+            sh "echo DEBUG=\\\"${DEBUG}\\\" >> env.properties"
+        }
     }
 
     stage ('mirror') {

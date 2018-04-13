@@ -33,12 +33,24 @@ node ('ci-v500-compile'){
         sh "echo BUILD_URL=\\\"${BUILD_URL}\\\" >> env.properties"
 
         // save jenkins parameters.
-        sh "echo TREE_NAME=\\\"${TREE_NAME}\\\" >> env.properties"
+        if (env.TREE_NAME) {
+            sh "echo TREE_NAME=\\\"${TREE_NAME}\\\" >> env.properties"
+        }
 
-        sh "echo SHELL_PLATFORM=\\\"${SHELL_PLATFORM}\\\" >> env.properties"
-        sh "echo SHELL_DISTRO=\\\"${SHELL_DISTRO}\\\" >> env.properties"
+        if (env.SHELL_PLATFORM) {
+            sh "echo SHELL_PLATFORM=\\\"${SHELL_PLATFORM}\\\" >> env.properties"
+        }
+        if (env.SHELL_DISTRO) {
+            sh "echo SHELL_DISTRO=\\\"${SHELL_DISTRO}\\\" >> env.properties"
+        }
 
-        sh "echo VERSION=\\\"${VERSION}\\\" >> env.properties"
+        if (env.VERSION) {
+            sh "echo VERSION=\\\"${VERSION}\\\" >> env.properties"
+        }
+
+        if (env.DEBUG) {
+            sh "echo DEBUG=\\\"${DEBUG}\\\" >> env.properties"
+        }
     }
 
     // load functions

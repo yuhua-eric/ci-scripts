@@ -33,15 +33,31 @@ node ('compile'){
         sh "echo BUILD_URL=\\\"${BUILD_URL}\\\" >> env.properties"
 
         // save jenkins parameters.
-        sh "echo TREE_NAME=\\\"${TREE_NAME}\\\" >> env.properties"
+        if (env.TREE_NAME) {
+            sh "echo TREE_NAME=\\\"${TREE_NAME}\\\" >> env.properties"
+        }
 
-        sh "echo SHELL_PLATFORM=\\\"${SHELL_PLATFORM}\\\" >> env.properties"
-        sh "echo SHELL_DISTRO=\\\"${SHELL_DISTRO}\\\" >> env.properties"
+        if (env.SHELL_PLATFORM) {
+            sh "echo SHELL_PLATFORM=\\\"${SHELL_PLATFORM}\\\" >> env.properties"
+        }
+        if (env.SHELL_DISTRO) {
+            sh "echo SHELL_DISTRO=\\\"${SHELL_DISTRO}\\\" >> env.properties"
+        }
 
-        sh "echo VERSION=\\\"${VERSION}\\\" >> env.properties"
+        if (env.VERSION) {
+            sh "echo VERSION=\\\"${VERSION}\\\" >> env.properties"
+        }
 
-        sh "echo SUCCESS_MAIL_LIST=\\\"${SUCCESS_MAIL_LIST}\\\" >> env.properties"
-        sh "echo FAILED_MAIL_LIST=\\\"${FAILED_MAIL_LIST}\\\" >> env.properties"
+        if (env.SUCCESS_MAIL_LIST) {
+            sh "echo SUCCESS_MAIL_LIST=\\\"${SUCCESS_MAIL_LIST}\\\" >> env.properties"
+        }
+        if (env.FAILED_MAIL_LIST) {
+            sh "echo FAILED_MAIL_LIST=\\\"${FAILED_MAIL_LIST}\\\" >> env.properties"
+        }
+
+        if (env.DEBUG) {
+            sh "echo DEBUG=\\\"${DEBUG}\\\" >> env.properties"
+        }
     }
 
     // load functions
