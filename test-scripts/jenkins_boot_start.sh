@@ -28,6 +28,8 @@ function init_input_params() {
 
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
 
+    DEBUG=${DEBUG:-""}
+
     JENKINS_JOB_INFO=$(expr "${BUILD_URL}" : '^http.*/job/\(.*\)/$' | sed "s#/#-#g")
 
     JENKINS_JOB_START_TIME=${JENKINS_JOB_START_TIME:-$(current_time)}
@@ -78,6 +80,7 @@ BOOT_PLAN=${BOOT_PLAN}
 TEST_REPO=${TEST_REPO}
 TEST_SCOPE="${TEST_SCOPE}"
 TEST_LEVEL=${TEST_LEVEL}
+DEBUG=${DEBUG}
 JENKINS_JOB_START_TIME="${JENKINS_JOB_START_TIME}"
 ARCH_MAP="${ARCH_MAP}"
 EOF

@@ -66,6 +66,8 @@ function init_input_params() {
     SETUP_TYPE=${SETUP_TYPE:-""}
 
     JENKINS_JOB_START_TIME=${JENKINS_JOB_START_TIME:-$(current_time)}
+
+    DEBUG=${DEBUG:-""}
 }
 
 function parse_params() {
@@ -133,6 +135,7 @@ TEST_REPO=${TEST_REPO}
 TEST_PLAN=${TEST_PLAN}
 TEST_SCOPE="${TEST_SCOPE}"
 TEST_LEVEL=${TEST_LEVEL}
+DEBUG=${DEBUG}
 JENKINS_JOB_START_TIME="${JENKINS_JOB_START_TIME}"
 ARCH_MAP="${ARCH_MAP}"
 EOF
