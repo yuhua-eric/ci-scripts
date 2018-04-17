@@ -42,13 +42,24 @@ mount "${material_iso}" ./mnt
 cp -rf ./mnt/* ./mnt/.discinfo ./mnt/.treeinfo ./centos/
 
 cp $cfg_path$new_grub ./centos/EFI/BOOT/
-cp $cfg_path$new_kickstart ./centos/
 # TODO: sed grub and cfg info.
 sed -i 's/${template}/'"${GIT_DESCRIBE}"'/g' ./centos/EFI/BOOT/$new_grub || true
+
+## modify:add kickstart file into initrd
+mkdir initrd
+cp ./centos/images/pxeboot/initrd.img ./
+cd initrd
+xzcat ../initrd.img | cpio -idmv
+rm ../initrd.img
+cp ../$cfg_path$new_kickstart ./
+find . | cpio -o -H newc | xz --check=crc32 --lzma2=dict=512KiB > ../initrd.img
+cd ..
+cp ./initrd.img ./centos/images/pxeboot/
+##end of modify
 
 genisoimage -e images/efiboot.img -no-emul-boot -T -J -R -c boot.catalog -hide boot.catalog -V "CentOS 7 aarch64" -o ./$new_iso ./centos
 
 umount ./mnt/
-rm -rf ./centos ./mnt
+rm -rf ./centos ./mnt ./initrd.img ./initrd/
 
 cp -f ${new_iso} /fileserver/open-estuary/${VERSION}/CentOS/
