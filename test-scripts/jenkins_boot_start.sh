@@ -453,6 +453,35 @@ EOF
 
 }
 
+# export FTP_DIR="/fileserver"; export TREE_NAME="open-estuary"; export month=201804
+function generate_pass_rate() {
+    month=$(date +"%Y%m")
+    day=$(date +"%d")
+
+    release_list=$(ls ${FTP_DIR}/${TREE_NAME}/ | grep "$month" || true)
+    success_day=$(echo ${release_list} | wc -w)
+    rate=$(echo "${success_day} * 100 / ${day}" | bc)
+    echo ${rate}
+}
+
+# export FTP_DIR="/fileserver"; export TREE_NAME="open-estuary"; export DETAILS_SUM='details_summary.txt'
+function generate_test_rate() {
+    month=$(date +"%Y%m")
+    day=$(date +"%d")
+
+    release_list=$(ls ${FTP_DIR}/${TREE_NAME}/ | grep "$month" || true)
+    success_day=0
+    for release in ${release_list};do
+        if [ -e ${FTP_DIR}/${TREE_NAME}/${release}/results/${DETAILS_SUM} ];then
+           if ! grep -qE 'fail$' ${FTP_DIR}/${TREE_NAME}/${release}/results/${DETAILS_SUM};then
+               success_day=$((success_day + 1))
+           fi
+        fi
+    done
+    rate=$(echo "${success_day} * 100 / ${day}" | bc)
+    echo ${rate}
+}
+
 function generate_success_mail(){
     echo "###################### start generate mail ####################"
 
@@ -540,10 +569,12 @@ done
 
   echo "<b>4. ${MONTH}月版本健康度统计</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
   HEALTH_RATE_VERSION="Estuary V5.0"
-  HEALTH_RATE_COMPILE="{\"data\": \"100%\", \"link\": \"${BUILD_URL}BuildReport\"}"
-  HEALTH_RATE_TEST="0%"
+  BUILD_PASS_RATE=$(generate_pass_rate || true)
+  HEALTH_RATE_COMPILE="{\"data\": \"${BUILD_PASS_RATE}%\", \"link\": \"${BUILD_URL}BuildReport\"}"
+  TEST_PASS_RATE=$(generate_test_rate || true)
+  HEALTH_RATE_TEST="${TEST_PASS_RATE}%"
   HEALTH_RATE_LINT="100%"
-  HEALTH_RATE_TOTAL="0%"
+  HEALTH_RATE_TOTAL="${TEST_PASS_RATE}%"
   export_vars HEALTH_RATE_VERSION HEALTH_RATE_COMPILE HEALTH_RATE_TEST HEALTH_RATE_LINT HEALTH_RATE_TOTAL
   envsubst < ./html/4-health-rate-table.json > ./html/4-health-rate-table.json.tmp
   python ./html/html-table.py -f ./html/4-health-rate-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
