@@ -828,7 +828,12 @@ def get_name_from_yaml(path_list, dir_name_lists, owner, test_case_definition_di
     for item in path_list:
         paths = item[len(test_case_definition_dir):].split('/')
         with open(item, 'r') as f:
-            data = yaml.load(f)
+            try:
+                data = yaml.load(f)
+            except(yaml.parser.ParserError, yaml.scanner.ScannerError) as e:
+                print "warnings: wrong yaml syntax :\n %s" % e
+                continue
+
             if isinstance(data, dict):
                 if data.has_key('metadata') and data['metadata'].has_key('name'):
                     module = paths[1]
