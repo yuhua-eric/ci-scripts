@@ -8,7 +8,8 @@ import re
 # TODO : depends on the boot type and boot os ,set the autoinstall time.
 # DEPLOY_TIME_OUT = 3000
 # set 25 minutes, so that it can retry the deploy
-DEPLOY_TIME_OUT = 1500
+# (* 35 60)2100
+DEPLOY_TIME_OUT = 2100
 
 def boot_device(DEPLOY_TYPE, BMC_HOST, BMC_USER, BMC_PASS):
     connection_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol activate' % (BMC_HOST, BMC_USER, BMC_PASS)

@@ -18,9 +18,9 @@ metadata:
 
 timeouts:
   job:
-    minutes: 120
+    minutes: 140
   action:
-    minutes: 60
+    minutes: 70
   connection:
     minutes: 10
 actions:
@@ -50,6 +50,6 @@ actions:
     - 'root@debian:~#'
 - test:
     timeout:
-      minutes: 120
+      minutes: 140
     definitions:
 {test_definitions}
