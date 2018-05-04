@@ -4,8 +4,8 @@ Build:
         - Ubuntu
         - CentOS
         - Debian
-        #- Fedora
-        #- OpenSuse
+        - Fedora
+        - OpenSuse
         #- Rancher
         #- OpenEmbedded
 
