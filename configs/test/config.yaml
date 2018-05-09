@@ -5,7 +5,7 @@ Build:
         - CentOS
         - Debian
         #- Fedora
-        #- OpenSuse
+        - OpenSuse
         #- Rancher
         #- OpenEmbedded
 
@@ -18,10 +18,13 @@ DISTRO:
         - Ubuntu: Ubuntu_ARM64.tar.gz
         - CentOS: CentOS_ARM64.tar.gz
         - Debian: Debian_ARM64.tar.gz
+        - OpenSuse: OpenSuse_ARM64.tar.gz
     D05:
         - CentOS: CentOS_ARM64.tar.gz
         - Ubuntu: Ubuntu_ARM64.tar.gz
         - Debian: Debian_ARM64.tar.gz
+        - OpenSuse: OpenSuse_ARM64.tar.gz
+
 
 
 # the dictionary for the board and arch mapping
