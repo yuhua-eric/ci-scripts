@@ -1,9 +1,9 @@
 Build:
     # parameters for the build
     Distro:
-        - Ubuntu
+        #- Ubuntu
         - CentOS
-        - Debian
+        #- Debian
         #- Fedora
         - OpenSuse
         #- Rancher
