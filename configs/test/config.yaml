@@ -25,7 +25,7 @@ DISTRO:
         - Ubuntu: Ubuntu_ARM64.tar.gz
         - Debian: Debian_ARM64.tar.gz
         - OpenSuse: OpenSuse_ARM64.tar.gz
-
+        - Fedora: Fedora_ARM64.tar.gz
 
 
 # the dictionary for the board and arch mapping
