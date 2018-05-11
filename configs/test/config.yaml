@@ -4,7 +4,7 @@ Build:
         - Fedora
         - OpenSuse
         - Ubuntu
-        #- CentOS
+        - CentOS
         - Debian
         #- Rancher
         #- OpenEmbedded
@@ -19,6 +19,7 @@ DISTRO:
         - CentOS: CentOS_ARM64.tar.gz
         - Debian: Debian_ARM64.tar.gz
         - OpenSuse: OpenSuse_ARM64.tar.gz
+        - Fedora: Fedora_ARM64.tar.gz
     D05:
         - CentOS: CentOS_ARM64.tar.gz
         - Ubuntu: Ubuntu_ARM64.tar.gz
