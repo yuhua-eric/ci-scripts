@@ -7,5 +7,5 @@
 function init_os_dict() {
     # declare global dict
     declare -A -g os_dict
-    os_dict=( ["centos"]="CentOS" ["ubuntu"]="Ubuntu" ["debian"]="Debian")
+    os_dict=( ["centos"]="CentOS" ["ubuntu"]="Ubuntu" ["debian"]="Debian" ["fedora"]="Fedora" ["opensuse"]="Opensuse")
 }
