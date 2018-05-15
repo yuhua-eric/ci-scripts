@@ -64,7 +64,7 @@ def boot_device(DEPLOY_TYPE, BMC_HOST, BMC_USER, BMC_PASS):
     # connection.sendline("")
 
     # TODO: retry login
-    connection.prompt_str = ['login:']
+    connection.prompt_str = ['localhost login:']
     connection.wait()
     print "os login interrupt prompt find !"
 
