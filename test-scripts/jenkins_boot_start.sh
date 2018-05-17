@@ -526,7 +526,7 @@ function generate_success_mail(){
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<b>1. 构建信息</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-    JOB_INFO_VERSION="Estuary V5.0 - ${TODAY}"
+    JOB_INFO_VERSION="Estuary V5.1rc1 - ${TODAY}"
     # TODO : the start time need read from file.
     JOB_INFO_SHA1="${GIT_DESCRIBE}"
     JOB_INFO_RESULT=${JOB_RESULT}
@@ -539,7 +539,7 @@ function generate_success_mail(){
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "<b>2. 今日构建结果</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    JOB_RESULT_VERSION="Estuary V5.0"
+    JOB_RESULT_VERSION="Estuary V5.1rc1"
     JOB_RESULT_DATA=""
     for DISTRO in $SHELL_DISTRO; do
         JOB_RESULT_DATA=$(< ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM})",${JOB_RESULT_DATA}"
@@ -568,7 +568,7 @@ function generate_success_mail(){
 done
 
   echo "<b>4. ${MONTH}月版本健康度统计</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-  HEALTH_RATE_VERSION="Estuary V5.0"
+  HEALTH_RATE_VERSION="Estuary V5.1rc1"
   BUILD_PASS_RATE=$(generate_pass_rate || true)
   HEALTH_RATE_COMPILE="{\"data\": \"${BUILD_PASS_RATE}%\", \"link\": \"${BUILD_URL}BuildReport\"}"
   TEST_PASS_RATE=$(generate_test_rate || true)
