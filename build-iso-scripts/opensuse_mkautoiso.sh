@@ -17,7 +17,7 @@ if [ -z ${VERSION} ];then
     exit 1
 fi
 
-material_iso=$(ls /fileserver/open-estuary/${VERSION}/Opensuse/*openSUSE*.iso)
+material_iso=$(ls /fileserver/open-estuary/${VERSION}/OpenSuse/*openSUSE*.iso)
 if [ -z "${material_iso}" ];then
     exit 1
 fi
