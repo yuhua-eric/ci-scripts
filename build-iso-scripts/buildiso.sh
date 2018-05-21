@@ -54,6 +54,8 @@ function main() {
     ./centos_mkautoiso.sh "${GIT_DESCRIBE}"
     ./ubuntu_mkautoiso.sh "${GIT_DESCRIBE}"
     ./debian_mkautoiso.sh "${GIT_DESCRIBE}"
+    ./fedora_mkautoiso.sh "${GIT_DESCRIBE}"
+    ./opensuse_mkautoiso.sh "${GIT_DESCRIBE}"
 }
 
 main "$@"

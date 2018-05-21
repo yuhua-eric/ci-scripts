@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<productDefines xmlns="http://www.suse.com/1.0/yast2ns" xmlns:config="http://www.suse.com/1.0/configns">
+
+<general>
+  <mode>
+    <second_stage config:type="boolean">true</second_stage>
+  </mode>
+  <signature-handling>
+    <accept_unsigned_file config:type="boolean">true</accept_unsigned_file>
+    <accept_file_without_checksum config:type="boolean">true</accept_file_without_checksum>
+    <accept_verification_failed config:type="boolean">true</accept_verification_failed>
+    <accept_unknown_gpg_key config:type="boolean">true</accept_unknown_gpg_key>
+    <import_gpg_key config:type="boolean">true</import_gpg_key>
+    <accept_non_trusted_gpg_key config:type="boolean">true</accept_non_trusted_gpg_key>
+  </signature-handling>
+</general>
+
+<users config:type="list">
+     <user>
+       <encrypted config:type="boolean">false</encrypted>
+       <uid>0</uid>
+       <gid>0</gid>
+       <user_password>root</user_password>
+       <username>root</username>
+    <forename/>
+    <surname/>
+     </user>
+</users>
+
+<software>
+  <selections config:type="list">
+    <selection>Minimal</selection>
+  </selections>
+  <packages config:type="list">
+    <package>zypper</package>
+  </packages>
+  <do_online_update config:type="boolean">true</do_online_update>
+</software>
+
+<networking>
+    <dhcp_options>
+      <dhclient_client_id></dhclient_client_id>
+      <dhclient_hostname_option>AUTO</dhclient_hostname_option>
+    </dhcp_options>
+    <dns>
+      <dhcp_hostname config:type="boolean">false</dhcp_hostname>
+      <resolv_conf_policy>auto</resolv_conf_policy>
+    </dns>
+    <interfaces config:type="list">
+      <interface>
+        <bootproto>dhcp</bootproto>
+        <device>eth0</device>
+        <prefixlen>16</prefixlen>
+        <startmode>onboot</startmode>
+        <usercontrol>no</usercontrol>
+      </interface>
+      <interface>
+        <bootproto>dhcp</bootproto>
+        <device>eth1</device>
+        <prefixlen>16</prefixlen>
+        <startmode>onboot</startmode>
+        <usercontrol>no</usercontrol>
+      </interface>
+    </interfaces>
+    <managed config:type="boolean">false</managed>
+    <routing>
+      <ip_forward config:type="boolean">false</ip_forward>
+    </routing>
+</networking>
+
+<partitioning  config:type="list">
+  <drive>
+    <device>/dev/sda</device>            
+    <partitions config:type="list">
+      <partition>
+	<mount>/</mount>
+	<size>40gb</size>
+      </partition>
+      <partition>
+	<mount>swap</mount>
+	<size>2gb</size>
+      </partition>
+      <partition>
+        <mount>/boot/efi</mount>
+        <size>200mb</size>
+      </partition>
+      <partition>
+        <mount>/home</mount>
+        <size>auto</size>
+      </partition>
+    </partitions>
+    <use>all</use>
+  </drive>
+</partitioning>
+
+<scripts>
+  <chroot-scripts config:type="list">
+    <script>
+      <chrooted config:type="boolean">true</chrooted>
+      <filename>instkernel.sh</filename>
+      <debug config:type="boolean">true</debug>
+      <feedback config:type="boolean">true</feedback>
+      <feedback_type>warning</feedback_type>
+      <location></location>
+      <interpreter>shell</interpreter>
+      <source><![CDATA[
+      #!/bin/bash
+      #
+      # After installation, the logfile from this script can be found in
+      # /var/adm/autoinstall/logs
+      #
+      echo "========================================="
+      echo "... Starting AutoYAST included script ..."
+      echo "========================================="
+      exit 0
+]]>
+      </source>
+    </script>
+  </chroot-scripts>
+</scripts>
+
+</productDefines>
