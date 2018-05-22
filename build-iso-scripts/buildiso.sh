@@ -73,9 +73,9 @@ function main() {
 
     init_input_params
     start_docker_service
-    ./centos_mkautoiso.sh "${GIT_DESCRIBE}"
-    ./ubuntu_mkautoiso.sh "${GIT_DESCRIBE}"
-    ./debian_mkautoiso.sh "${GIT_DESCRIBE}"
+   # ./centos_mkautoiso.sh "${GIT_DESCRIBE}"
+   # ./ubuntu_mkautoiso.sh "${GIT_DESCRIBE}"
+   # ./debian_mkautoiso.sh "${GIT_DESCRIBE}"
     ./fedora_mkautoiso.sh "${GIT_DESCRIBE}"
     #./opensuse_mkautoiso.sh "${GIT_DESCRIBE}"
     cp_opensuse_iso
