@@ -73,12 +73,12 @@ function main() {
 
     init_input_params
     start_docker_service
-    cp_opensuse_iso
     ./centos_mkautoiso.sh "${GIT_DESCRIBE}"
     ./ubuntu_mkautoiso.sh "${GIT_DESCRIBE}"
     ./debian_mkautoiso.sh "${GIT_DESCRIBE}"
     ./fedora_mkautoiso.sh "${GIT_DESCRIBE}"
     #./opensuse_mkautoiso.sh "${GIT_DESCRIBE}"
+    cp_opensuse_iso
     docker run --privileged=true -it  -v /home:/root/ --name opensuse estuary/opensuse:5.1-full bash /root/jenkins/workspace/estuary-v500-build/local/ci-scripts/build-iso-scripts/opensuse_mkautoiso.sh
     cp_auto_iso
 }
