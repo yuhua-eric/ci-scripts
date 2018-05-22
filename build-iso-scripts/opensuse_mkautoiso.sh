@@ -6,18 +6,20 @@
 
 GIT_DESCRIBE=${1:-"None"}
 
-new_iso="auto-install_open.iso"
+new_iso="auto-install.iso"
 cfg_path="../configs/auto-install/opensuse/auto-iso/"
 new_grub="grub.cfg"
 #new_kickstart="ks-iso.cfg"
 new_xml="autoinst-iso.xml"
+cu_dir='/root/jenkins/workspace/estuary-v500-build/local/ci-scripts/build-iso-scripts' 
+cd $cu_dir
+#VERSION=$(ls /fileserver/open-estuary)
+#if [ -z ${VERSION} ];then
+#    exit 1
+#fi
 
-VERSION=$(ls /fileserver/open-estuary)
-if [ -z ${VERSION} ];then
-    exit 1
-fi
-
-material_iso=$(ls /fileserver/open-estuary/${VERSION}/OpenSuse/*openSUSE*.iso)
+#material_iso=$(ls /fileserver/open-estuary/${VERSION}/OpenSuse/*openSUSE*.iso)
+material_iso=$(ls ./*openSUSE*.iso)
 if [ -z "${material_iso}" ];then
     exit 1
 fi
@@ -57,9 +59,9 @@ cd ..
 cp ./initrd ./opensuse/boot/aarch64/
 ##end of modify
 
-genisoimage -e boot/aarch64/efi -no-emul-boot -T -J -R -c boot.catalog -hide boot.catalog -V "openSUSE-Leap-42.3-DVD-Media1" -o ./$new_iso ./opensuse
+mksusecd --create ./$new_iso --no-hybrid ./opensuse
 
 umount ./mnt/
 rm -rf ./opensuse ./mnt ./initrd ./initr/
-cp -f ${new_iso} /fileserver/open-estuary/${VERSION}/Opensuse/
+#cp -f ${new_iso} /fileserver/open-estuary/${VERSION}/Opensuse/
 
