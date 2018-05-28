@@ -3,9 +3,9 @@ Build:
     Distro:
         - Fedora
         - OpenSuse
-        #- Ubuntu
-        #- CentOS
-        #- Debian
+        - Ubuntu
+        - CentOS
+        - Debian
         #- Rancher
         #- OpenEmbedded
 
