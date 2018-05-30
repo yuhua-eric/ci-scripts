@@ -89,10 +89,9 @@ node ('ci-v500-compile'){
 
     stage('stash') {
         // stash result
-        // dir('/fileserver/open-estuary') {
-        //    stash includes: '**/*', name: 'buildResult'
-        //}
-		sh "scp -r /fileserver/open-estuary/* root@192.168.50.122:~/estuary/fileserver_data/open-estuary/ 2>&1 "
+        dir('/fileserver/open-estuary') {
+			stash includes: '**/*', name: 'buildResult'
+        }
 
         stash includes: '*.txt', name: 'mailResult'
         stash includes: '*.properties', name: 'paramsResult'
@@ -115,11 +114,11 @@ node('ci-compile') {
 
     stage('upload') {
         // unstash result
-        // dir('/fileserver/open-estuary'){
-        //    unstash 'buildResult'
+        dir('/fileserver/open-estuary'){
+            unstash 'buildResult'
 
             // TODO : if git_describe exist, clean fileserver pxe_install iso_install
-        //}
+        }
     }
     stage('Result') {
         unstash 'mailResult'
