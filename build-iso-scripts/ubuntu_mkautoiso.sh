@@ -12,13 +12,13 @@ cfg_path="../configs/auto-install/ubuntu/auto-iso/"
 new_grub="grub.cfg"
 new_preseed="ubuntu.seed"
 
-VERSION=$(ls /fileserver/open-estuary)
+VERSION=$(ls /home/fileserver/open-estuary)
 if [ -z ${VERSION} ];then
     exit 1
 fi
 
 # find the iso path
-material_iso=$(ls /fileserver/open-estuary/${VERSION}/Ubuntu/*ubuntu*.iso)
+material_iso=$(ls /home/fileserver/open-estuary/${VERSION}/Ubuntu/*ubuntu*.iso)
 if [ -z "${material_iso}" ];then
     exit 1
 fi
@@ -53,4 +53,4 @@ xorriso -as mkisofs -r -checksum_algorithm_iso md5,sha1 -V 'custom' -o ./$new_is
 umount ./mnt/
 rm -rf ./ubuntu ./mnt
 
-cp -f ${new_iso} /fileserver/open-estuary/${VERSION}/Ubuntu/
+cp -f ${new_iso} /home/fileserver/open-estuary/${VERSION}/Ubuntu/

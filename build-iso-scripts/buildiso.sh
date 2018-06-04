@@ -52,20 +52,20 @@ function start_docker_service() {
 }
 
 function cp_opensuse_iso(){
-    VERSION=$(ls /fileserver/open-estuary)
+    VERSION=$(ls /home/fileserver/open-estuary)
     if [ -z ${VERSION} ];then
         exit 1
     fi 
-    material_iso=$(ls /fileserver/open-estuary/${VERSION}/OpenSuse/*openSUSE*.iso)
+    material_iso=$(ls /home/fileserver/open-estuary/${VERSION}/OpenSuse/*openSUSE*.iso)
     cp ${material_iso} ./
 }
 
 function cp_auto_iso(){
-    VERSION=$(ls /fileserver/open-estuary)
+    VERSION=$(ls /home/fileserver/open-estuary)
     if [ -z ${VERSION} ];then
         exit 1
     fi
-    cp -f ./auto-install.iso /fileserver/open-estuary/${VERSION}/OpenSuse/
+    cp -f ./auto-install.iso /home/fileserver/open-estuary/${VERSION}/OpenSuse/
 }
 function main() {
     parse_input "$@"
@@ -77,7 +77,11 @@ function main() {
     ./ubuntu_mkautoiso.sh "${GIT_DESCRIBE}"
     ./debian_mkautoiso.sh "${GIT_DESCRIBE}"
     ./fedora_mkautoiso.sh "${GIT_DESCRIBE}"
+<<<<<<< HEAD
+   #./opensuse_mkautoiso.sh "${GIT_DESCRIBE}"
+=======
     #./opensuse_mkautoiso.sh "${GIT_DESCRIBE}"
+>>>>>>> f79f37c188f0c8d1dea35cadac5f15dfd46b2d23
     cp_opensuse_iso
     docker run --privileged=true -i -v /home:/root/ --name opensuse estuary/opensuse:5.1-full bash /root/jenkins/workspace/estuary-v500-build/local/ci-scripts/build-iso-scripts/opensuse_mkautoiso.sh
     cp_auto_iso

@@ -12,12 +12,12 @@ cfg_path="../configs/auto-install/fedora/auto-iso/"
 new_grub="grub.cfg"
 new_kickstart="ks-iso.cfg"
 
-VERSION=$(ls /fileserver/open-estuary)
+VERSION=$(ls /home/fileserver/open-estuary)
 if [ -z ${VERSION} ];then
     exit 1
 fi
 
-material_iso=$(ls /fileserver/open-estuary/${VERSION}/Fedora/*Fedora*.iso)
+material_iso=$(ls /home/fileserver/open-estuary/${VERSION}/Fedora/*Fedora*.iso)
 if [ -z "${material_iso}" ];then
     exit 1
 fi
@@ -62,4 +62,4 @@ genisoimage -e images/efiboot.img -no-emul-boot -T -J -R -c boot.catalog -hide b
 umount ./mnt/
 rm -rf ./fedora ./mnt ./initrd.img ./initrd/
 
-cp -f ${new_iso} /fileserver/open-estuary/${VERSION}/Fedora/
+cp -f ${new_iso} /home/fileserver/open-estuary/${VERSION}/Fedora/
