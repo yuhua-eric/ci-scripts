@@ -70,17 +70,16 @@ function cp_auto_iso(){
 function main() {
     parse_input "$@"
     source_properties_file "${PROPERTIES_FILE}"
-
     init_input_params
-    start_docker_service
+    #start_docker_service
     ./centos_mkautoiso.sh "${GIT_DESCRIBE}"
     ./ubuntu_mkautoiso.sh "${GIT_DESCRIBE}"
     ./debian_mkautoiso.sh "${GIT_DESCRIBE}"
     ./fedora_mkautoiso.sh "${GIT_DESCRIBE}"
     #./opensuse_mkautoiso.sh "${GIT_DESCRIBE}"
-    cp_opensuse_iso
-    docker run --privileged=true -i -v /home:/root/ --name opensuse estuary/opensuse:5.1-full bash /root/jenkins/workspace/estuary-v500-build/local/ci-scripts/build-iso-scripts/opensuse_mkautoiso.sh
-    cp_auto_iso
+    #cp_opensuse_iso
+    #docker run --privileged=true -i -v /home:/root/ --name opensuse estuary/opensuse:5.1-full bash /root/jenkins/workspace/estuary-v500-build/local/ci-scripts/build-iso-scripts/opensuse_mkautoiso.sh
+    #cp_auto_iso
 }
 
 main "$@"
