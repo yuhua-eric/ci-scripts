@@ -12,12 +12,12 @@ cfg_path="../configs/auto-install/debian/auto-iso/"
 new_grub="grub.cfg"
 new_preseed="preseed.cfg"
 
-VERSION=$(ls /fileserver/open-estuary)
+VERSION=$(ls /home/fileserver/open-estuary)
 if [ -z "${VERSION}" ];then
     exit 1
 fi
 
-material_iso=$(ls /fileserver/open-estuary/${VERSION}/Debian/*debian*.iso)
+material_iso=$(ls /home/fileserver/open-estuary/${VERSION}/Debian/*debian*.iso)
 if [ -z "${material_iso}" ];then
     exit 1
 fi
@@ -51,4 +51,4 @@ xorriso -as mkisofs -r -checksum_algorithm_iso md5,sha1 -o ./$new_iso -J -joliet
 umount ./mnt/
 rm -rf ./debian ./mnt
 
-cp -f ${new_iso} /fileserver/open-estuary/${VERSION}/Debian/
+cp -f ${new_iso} /home/fileserver/open-estuary/${VERSION}/Debian/

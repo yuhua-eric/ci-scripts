@@ -12,12 +12,12 @@ cfg_path="../configs/auto-install/centos/auto-iso/"
 new_grub="grub.cfg"
 new_kickstart="ks-iso.cfg"
 
-VERSION=$(ls /fileserver/open-estuary)
+VERSION=$(ls /home/fileserver/open-estuary)
 if [ -z ${VERSION} ];then
     exit 1
 fi
 
-material_iso=$(ls /fileserver/open-estuary/${VERSION}/CentOS/*CentOS*.iso)
+material_iso=$(ls /home/fileserver/open-estuary/${VERSION}/CentOS/*CentOS*.iso)
 if [ -z "${material_iso}" ];then
     exit 1
 fi
@@ -62,4 +62,4 @@ genisoimage -e images/efiboot.img -no-emul-boot -T -J -R -c boot.catalog -hide b
 umount ./mnt/
 rm -rf ./centos ./mnt ./initrd.img ./initrd/
 
-cp -f ${new_iso} /fileserver/open-estuary/${VERSION}/CentOS/
+cp -f ${new_iso} /home/fileserver/open-estuary/${VERSION}/CentOS/

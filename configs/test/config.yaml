@@ -1,11 +1,11 @@
 Build:
     # parameters for the build
     Distro:
+        - Fedora
+        #- OpenSuse
         - Ubuntu
         - CentOS
         - Debian
-        #- Fedora
-        #- OpenSuse
         #- Rancher
         #- OpenEmbedded
 
@@ -18,10 +18,14 @@ DISTRO:
         - Ubuntu: Ubuntu_ARM64.tar.gz
         - CentOS: CentOS_ARM64.tar.gz
         - Debian: Debian_ARM64.tar.gz
+        - OpenSuse: OpenSuse_ARM64.tar.gz
+        - Fedora: Fedora_ARM64.tar.gz
     D05:
         - CentOS: CentOS_ARM64.tar.gz
         - Ubuntu: Ubuntu_ARM64.tar.gz
         - Debian: Debian_ARM64.tar.gz
+        - OpenSuse: OpenSuse_ARM64.tar.gz
+        - Fedora: Fedora_ARM64.tar.gz
 
 
 # the dictionary for the board and arch mapping
@@ -54,7 +58,7 @@ Test:
 Ftpinfo:
     ftpserver: http://192.168.50.122:8083
     FTPSERVER_DISPLAY_URL: http://120.31.149.194:18083
-    FTP_DIR : /fileserver
+    FTP_DIR : /home/fileserver
 
 # mail list
 Mail:
