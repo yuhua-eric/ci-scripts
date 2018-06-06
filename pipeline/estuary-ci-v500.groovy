@@ -114,7 +114,7 @@ node ('ci-v500-compile'){
 
     stage('Stash Build Result') {
         // stash result
-        dir('/fileserver/open-estuary') {
+        dir('/home/fileserver/open-estuary') {
             stash includes: '**/*', name: 'buildResult'
         }
 
