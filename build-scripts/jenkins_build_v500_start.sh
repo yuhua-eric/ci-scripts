@@ -88,7 +88,7 @@ function parse_params() {
     : ${LAVA_TOKEN:=`python configs/parameter_parser.py -f config.yaml -s LAVA -k TOKEN`}
 
     : ${FTP_SERVER:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k ftpserver`}
-    : ${FTP_DIR:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k FTP_DIR`}
+    : ${FTP_DIR:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k STASH_DIR`}
     : ${FTPSERVER_DISPLAY_URL:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k FTPSERVER_DISPLAY_URL`}
 
     : ${ARCH_MAP:=`python configs/parameter_parser.py -f config.yaml -s Arch`}
