@@ -42,6 +42,21 @@ function parse_input() {
 function init_input_params() {
     TREE_NAME=${TREE_NAME:-"open-estuary"}
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
+    SAVE_ISO=${SAVE_ISO:-"n"}
+}
+function deal_with_iso() {
+    VERSION=$(ls /home/fileserver/open-estuary)
+    if [ -z ${VERSION} ];then
+        exit 1
+    fi
+    cd /home/fileserver/open-estuary/${VERSION}
+    if [ x"$SAVE_ISO" = x"n" ]; then
+        cd CentOS && rm -f *CentOS*.iso && cd -
+        cd Ubuntu && rm -f *ubuntu*.iso && cd -
+        cd Debian && rm -f *debian*.iso && cd -
+        cd Fedora && rm -f *Fedora*.iso && cd -
+        #cd OpenSuse && rm -f *openSUSE*.iso && cd -
+    fi
 }
 
 function start_docker_service() {
@@ -80,6 +95,7 @@ function main() {
     #cp_opensuse_iso
     #docker run --privileged=true -i -v /home:/root/ --name opensuse estuary/opensuse:5.1-full bash /root/jenkins/workspace/estuary-v500-build/local/ci-scripts/build-iso-scripts/opensuse_mkautoiso.sh
     #cp_auto_iso
+    deal_with_iso
 }
 
 main "$@"

@@ -89,6 +89,7 @@ function parse_params() {
 
     : ${FTP_SERVER:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k ftpserver`}
     : ${FTP_DIR:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k FTP_DIR`}
+    : ${STASH_DIR:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k STASH_DIR`}
     : ${FTPSERVER_DISPLAY_URL:=`python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k FTPSERVER_DISPLAY_URL`}
 
     : ${ARCH_MAP:=`python configs/parameter_parser.py -f config.yaml -s Arch`}
@@ -269,10 +270,10 @@ function parse_arch_map(){
 function cp_image() {
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
-    DES_DIR=$FTP_DIR/$TREE_NAME/$GIT_DESCRIBE
+    DES_DIR=$STASH_DIR/$TREE_NAME/$GIT_DESCRIBE
 
     # do clean
-    rm -rf $FTP_DIR/$TREE_NAME/
+    rm -rf $STASH_DIR/$TREE_NAME/
     [ -d $DES_DIR ] && rm -rf $DES_DIR
 
     mkdir -p $DES_DIR
@@ -406,7 +407,7 @@ function main() {
             cp_image
         fi
     else
-        DES_DIR=$FTP_DIR/$TREE_NAME/$GIT_DESCRIBE
+        DES_DIR=$STASH_DIR/$TREE_NAME/$GIT_DESCRIBE
         if [ -d $DES_DIR ];then
             echo "Skip build, use old build : ${GIT_DESCRIBE}"
         else

@@ -74,6 +74,10 @@ node ('ci-v500-compile'){
         if (env.FAILED_MAIL_CC_LIST) {
             sh "echo FAILED_MAIL_CC_LIST=\\\"${FAILED_MAIL_CC_LIST}\\\" >> env.properties"
         }
+        if (env.SAVE_ISO) {
+            sh "echo SAVE_ISO=\\\"${SAVE_ISO}\\\" >> env.properties"
+        }
+
 
         if (env.DEBUG) {
             sh "echo DEBUG=\\\"${DEBUG}\\\" >> env.properties"
