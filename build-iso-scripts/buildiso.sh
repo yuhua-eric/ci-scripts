@@ -42,7 +42,7 @@ function parse_input() {
 function init_input_params() {
     TREE_NAME=${TREE_NAME:-"open-estuary"}
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
-    SAVE_ISO=${SAVE_ISO:-"n"}
+    SAVE_ISO=${SAVE_ISO:-"y"}
 }
 function deal_with_iso() {
     VERSION=$(ls /home/fileserver/open-estuary)

@@ -47,6 +47,9 @@ node ('ci-v500-compile'){
         if (env.VERSION) {
             sh "echo VERSION=\\\"${VERSION}\\\" >> env.properties"
         }
+        if (env.SAVE_ISO) {
+            sh "echo SAVE_ISO=\\\"${SAVE_ISO}\\\" >> env.properties"
+        }
 
         if (env.DEBUG) {
             sh "echo DEBUG=\\\"${DEBUG}\\\" >> env.properties"
