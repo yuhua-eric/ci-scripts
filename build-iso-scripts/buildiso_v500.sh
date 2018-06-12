@@ -43,16 +43,9 @@ function init_input_params() {
     TREE_NAME=${TREE_NAME:-"open-estuary"}
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
     SAVE_ISO=${SAVE_ISO:-"y"}
+    ALL_SHELL_DISTRO=${SHELL_DISTRO:-"Ubuntu CentOS"}
 }
-function parse_params() {
-    WORKSPACE=${WORKSPACE:-/root/jenkins/workspace/estuary-v500-build}
-    WORK_DIR=${WORKSPACE}/local
-    CI_SCRIPTS_DIR=${WORK_DIR}/ci-scripts
-    pushd ${CI_SCRIPTS_DIR}
-    : ${SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
-    : ${ALL_SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
-    popd    # restore current work directory
-}
+
 function deal_with_iso() {
     VERSION=$(ls /home/fileserver/open-estuary)
     if [ -z ${VERSION} ];then
