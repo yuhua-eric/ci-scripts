@@ -62,6 +62,7 @@ function init_input_params() {
     PACKAGES=${PACKAGES:-""}
     # all setup types
     SETUP_TYPE=${SETUP_TYPE:-""}
+    ALL_SHELL_PLATFORM=${SHELL_PLATFORM:-"D05"}
     ALL_SHELL_DISTRO=${SHELL_DISTRO:-"Ubuntu CentOS"}
 
     DEBUG=${DEBUG:-""}
@@ -72,7 +73,7 @@ function init_input_params() {
 function parse_params() {
     pushd ${CI_SCRIPTS_DIR}
     : ${SHELL_PLATFORM:=`python configs/parameter_parser.py -f config.yaml -s Build -k Platform`}
-    : ${ALL_SHELL_PLATFORM:=`python configs/parameter_parser.py -f config.yaml -s Build -k Platform`}
+    #: ${ALL_SHELL_PLATFORM:=`python configs/parameter_parser.py -f config.yaml -s Build -k Platform`}
     : ${SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
    # : ${ALL_SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
 
