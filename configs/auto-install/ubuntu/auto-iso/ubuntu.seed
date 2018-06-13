@@ -99,15 +99,21 @@ d-i debian-installer/allow_unauthenticated string true
 d-i base-installer/kernel/image string linux-image-estuary
 
 ## apt-setup
+d-i mirror/http/proxy string
+d-i mirror/http/hostname string cn.ports.ubuntu.com
+d-i mirror/http/directory string /ubuntu-ports/
+d-i mirror/http/mirror select cn.ports.ubuntu.com
 #d-i apt-setup/non-free boolean true
 #d-i apt-setup/contrib boolean true
-d-i apt-setup/use_mirror boolean false
+d-i apt-setup/use_mirror boolean true
 d-i apt-setup/restricted boolean true
 d-i apt-setup/universe boolean true
 d-i apt-setup/backports boolean true
 #d-i apt-setup/services-select multiselect security
 #d-i apt-setup/security_host string security.ubuntu.com
 #d-i apt-setup/security_path string /ubuntu
+d-i apt-setup/security_host string cn.ports.ubuntu.com
+d-i apt-setup/security_path string /ubuntu-ports/
 d-i pkgsel/update-policy select none
 
 ##install software
