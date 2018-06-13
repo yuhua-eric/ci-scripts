@@ -29,15 +29,15 @@ oem-config	oem-config/steps	multiselect language, timezone, keyboard, user, netw
 
 
 d-i mirror/country string manual
-d-i mirror/http/proxy string
+#d-i mirror/http/proxy string
 # hard code Private
 #d-i mirror/http/hostname string 192.168.50.122:8083
 #d-i mirror/http/directory string /estuary_v500/Ubuntu/mirror/
 #d-i mirror/http/mirror select 192.168.50.122:8083
 ## 107
-d-i mirror/http/hostname string 192.168.1.107:80
+d-i mirror/http/hostname string cn.ports.ubuntu.com
 d-i mirror/http/directory string /ubuntu-ports/
-d-i mirror/http/mirror select 192.168.1.107:80
+d-i mirror/http/mirror select cn.ports.ubuntu.com
 ## Official
 #d-i mirror/http/hostname string ports.ubuntu.com
 #d-i mirror/http/directory string /ubuntu-ports/
@@ -67,7 +67,7 @@ d-i partman-auto/method string regular
 #d-i partman/confirm_nooverwrite boolean true
 
 
-d-i apt-setup/use_mirror boolean false
+
 d-i apt-setup/use_mirror boolean true
 
 #------------------------------------------------------------------
@@ -79,8 +79,7 @@ d-i apt-setup/use_mirror boolean true
 #      repositories at the earliest stages of the debian-installer.
 #------------------------------------------------------------------
 #d-i apt-setup/restricted boolean true
-d-i apt-setup/restricted boolean false
-d-i apt-setup/multiverse boolean false
+
 
 d-i apt-setup/universe boolean true
 d-i apt-setup/backports boolean true
@@ -89,7 +88,7 @@ d-i apt-setup/backports boolean true
 #d-i apt-setup/security_host string 192.168.50.122:8083
 #d-i apt-setup/security_path string /estuary_v500/Ubuntu/mirror/
 ##107
-d-i apt-setup/security_host string 192.168.1.107:80
+d-i apt-setup/security_host string cn.ports.ubuntu.com
 d-i apt-setup/security_path string /ubuntu-ports/
 ## Official
 #d-i apt-setup/security_host string ports.ubuntu.com

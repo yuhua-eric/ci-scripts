@@ -101,7 +101,7 @@ d-i base-installer/kernel/image string linux-image-estuary
 ## apt-setup
 #d-i apt-setup/non-free boolean true
 #d-i apt-setup/contrib boolean true
-d-i apt-setup/use_mirror boolean false
+d-i apt-setup/use_mirror boolean true
 d-i apt-setup/restricted boolean true
 d-i apt-setup/universe boolean true
 d-i apt-setup/backports boolean true
