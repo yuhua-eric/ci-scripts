@@ -53,10 +53,16 @@ function deal_with_iso() {
     fi
     cd /home/fileserver/open-estuary/${VERSION}
     if [ x"$SAVE_ISO" = x"n" ]; then
-        cd CentOS && rm -f *CentOS*.iso && cd -
-        cd Ubuntu && rm -f *ubuntu*.iso && cd -
-        cd Debian && rm -f *debian*.iso && cd -
-        cd Fedora && rm -f *Fedora*.iso && cd -
+        for DISTRO in $ALL_SHELL_DISTRO;do
+            if [ x"$DISTRO" = x"CentOS" -o x"$DISTRO" = x"Fedora" ]; then  
+                cd $DISTRO && rm -f *$DISTRO*.iso && cd -
+            elif [ x"$DISTRO" = x"Ubuntu" -o x"$DISTRO" = x"Debian" ]; then
+                distro="$(echo $DISTRO | tr '[:upper:]' '[:lower:]')"  
+                cd $distro && rm -f *$distro*.iso && cd -
+            #elif [ x"$DISTRO" = x"OpenSuse" ]; then
+               #cd OpenSuse && rm -f *openSUSE*.iso && cd -
+            fi     
+        done
         #cd OpenSuse && rm -f *openSUSE*.iso && cd -
     fi
 }
