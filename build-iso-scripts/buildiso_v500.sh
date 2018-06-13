@@ -88,7 +88,6 @@ function main() {
     parse_input "$@"
     source_properties_file "${PROPERTIES_FILE}"
     init_input_params
-    parse_params
     #start_docker_service
     for DISTRO in $ALL_SHELL_DISTRO;do
         distro="$(echo $DISTRO | tr '[:upper:]' '[:lower:]')"
