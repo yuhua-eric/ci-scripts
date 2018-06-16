@@ -2,7 +2,7 @@ Build:
     # parameters for the build
     Distro:
         - Fedora
-        #- OpenSuse
+        - OpenSuse
         - Ubuntu
         - CentOS
         - Debian
