@@ -97,7 +97,7 @@ function main() {
     #start_docker_service
     for DISTRO in $ALL_SHELL_DISTRO;do
         distro="$(echo $DISTRO | tr '[:upper:]' '[:lower:]')"
-        if [ x"$distro" != x"OpenSuse" ]; then            
+        if [ x"$distro" != x"opensuse" ]; then            
             ./${distro}_mkautoiso.sh "${GIT_DESCRIBE}"
         else
             start_docker_service
