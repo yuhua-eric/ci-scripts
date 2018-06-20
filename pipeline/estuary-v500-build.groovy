@@ -62,7 +62,7 @@ node ('ci-v500-compile'){
 
     def build_result = 0
     stage('Build') {
-        build_result = sh script: "./local/ci-scripts/build-scripts/jenkins_build_v500_start.sh -p env.properties 2>&1 ", returnStatus: true
+        build_result = sh script: "./local/ci-scripts/build-scripts/estuary_build_v500_start.sh -p env.properties 2>&1 ", returnStatus: true
     }
     echo "build_result : ${build_result}"
     if (build_result == 0) {
@@ -77,7 +77,7 @@ node ('ci-v500-compile'){
 
     def iso_result = 0
     dir('./local/ci-scripts/build-iso-scripts') {
-        iso_result = sh script: "./buildiso.sh -p env.properties 2>&1 ", returnStatus: true
+        iso_result = sh script: "./buildiso_v500.sh -p env.properties 2>&1 ", returnStatus: true
     }
     echo "iso_result : ${iso_result}"
     if (iso_result == 0) {

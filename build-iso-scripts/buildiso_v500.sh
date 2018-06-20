@@ -43,16 +43,9 @@ function init_input_params() {
     TREE_NAME=${TREE_NAME:-"open-estuary"}
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
     SAVE_ISO=${SAVE_ISO:-"y"}
+    ALL_SHELL_DISTRO=${SHELL_DISTRO:-"Ubuntu CentOS"}
 }
-function parse_params() {
-    WORKSPACE=${WORKSPACE:-/root/jenkins/workspace/estuary-v500-build}
-    WORK_DIR=${WORKSPACE}/local
-    CI_SCRIPTS_DIR=${WORK_DIR}/ci-scripts
-    pushd ${CI_SCRIPTS_DIR}
-    : ${SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
-    : ${ALL_SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
-    popd    # restore current work directory
-}
+
 function deal_with_iso() {
     VERSION=$(ls /home/fileserver/open-estuary)
     if [ -z ${VERSION} ];then
@@ -61,18 +54,18 @@ function deal_with_iso() {
     cd /home/fileserver/open-estuary/${VERSION}
     if [ x"$SAVE_ISO" = x"n" ]; then
         for DISTRO in $ALL_SHELL_DISTRO;do
-            if [ x"$DISTRO" = x"CentOS" -o x"$DISTRO" = x"Fedora" ]; then
+            if [ x"$DISTRO" = x"CentOS" -o x"$DISTRO" = x"Fedora" ]; then  
                 cd $DISTRO && rm -f *$DISTRO*.iso && cd -
             elif [ x"$DISTRO" = x"Ubuntu" -o x"$DISTRO" = x"Debian" ]; then
-                distro="$(echo $DISTRO | tr '[:upper:]' '[:lower:]')"
+                distro="$(echo $DISTRO | tr '[:upper:]' '[:lower:]')"  
                 cd $DISTRO && rm -f *$distro*.iso && cd -
             elif [ x"$DISTRO" = x"OpenSuse" ]; then
                 cd OpenSuse && rm -f *openSUSE*.iso && cd -
-            fi
+            fi     
         done
         #cd OpenSuse && rm -f *openSUSE*.iso && cd -
     fi
- }
+}
 
 function start_docker_service() {
     docker_status=`service docker status|grep "running"`
@@ -101,7 +94,6 @@ function main() {
     parse_input "$@"
     source_properties_file "${PROPERTIES_FILE}"
     init_input_params
-    parse_params
     #start_docker_service
     for DISTRO in $ALL_SHELL_DISTRO;do
         distro="$(echo $DISTRO | tr '[:upper:]' '[:lower:]')"
