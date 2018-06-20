@@ -1,23 +1,39 @@
 # Suggest LVM by default.
 d-i	partman-auto/init_automatically_partition	string some_device_lvm
 d-i	partman-auto/init_automatically_partition	seen false
+
 # Install the Ubuntu Server seed.
 tasksel	tasksel/force-tasks	string server
+
+# Preseeding only locale sets language, country and locale.
+#d-i debian-installer/language string en
+d-i debian-installer/language string English
+d-i debian-install/locale string en_US.UTF-8
+d-i debian-installer/country string US  
+
 # Only install basic language packs. Let tasksel ask about tasks.
-d-i	pkgsel/language-pack-patterns	string
+#d-i	pkgsel/language-pack-patterns	string
+
 # No language support packages.
-d-i	pkgsel/install-language-support	boolean false
+#d-i	pkgsel/install-language-support	boolean false
+
 # Only ask the UTC question if there are other operating systems installed.
 d-i	clock-setup/utc-auto	boolean true
+
 # Verbose output and no boot splash screen.
 d-i	debian-installer/quiet	boolean false
 d-i	debian-installer/splash	boolean false
+
 # Install the debconf oem-config frontend (if in OEM mode).
 d-i	oem-config-udeb/frontend	string debconf
+
 # Wait for two seconds in grub
 d-i	grub-installer/timeout	string 2
+
 # Add the network and tasks oem-config steps by default.
-oem-config	oem-config/steps	multiselect language, timezone, keyboard, user, network, tasks
+d-i netcfg/get_hostname string ubuntu
+
+#oem-config	oem-config/steps	multiselect language, timezone, keyboard, user, network, tasks
 #d-i  base-installer/kernel/altmeta   string hwe-16.04
 #------------------------------------------------------------------
 # modification
@@ -27,22 +43,41 @@ oem-config	oem-config/steps	multiselect language, timezone, keyboard, user, netw
 #------------------------------------------------------------------
 #d-i base-installer/kernel/image string linux-image-estuary
 
-
-d-i mirror/country string manual
-#d-i mirror/http/proxy string
 # hard code Private
+# mirror
+d-i mirror/country string manual
+## 107
+d-i mirror/http/hostname string 192.168.1.107:80
+d-i mirror/http/mirror select 192.168.1.107:80
+d-i mirror/http/directory string /ubuntu-ports/
+## 50.122
 #d-i mirror/http/hostname string 192.168.50.122:8083
 #d-i mirror/http/directory string /estuary_v500/Ubuntu/mirror/
 #d-i mirror/http/mirror select 192.168.50.122:8083
-## 107
-d-i mirror/http/hostname string 192.168.1.107:80
-d-i mirror/http/directory string /ubuntu-ports/
-d-i mirror/http/mirror select 192.168.1.107:80
+#d-i mirror/http/proxy string http://192.168.1.108:8900
+## Official
+#d-i mirror/http/hostname string cn.ports.ubuntu.com
+#d-i mirror/http/mirror select cn.ports.ubuntu.com
+#d-i mirror/http/directory string /ubuntu-ports/
 ## Official
 #d-i mirror/http/hostname string ports.ubuntu.com
-#d-i mirror/http/directory string /ubuntu-ports/
 #d-i mirror/http/mirror select ports.ubuntu.com
+#d-i mirror/http/directory string /ubuntu-ports/
 
+# Account setup
+d-i passwd/root-password password root
+d-i passwd/root-password-again password root
+d-i passwd/user-fullname string Estuary
+d-i passwd/username string estuary
+d-i passwd/user-password password user
+d-i passwd/user-password-again password user
+d-i passwd/user-default-groups string audio cdrom video sudo
+d-i user-setup/allow-password-weak boolean true
+
+# Clock and time zone setup
+d-i clock-setup/utc boolean true
+d-i time/zone string Asia/Shanghai
+d-i clock-setup/ntp boolean true
 
 d-i partman-auto/disk string /dev/sda
 #d-i partman-auto/method string lvm
@@ -55,6 +90,7 @@ d-i partman-partitioning/confirm_write_new_label boolean true
 d-i partman/choose_partition select finish
 d-i partman/confirm boolean true
 d-i partman/confirm_nooverwrite boolean true
+
 # Partitioning
 #d-i partman-auto/disk string /dev/sda
 d-i partman-auto/method string regular
@@ -65,7 +101,6 @@ d-i partman-auto/method string regular
 #d-i partman/choose_partition select finish
 #d-i partman/confirm boolean true
 #d-i partman/confirm_nooverwrite boolean true
-
 
 
 d-i apt-setup/use_mirror boolean true
@@ -80,10 +115,10 @@ d-i apt-setup/use_mirror boolean true
 #------------------------------------------------------------------
 #d-i apt-setup/restricted boolean true
 
-
 d-i apt-setup/universe boolean true
 d-i apt-setup/backports boolean true
 # d-i apt-setup/services-select multiselect security
+
 # TODO : hard code Private
 #d-i apt-setup/security_host string 192.168.50.122:8083
 #d-i apt-setup/security_path string /estuary_v500/Ubuntu/mirror/
@@ -91,5 +126,7 @@ d-i apt-setup/backports boolean true
 d-i apt-setup/security_host string 192.168.1.107:80
 d-i apt-setup/security_path string /ubuntu-ports/
 ## Official
+#d-i apt-setup/security_host string cn.ports.ubuntu.com
+#d-i apt-setup/security_path string /ubuntu-ports/
 #d-i apt-setup/security_host string ports.ubuntu.com
 #d-i apt-setup/security_path string /ubuntu-ports/
