@@ -13,7 +13,7 @@ import re
 DEPLOY_TIME_OUT = 3600
 
 def boot_device(DEPLOY_TYPE, BMC_HOST, BMC_USER, BMC_PASS):
-    connection_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol activate' % (BMC_HOST, BMC_USER, BMC_PASS)
+    connection_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol activate usesolkeepalive' % (BMC_HOST, BMC_USER, BMC_PASS)
     disconnction_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol deactivate' % (BMC_HOST, BMC_USER, BMC_PASS)
     power_off_command = 'ipmitool -H %s -I lanplus -U %s -P %s power off' % (BMC_HOST, BMC_USER, BMC_PASS)
     power_on_command = 'ipmitool -H %s -I lanplus -U %s -P %s power on' % (BMC_HOST, BMC_USER, BMC_PASS)
