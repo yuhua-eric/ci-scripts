@@ -96,7 +96,7 @@ def generate_test_definitions(work_test_list, test_case_definition_url):
     all_definitions = []
     # put 5 test definition in one lava job.
     # TODO : change batch_num to 1 for test. normal it's 5
-    batch_num = 2
+    batch_num = 5 
     i = 0
     current_definition = ""
     for test in work_test_list:
