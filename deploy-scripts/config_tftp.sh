@@ -60,8 +60,8 @@ function config_tftp_pxe() {
         if timeout 60 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} test -d "/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/";then
             echo "/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/ exist in ${NEXT_SERVER}"
         else
-            timeout 60 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} mkdir -p "/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/"
-            timeout 60 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/tftp/pxe_install/arm64/estuary/template/${distro_name}/${DEVICE_TYPE,,}/" root@${NEXT_SERVER}:"/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/"
+            timeout 60 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} mkdir -p "/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/${version_name}/${distro_name}/"
+            timeout 60 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/tftp/pxe_install/arm64/estuary/template/${distro_name}/${DEVICE_TYPE,,}/" root@${NEXT_SERVER}:"/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/${version_name}/${distro_name}/"
         fi
     fi
 }
@@ -83,8 +83,8 @@ function config_tftp_iso() {
         if timeout 60 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} test -d "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/";then
             echo  "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/ exist in ${NEXT_SERVER}"
         else
-            timeout 60 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} mkdir -p "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/"
-            timeout 60 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/tftp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}" root@${NEXT_SERVER}:"/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}"
+            timeout 60 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} mkdir -p "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/"
+            timeout 60 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/tftp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}" root@${NEXT_SERVER}:"/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/"
         fi
     fi
 }
