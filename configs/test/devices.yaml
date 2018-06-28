@@ -15,6 +15,15 @@ dhcp:
   nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
+ci-lava-slave2:
+  type: D03
+  bmc: 192.168.2.246
+  ip: 192.168.50.222
+  mac: c0:a8:02:f6:00:04
+  next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
+  filename: "estuary_install/grubaa64.efi"
+
 # DUT
 d05ssh01:
   type: D05
@@ -142,15 +151,6 @@ d03ssh04:
   bmc: 192.168.2.210
   ip: 192.168.50.202
   mac: c0:a8:02:d2:00:04
-  next-server: 192.168.50.122
-  nfs-server: 192.168.2.49
-  filename: "estuary_install/grubaa64.efi"
-
-d03ssh05:
-  type: D03
-  bmc: 192.168.2.246
-  ip: 192.168.50.222
-  mac: c0:a8:02:f6:00:04
   next-server: 192.168.50.122
   nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
