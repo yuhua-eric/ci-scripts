@@ -12,6 +12,7 @@ dhcp:
   ip: 192.168.50.122
   mac: c0:a8:02:e0:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 # DUT
@@ -21,6 +22,7 @@ d05ssh01:
   ip: 192.168.50.125
   mac: c0:a8:02:ae:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 # DUT
@@ -30,6 +32,7 @@ d05ssh02:
   ip: 192.168.50.120
   mac: c0:a8:02:df:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 # DUT
@@ -39,6 +42,7 @@ d05ssh03:
   ip: 192.168.50.127
   mac: c0:a8:03:7f:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 # 20180209 New Device
@@ -48,6 +52,7 @@ d05ssh04:
   ip: 192.168.50.128
   mac: c0:a8:02:85:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 # 20180209 New Device
@@ -57,6 +62,7 @@ d05ssh05:
   ip: 192.168.50.129
   mac: c0:a8:02:86:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 # 20180209 New Device
@@ -66,6 +72,7 @@ d05ssh06:
   ip: 192.168.50.130
   mac: c0:a8:02:87:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 # 20180209 New Device
@@ -75,6 +82,7 @@ d05ssh07:
   ip: 192.168.50.131
   mac: c0:a8:02:b2:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 # v500 d05编译机器
@@ -84,6 +92,7 @@ d05ssh08:
   ip: 192.168.50.201
   mac: c0:a8:02:a9:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 d05ssh09:
@@ -91,7 +100,9 @@ d05ssh09:
   bmc: 192.168.2.193
   ip: 192.168.50.121
   mac: c0:a8:02:c1:00:04
-  next-server: 192.168.50.122
+  next-server: 192.168.50.222
+  nfs-server: 192.168.2.49
+  nfs-server: 192.168.2.47
   filename: "estuary_install/grubaa64.efi"
 
 # DUT
@@ -101,6 +112,7 @@ d03ssh01:
   ip: 192.168.50.124
   mac: c0:a8:03:fa:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 # 20180209 New Device
@@ -111,6 +123,7 @@ d03ssh02:
   ip: 192.168.50.123
   mac: c0:a8:02:d6:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 # 20180209 New Device
@@ -121,6 +134,7 @@ d03ssh03:
   ip: 192.168.50.132
   mac: c0:a8:02:e9:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 # 主力 d03 测试机器
@@ -130,6 +144,7 @@ d03ssh04:
   ip: 192.168.50.202
   mac: c0:a8:02:d2:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 d03ssh05:
@@ -138,6 +153,7 @@ d03ssh05:
   ip: 192.168.50.222
   mac: c0:a8:02:f6:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 # v500 compile server
@@ -147,5 +163,6 @@ d05compile01:
   ip: 192.168.50.126
   mac: c0:a8:03:80:00:04
   next-server: 192.168.50.122
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
