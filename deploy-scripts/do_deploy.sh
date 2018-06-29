@@ -21,7 +21,7 @@ BOOT_PLAN=${5:-"BOOT_PXE"}
 cd ../
 BMC_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k bmc)
 TARGET_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k ip)
-NFS_BMC_IP=$(python configs/parameter_parser.py -f config.yaml -s NFS -k BMC_IP)
+NFS_BMC_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k nfs-server)
 DEVICE_TYPE=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k type)
 cd -
 

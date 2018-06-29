@@ -163,6 +163,7 @@ node('ci-compile') {
 
     stage ('Mirror Test Repo') {
         build job: 'step_mirror_test_repo_in_lava', parameters: [[$class: 'StringParameterValue', name: 'TEST_REPO', value: TEST_REPO]]
+        build job: 'step_mirror_test_repo_in_lava_worker2', parameters: [[$class: 'StringParameterValue', name: 'TEST_REPO', value: TEST_REPO]]
     }
 
     def test_result = 0

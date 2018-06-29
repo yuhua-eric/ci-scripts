@@ -30,6 +30,7 @@ cd ../
 FTP_SERVER=$(python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k ftpserver)
 TARGET_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k bmc)
 DEVICE_TYPE=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k type)
+NEXT_SERVER=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k next-server)
 cd -
 
 
@@ -56,6 +57,12 @@ function config_tftp_pxe() {
             wget -c -q ${FTP_SERVER}/open-estuary/${version_name}/"${os_dict[$distro_name]}"/netboot.tar.gz
             tar -xzvf netboot.tar.gz
         fi
+        if timeout 60 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} test -d "/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/";then
+            echo "/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/ exist in ${NEXT_SERVER}"
+        else
+            timeout 60 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} mkdir -p "/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/${version_name}/${distro_name}/"
+            timeout 60 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/tftp/pxe_install/arm64/estuary/template/${distro_name}/${DEVICE_TYPE,,}/" root@${NEXT_SERVER}:"/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/${version_name}/${distro_name}/"
+        fi
     fi
 }
 
@@ -72,6 +79,12 @@ function config_tftp_iso() {
             rm -rf *.iso || true
             init_os_dict
             wget -c -q ${FTP_SERVER}/open-estuary/${version_name}/"${os_dict[$distro_name]}"/auto-install.iso
+        fi
+        if timeout 60 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} test -d "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/";then
+            echo  "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/ exist in ${NEXT_SERVER}"
+        else
+            timeout 60 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} mkdir -p "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/"
+            timeout 60 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/tftp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}" root@${NEXT_SERVER}:"/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/"
         fi
     fi
 }
