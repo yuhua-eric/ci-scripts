@@ -84,7 +84,7 @@ function config_tftp_iso() {
             echo  "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}/ exist in ${NEXT_SERVER}"
         else
             timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} mkdir -p "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/"
-            timeout 240 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/tftp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}" root@${NEXT_SERVER}:"/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/"
+            timeout 540 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/tftp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}" root@${NEXT_SERVER}:"/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/"
         fi
     fi
 }
