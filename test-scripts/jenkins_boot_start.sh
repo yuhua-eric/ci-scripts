@@ -503,12 +503,10 @@ function generate_success_mail(){
         ${DISTRO}_pass=`cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM} |grep data|awk -F ','     '{print $7}'|awk -F ':' '{print $2}'`
         echo "the total case is ${DISTRO}_sum,and the total pass is ${DISTRO}_pass"
     done
-    for DISTRO in $SHELL_DISTRO; do
-        whole_sum=0
-        whole_sum=`expr ${DISTRO}_sum + $whole_sum` 
-        whole_pass=0
-        whole_pass=`expr ${DISTRO}_pass + $whole_pass`
-    JOB_RESULT=`expr $whole_sum / $whole_pass`
+    whole_sum=`expr $Ubuntu_sum + $CentOS_sum`
+    whole_pass=`expr $Ubuntu_pass + $CentOS_pass`
+    JOB_RESULT=`expr $whole_pass / $whole_sum`
+
     echo "so we get the job_result $JOB_RESULT"
     # echo all mail releated info
     echo_vars TODAY GIT_DESCRIBE JOB_RESULT TREE_NAME BOOT_PLAN BUILD_URL FTPSERVER_DISPLAY_URL TEST_REPO
