@@ -498,15 +498,34 @@ function generate_success_mail(){
     # the result dir path ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
 
     # set job result by
-    for DISTRO in $SHELL_DISTRO; do
-        ${DISTRO}_sum=`cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM} |grep data|awk -F ',' '{print $4}'|awk -F ':' '{print $2}'`
-        ${DISTRO}_pass=`cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM} |grep data|awk -F ','     '{print $7}'|awk -F ':' '{print $2}'`
-        echo "the total case is ${DISTRO}_sum,and the total pass is ${DISTRO}_pass"
-    done
-    whole_sum=`expr $Ubuntu_sum + $CentOS_sum`
-    whole_pass=`expr $Ubuntu_pass + $CentOS_pass`
-    JOB_RESULT=`expr $whole_pass / $whole_sum`
+    i=0
+    for DISTRO in Ubuntu CentOS; do
+        a=`cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM} |grep data|awk -F ',' '{print $4}'|awk -F ' ' '{print $2}'`
+        arr_sum[$i]=$a
+        b=`cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM} |grep data|awk -F ','     '{print $7}'|awk -F ' ' '{print $2}'`
+        arr_pass[$i]=$b
+        i=$i+1
+        echo $i 
+        echo "the total case is ${arr_sum[@]},and the total pass is ${arr_pass[@]}"
 
+    done
+    #echo "the total case is ${arr_sum[@]},and the total pass is ${arr_pass[@]}"
+    whole_sum=0
+    for v in ${arr_sum[@]};do
+        #echo '801'|awk '{print int($0)}'
+        echo $v
+        x=`echo $v | awk '{split($0,a,"\"");print a[2];}'`
+        #let whole_sum+=$v
+        whole_sum=`expr $x + $whole_sum`
+    done
+    whole_pass=0
+    for v in ${arr_pass[@]};do
+        echo $v  
+        x=`echo $v | awk '{split($0,a,"\"");print a[2];}'`
+       whole_pass=`expr $x + $whole_pass`
+    done
+    JOB_RESULT=`awk 'BEGIN{printf "%.2f%\n",'$whole_pass'/'$whole_sum'*100}'`
+    #JOB_RESULT=`expr $whole_pass / $whole_sum`
     echo "so we get the job_result $JOB_RESULT"
     # echo all mail releated info
     echo_vars TODAY GIT_DESCRIBE JOB_RESULT TREE_NAME BOOT_PLAN BUILD_URL FTPSERVER_DISPLAY_URL TEST_REPO
