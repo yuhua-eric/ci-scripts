@@ -498,21 +498,16 @@ function generate_success_mail(){
     # the result dir path ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
 
     # set job result by
-    JOB_RESULT=PASS
-    if [ -e ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} ];then
-        if cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} | grep -q "\(fail\|FAIL\)$";then
-            JOB_RESULT=FAIL
-        fi
+    for DISTRO in $SHELL_DISTRO; do
+        ${DISTRO}_sum=`cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM} |grep data|awk -F ',' '{print $4}'|awk -F ':' '{print $2}'`
+        ${DISTRO}_pass=`cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM} |grep data|awk -F ','     '{print $7}'|awk -F ':' '{print $2}'`
+        echo "the total case is ${DISTRO}_sum,and the total pass is ${DISTRO}_pass"
+    done
+    whole_sum=`expr $Ubuntu_sum + $CentOS_sum`
+    whole_pass=`expr $Ubuntu_pass + $CentOS_pass`
+    JOB_RESULT=`expr $whole_pass / $whole_sum`
 
-        if cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} | grep -q "\(pass\|PASS\)$";then
-            :
-        else
-            JOB_RESULT=FAIL
-        fi
-    else
-        JOB_RESULT=FAIL
-    fi
-
+    echo "so we get the job_result $JOB_RESULT"
     # echo all mail releated info
     echo_vars TODAY GIT_DESCRIBE JOB_RESULT TREE_NAME BOOT_PLAN BUILD_URL FTPSERVER_DISPLAY_URL TEST_REPO
 
