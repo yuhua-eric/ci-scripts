@@ -499,7 +499,7 @@ function generate_success_mail(){
 
     # set job result by
     i=0
-    for DISTRO in Ubuntu CentOS; do
+    for DISTRO in $SHELL_DISTRO; do
         a=`cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM} |grep data|awk -F ',' '{print $4}'|awk -F ' ' '{print $2}'`
         arr_sum[$i]=$a
         b=`cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM} |grep data|awk -F ','     '{print $7}'|awk -F ' ' '{print $2}'`
