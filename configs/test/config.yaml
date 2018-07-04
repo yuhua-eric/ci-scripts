@@ -64,9 +64,9 @@ Ftpinfo:
 # mail list
 Mail:
   SUCCESS_LIST: liu_caili@hoperun.com
-  SUCCESS_CC_LIST: liu_caili@hoperun.com
+  SUCCESS_CC_LIST: yu_hua1@hoperun.com
   FAILED_LIST: liu_caili@hoperun.com
-  FAILED_CC_LIST: liu_caili@hoperun.com
+  FAILED_CC_LIST: yu_hua1@hoperun.com
 
 DHCP:
   ip: 192.168.50.122
