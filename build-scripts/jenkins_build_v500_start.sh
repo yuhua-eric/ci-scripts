@@ -200,7 +200,7 @@ function sync_code() {
     #fi
 	if [ "$BRANCH"x != ""x ]; then
         cd estuary
-        git checkout refs/tags/${VERSION}
+        git checkout ${BRANCH}
         cd -
     fi
 	
