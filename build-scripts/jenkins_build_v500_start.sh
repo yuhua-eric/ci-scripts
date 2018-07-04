@@ -54,6 +54,8 @@ function init_input_params() {
     # project name
     TREE_NAME=${TREE_NAME:-"open-estuary"}
     # select a version
+    SOURCE_CODE=${SOURCE_CODE:-"https://github.com/open-estuary/estuary.git"}
+    BRANCH=${BRANCH:-""}
     VERSION=${VERSION:-""}
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
 
@@ -171,28 +173,41 @@ function sync_code() {
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
     # remove old estuary repo
-    # rm -rf estuary
-    if [ "$VERSION"x != ""x ]; then
-        if [ -d "estuary" ];then
-            cd estuary
-            git fetch
-            git checkout refs/tags/${VERSION}
-            cd -
-        else
-            git clone "https://github.com/open-estuary/estuary.git"
-            cd estuary
-            git checkout refs/tags/${VERSION}
-            cd -
-        fi
-    else
-        if [ -d "estuary" ];then
-            cd estuary
-            git fetch
-            git checkout origin/master
-            cd -
-        else
-            git clone "https://github.com/open-estuary/estuary.git" -b master
-        fi
+    rm -rf estuary
+	git clone ${SOURCE_CODE}
+	
+    #if [ "$VERSION"x != ""x ]; then
+    #    if [ -d "estuary" ];then
+    #        cd estuary
+    #        git fetch
+    #        git checkout refs/tags/${VERSION}
+    #        cd -
+    #    else
+    #        git clone "https://github.com/open-estuary/estuary.git"
+    #        cd estuary
+    #        git checkout refs/tags/${VERSION}
+    #        cd -
+    #    fi
+    #else
+    #    if [ -d "estuary" ];then
+    #        cd estuary
+    #        git fetch
+    #        git checkout origin/master
+    #        cd -
+    #    else
+    #        git clone "https://github.com/open-estuary/estuary.git" -b master
+    #    fi
+    #fi
+	if [ "$BRANCH"x != ""x ]; then
+        cd estuary
+        git checkout refs/tags/${VERSION}
+        cd -
+    fi
+	
+	if [ "$VERSION"x != ""x ]; then
+        cd estuary
+        git checkout refs/tags/${VERSION}
+        cd -
     fi
 
     # TODO : import gpg file
