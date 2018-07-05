@@ -44,6 +44,14 @@ node ('ci-v500-compile'){
             sh "echo SHELL_DISTRO=\\\"${SHELL_DISTRO}\\\" >> env.properties"
         }
 
+		if (env.SOURCE_CODE) {
+            sh "echo SOURCE_CODE=\\\"${SOURCE_CODE}\\\" >> env.properties"
+        }
+		
+		if (env.BRANCH) {
+            sh "echo BRANCH=\\\"${BRANCH}\\\" >> env.properties"
+        }
+		
         if (env.VERSION) {
             sh "echo VERSION=\\\"${VERSION}\\\" >> env.properties"
         }
