@@ -282,6 +282,23 @@ function parse_arch_map(){
     done
 }
 
+function get_compile_result() {
+
+	
+    touch compile_result.txt 
+    for DISTRO in $ALL_SHELL_DISTRO;do
+        tail -n 5 $OPEN_ESTUARY_DIR/estuary/${DISTRO}.log |grep 'Build distros done!' > compile_tmp.log
+	if [ -s ./compile_tmp.log ] ; then
+		echo "${DISTRO,,}:pass" > compile_result.txt
+	fi
+    done
+    tail -n 5 $OPEN_ESTUARY_DIR/estuary/common.log |grep 'build common rootfs done!' > compile_tmp.log    
+    if [ -s ./compile_tmp.log ] ; then
+                echo "common:pass" > compile_result.txt
+    fi
+	    
+
+}
 function cp_image() {
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
@@ -418,6 +435,7 @@ function main() {
         do_build
         get_version_info
         parse_arch_map
+	get_compile_result
         if [ x"$SKIP_CP_IMAGE" = x"false" ];then
             cp_image
         fi
