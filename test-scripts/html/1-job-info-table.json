@@ -3,13 +3,15 @@
     "版本描述",
     "Sha1 Value",
     "构建结果",
+    "用例测试成功率",
     "构建开始时间",
     "测试完成时间"
   ],
   "Row" : [
     "${JOB_INFO_VERSION}",
     "${JOB_INFO_SHA1}",
-		"${JOB_INFO_RESULT}",
+	"${JOB_INFO_RESULT}",
+	"${JOB_INFO_PASSRATE}",
     "${JOB_INFO_START_TIME}",
     "${JOB_INFO_END_TIME}"
   ]
