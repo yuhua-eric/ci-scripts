@@ -336,6 +336,29 @@ function tar_test_result() {
     popd
 }
 
+function generate_distro_file() {
+    OPEN_ESTUARY_DIR=/home/jenkins/workspace/Estuary-Test/local/open-estuary
+    ALL_FILE_DISTRO="Fedora OpenSuse Debian"
+    pushd ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
+    touch whole_summary.txt
+    echo '["distro", {"data": "pass", "color": "green"}, {"data": "0"}, "0.00%", {"data": "0", "color": "green"}, {"data": "0", "color": "red"}, {"data": "0", "color": "orange"}]' > whole_summary.txt
+    timeout 120 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  "$OPEN_ESTUARY_DIR/estuary/compile_result.txt" "./"
+    for distro in ${ALL_FILE_DISTRO};do
+	mkdir $distro
+	cd $distro
+	cp ../whole_summary.txt ./
+	cat ./compile_result.txt |grep "$distro:pass" > ./compile_tmp.log
+	if [ -s ./compile_tmp.log ] ; then
+	    echo "no nedd change"
+	else
+	    sed -i "s/pass/fail/g" ./whole_summary.txt
+	fi
+	sed -i "s/distro/$distro/g" ./whole_summary.txt
+
+    done
+
+}
+
 function collect_result() {
     # push the binary files to the ftpserver
     pushd ${WORKSPACE}/local/ci-scripts/test-scripts
@@ -555,7 +578,8 @@ function generate_success_mail(){
     echo "<b>2. 今日构建结果</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     JOB_RESULT_VERSION="Estuary v5.1"
     JOB_RESULT_DATA=""
-    for DISTRO in $SHELL_DISTRO; do
+    ALL_SHELL_DISTRO='Ubuntu CentOS Fedora OpenSuse Debian'
+    for DISTRO in $ALL_SHELL_DISTRO; do
         JOB_RESULT_DATA=$(< ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM})",${JOB_RESULT_DATA}"
     done
     JOB_RESULT_DATA="${JOB_RESULT_DATA%,}"
@@ -761,6 +785,7 @@ function main() {
     print_time "time_preparing_envireonment"
 
     trigger_lava_build
+    generate_distro_file
     collect_result
 
     print_time "time_test_test_end"

@@ -355,15 +355,17 @@ function cp_image() {
             fi
 
             echo $distro_tar_name
-
-            pushd $DES_DIR/binary/${arch[$PLATFORM_L]}
-            [ ! -f ${distro_tar_name,,}.sum ] && md5sum ${distro_tar_name,,} > ${distro_tar_name,,}.sum
-            popd
-
-            pushd $PLATFORM_ARCH_DIR/distro
-            ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} $distro_tar_name
-            ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum $distro_tar_name.sum
-            popd
+            cat $OPEN_ESTUARY_DIR/estuary/compile_result.txt |grep "$DISTRO:pass" > ./compile_tmp.log
+	    if [ -s ./compile_tmp.log ] ; then
+                pushd $DES_DIR/binary/${arch[$PLATFORM_L]}
+                [ ! -f ${distro_tar_name,,}.sum ] && md5sum ${distro_tar_name,,} > ${distro_tar_name,,}.sum
+                popd
+ 
+                pushd $PLATFORM_ARCH_DIR/distro
+                ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} $distro_tar_name
+                ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum $distro_tar_name.sum
+                popd
+	    fi	
         done
     done
 
