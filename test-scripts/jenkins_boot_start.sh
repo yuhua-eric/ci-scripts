@@ -342,18 +342,19 @@ function generate_distro_file() {
     pushd ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
     touch whole_summary.txt
     echo '["distro", {"data": "pass", "color": "green"}, {"data": "0"}, "0.00%", {"data": "0", "color": "green"}, {"data": "0", "color": "red"}, {"data": "0", "color": "orange"}]' > whole_summary.txt
-    timeout 120 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  "$OPEN_ESTUARY_DIR/estuary/compile_result.txt" "./"
+    timeout 120 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  root@192.168.50.126:"$OPEN_ESTUARY_DIR/estuary/compile_result.txt" "./"
     for distro in ${ALL_FILE_DISTRO};do
-	mkdir $distro
-	cd $distro
-	cp ../whole_summary.txt ./
-	cat ./compile_result.txt |grep "$distro:pass" > ./compile_tmp.log
-	if [ -s ./compile_tmp.log ] ; then
-	    echo "no nedd change"
-	else
-	    sed -i "s/pass/fail/g" ./whole_summary.txt
-	fi
-	sed -i "s/distro/$distro/g" ./whole_summary.txt
+        mkdir $distro
+        cd $distro
+        cp ../whole_summary.txt ./
+        cat ../compile_result.txt |grep "${distro,,}:pass" > ./compile_tmp.log
+        if [ -s ./compile_tmp.log ] ; then
+            echo "no nedd change"
+        else
+            sed -i "s/pass/fail/g" ./whole_summary.txt
+        fi
+        sed -i "s/distro/$distro/g" ./whole_summary.txt
+        cd -
 
     done
 
