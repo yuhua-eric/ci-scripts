@@ -387,7 +387,8 @@ function collect_result() {
     fi
 
     cd ${GIT_DESCRIBE}/${RESULTS_DIR}
-    distro_dirs=$(ls -d */ | cut -f1 -d'/')
+    #distro_dirs=$(ls -d */ | cut -f1 -d'/')
+    distro_dirs=$SHELL_DISTRO
     cd -
 
     for distro_name in ${distro_dirs};do
