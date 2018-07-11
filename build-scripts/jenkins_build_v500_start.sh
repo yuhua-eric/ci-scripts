@@ -284,18 +284,19 @@ function parse_arch_map(){
 
 function get_compile_result() {
 
-	
+    pushd $OPEN_ESTUARY_DIR/estuary	
     touch compile_result.txt 
     for DISTRO in $ALL_SHELL_DISTRO;do
         tail -n 5 $OPEN_ESTUARY_DIR/estuary/${DISTRO}.log |grep 'Build distros done!' > compile_tmp.log
 	if [ -s ./compile_tmp.log ] ; then
-		echo "${DISTRO,,}:pass" > compile_result.txt
+		echo "${DISTRO,,}:pass" >> compile_result.txt
 	fi
     done
     tail -n 5 $OPEN_ESTUARY_DIR/estuary/common.log |grep 'build common rootfs done!' > compile_tmp.log    
     if [ -s ./compile_tmp.log ] ; then
-                echo "common:pass" > compile_result.txt
+                echo "common:pass" >> compile_result.txt
     fi
+    popd
 	    
 
 }
