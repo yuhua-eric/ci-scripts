@@ -90,7 +90,8 @@ d-i partman/confirm_nooverwrite boolean true
 
 ## umount /dev/sda
 d-i partman/unmount_active boolean true
-d-i preseed/early_command string umount /media || true
+#d-i preseed/early_command string umount /media || true
+d-i preseed/early_command string umount /media || true ; mount -t iso9660 -o loop /dev/sr0 /cdrom || true
 
 ##allow to install mirror from LAN unauthenticated mirror
 d-i debian-installer/allow_unauthenticated string true
