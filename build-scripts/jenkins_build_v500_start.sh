@@ -174,7 +174,7 @@ function sync_code() {
 
     # remove old estuary repo
     rm -rf estuary
-	git clone ${SOURCE_CODE}
+    git clone ${SOURCE_CODE}
 	
     #if [ "$VERSION"x != ""x ]; then
     #    if [ -d "estuary" ];then

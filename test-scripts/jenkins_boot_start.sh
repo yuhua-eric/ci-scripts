@@ -523,7 +523,23 @@ function generate_success_mail(){
 
     # the result dir path ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
 
-    # set job result by
+    # set job result by liucaili
+	JOB_RESULT=PASS
+    if [ -e ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} ];then
+        if cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} | grep -q "\(fail\|FAIL\)$";then
+            JOB_RESULT=FAIL
+        fi
+
+        if cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM} | grep -q "\(pass\|PASS\)$";then
+            :
+        else
+            JOB_RESULT=FAIL
+        fi
+    else
+        JOB_RESULT=FAIL
+    fi
+
+	# set job pass rate by yuhua
     i=0
     for DISTRO in $SHELL_DISTRO; do
         a=`cat ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM} |grep data|awk -F ',' '{print $4}'|awk -F ' ' '{print $2}'`
@@ -550,16 +566,17 @@ function generate_success_mail(){
         x=`echo $v | awk '{split($0,a,"\"");print a[2];}'`
        whole_pass=`expr $x + $whole_pass`
     done
-    JOB_RESULT=`awk 'BEGIN{printf "%.2f%\n",'$whole_pass'/'$whole_sum'*100}'`
+    JOB_PASSRATE=`awk 'BEGIN{printf "%.2f%\n",'$whole_pass'/'$whole_sum'*100}'`
     #JOB_RESULT=`expr $whole_pass / $whole_sum`
-    echo "so we get the job_result $JOB_RESULT"
+    echo "so we get the job_pass_rate $JOB_PASSRATE"
+	
     # echo all mail releated info
-    echo_vars TODAY GIT_DESCRIBE JOB_RESULT TREE_NAME BOOT_PLAN BUILD_URL FTPSERVER_DISPLAY_URL TEST_REPO
+    echo_vars TODAY GIT_DESCRIBE JOB_RESULT JOB_PASSRATE TREE_NAME BOOT_PLAN BUILD_URL FTPSERVER_DISPLAY_URL TEST_REPO
 
     echo "------------------------------------------------------------"
 
 
-    echo "Estuary CI Auto-test Daily Report (${TODAY}) - ${JOB_RESULT}" > ${WORKSPACE}/MAIL_SUBJECT.txt
+    echo "Estuary CI Auto-test Daily Report (${TODAY}) - Testcase Successful Rate ${JOB_PASSRATE}" > ${WORKSPACE}/MAIL_SUBJECT.txt
 
     echo "<b>Estuary CI Auto-test Daily Report (${TODAY})</b><br>" > ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
@@ -570,9 +587,10 @@ function generate_success_mail(){
     # TODO : the start time need read from file.
     JOB_INFO_SHA1="${GIT_DESCRIBE}"
     JOB_INFO_RESULT=${JOB_RESULT}
+    JOB_INFO_PASSRATE=${JOB_PASSRATE}
     JOB_INFO_START_TIME="${JENKINS_JOB_START_TIME}"
     JOB_INFO_END_TIME=$(current_time)
-    export_vars JOB_INFO_VERSION JOB_INFO_SHA1 JOB_INFO_RESULT JOB_INFO_START_TIME JOB_INFO_END_TIME
+    export_vars JOB_INFO_VERSION JOB_INFO_SHA1 JOB_INFO_RESULT JOB_INFO_PASSRATE JOB_INFO_START_TIME JOB_INFO_END_TIME
     envsubst < ./html/1-job-info-table.json > ./html/1-job-info-table.json.tmp
     python ./html/html-table.py -f ./html/1-job-info-table.json.tmp >> ${WORKSPACE}/MAIL_CONTENT.txt
     rm -f ./html/1-job-info-table.json.tmp
