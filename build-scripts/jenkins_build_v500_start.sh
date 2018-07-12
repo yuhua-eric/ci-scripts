@@ -233,11 +233,15 @@ function do_build() {
         pushd estuary
         # TODO : workaround for build all in single machine
         for DISTRO in $ALL_SHELL_DISTRO;do
-            ./build.sh --build_dir=${BUILD_DIR} -d "${DISTRO,,}" > ${DISTRO}.log 2>&1 &
+            ./build.sh --build_dir=${BUILD_DIR} -d "${DISTRO,,}" |tee > ${DISTRO}.log 2>&1 &
             sleep 1m
         done
-        ./build.sh --build_dir=${BUILD_DIR} -d common > common.log 2>&1 &
+        ./build.sh --build_dir=${BUILD_DIR} -d common |tee > common.log 2>&1 &
         wait
+#	full_distro=`ls *.log`
+#	for DISTRO in $full_distro;do
+#            cat ${DISTRO}.log
+#        done
 
         # ./build.sh --build_dir=${BUILD_DIR}
         popd
@@ -282,6 +286,24 @@ function parse_arch_map(){
     done
 }
 
+function get_compile_result() {
+
+    pushd $OPEN_ESTUARY_DIR/estuary	
+    touch compile_result.txt 
+    for DISTRO in $ALL_SHELL_DISTRO;do
+        tail -n 5 $OPEN_ESTUARY_DIR/estuary/${DISTRO}.log |grep 'Build distros done!' > compile_tmp.log
+	if [ -s ./compile_tmp.log ] ; then
+		echo "${DISTRO,,}:pass" >> compile_result.txt
+	fi
+    done
+    tail -n 5 $OPEN_ESTUARY_DIR/estuary/common.log |grep 'build common rootfs done!' > compile_tmp.log    
+    if [ -s ./compile_tmp.log ] ; then
+                echo "common:pass" >> compile_result.txt
+    fi
+    popd
+	    
+
+}
 function cp_image() {
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
@@ -338,15 +360,17 @@ function cp_image() {
             fi
 
             echo $distro_tar_name
-
-            pushd $DES_DIR/binary/${arch[$PLATFORM_L]}
-            [ ! -f ${distro_tar_name,,}.sum ] && md5sum ${distro_tar_name,,} > ${distro_tar_name,,}.sum
-            popd
-
-            pushd $PLATFORM_ARCH_DIR/distro
-            ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} $distro_tar_name
-            ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum $distro_tar_name.sum
-            popd
+            cat $OPEN_ESTUARY_DIR/estuary/compile_result.txt |grep "${DISTRO,,}:pass" > ./compile_tmp.log
+	    if [ -s ./compile_tmp.log ] ; then
+                pushd $DES_DIR/binary/${arch[$PLATFORM_L]}
+                [ ! -f ${distro_tar_name,,}.sum ] && md5sum ${distro_tar_name,,} > ${distro_tar_name,,}.sum
+                popd
+ 
+                pushd $PLATFORM_ARCH_DIR/distro
+                ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} $distro_tar_name
+                ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum $distro_tar_name.sum
+                popd
+	    fi	
         done
     done
 
@@ -418,6 +442,7 @@ function main() {
         do_build
         get_version_info
         parse_arch_map
+	get_compile_result
         if [ x"$SKIP_CP_IMAGE" = x"false" ];then
             cp_image
         fi
