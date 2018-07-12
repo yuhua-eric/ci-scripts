@@ -352,6 +352,7 @@ function generate_distro_file() {
             echo "no nedd change"
         else
             sed -i "s/pass/fail/g" ./whole_summary.txt
+            sed -i "s/0.00%/100.00%/g" ./whole_summary.txt
         fi
         sed -i "s/distro/$distro/g" ./whole_summary.txt
         cd -
