@@ -238,7 +238,8 @@ function do_build() {
         done
         ./build.sh --build_dir=${BUILD_DIR} -d common > common.log 2>&1 &
         wait
-	for DISTRO in $ALL_SHELL_DISTRO;do
+	full_distro=`ls *.log`
+	for DISTRO in $full_distro;do
             cat ${DISTRO}.log
         done
 
