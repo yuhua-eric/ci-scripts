@@ -238,6 +238,9 @@ function do_build() {
         done
         ./build.sh --build_dir=${BUILD_DIR} -d common > common.log 2>&1 &
         wait
+	for DISTRO in $ALL_SHELL_DISTRO;do
+            cat ${DISTRO}.log
+        done
 
         # ./build.sh --build_dir=${BUILD_DIR}
         popd
