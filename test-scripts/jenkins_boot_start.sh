@@ -338,24 +338,32 @@ function tar_test_result() {
 
 function generate_distro_file() {
     OPEN_ESTUARY_DIR=/home/jenkins/workspace/Estuary-Test/local/open-estuary
-    ALL_FILE_DISTRO="Fedora OpenSuse Debian"
+    ALL_FILE_DISTRO="Fedora OpenSuse Debian Ubuntu CentOS"
     pushd ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
     touch whole_summary.txt
     echo '["distro", {"data": "pass", "color": "green"}, {"data": "0", "color": "blue"}, "0.00%", {"data": "0", "color": "green"}, {"data": "0", "color": "red"}, {"data": "0", "color": "orange"}]' > whole_summary.txt
     timeout 120 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  root@192.168.50.126:"$OPEN_ESTUARY_DIR/estuary/compile_result.txt" "./"
     for distro in ${ALL_FILE_DISTRO};do
-        mkdir $distro
-        cd $distro
-        cp ../whole_summary.txt ./
-        cat ../compile_result.txt |grep "${distro,,}:pass" > ./compile_tmp.log
-        if [ -s ./compile_tmp.log ] ; then
-            echo "no nedd change"
-        else
-            sed -i "s/pass/fail/g" ./whole_summary.txt
-            sed -i "s/0.00%/100.00%/g" ./whole_summary.txt
-        fi
-        sed -i "s/distro/$distro/g" ./whole_summary.txt
-        cd -
+	#result=$(echo $SHELL_DISTRO | grep "${distro}")    
+	#if [ "$result" = "" ]
+	#if distro not in SHELL_DISTRO then prepare file
+	if [ "$SHELL_DISTRO" = "${SHELL_DISTRO/$distro/}" ];then
+            mkdir $distro
+            cd $distro
+            cp ../whole_summary.txt ./
+            cat ../compile_result.txt |grep "${distro,,}:pass" > ./compile_tmp.log
+            if [ -s ./compile_tmp.log ] ; then
+                echo "no need change"
+                sed -i "s/0.00%/100.00%/g" ./whole_summary.txt
+            else
+                sed -i "s/pass/fail/g" ./whole_summary.txt
+                #sed -i "s/0.00%/100.00%/g" ./whole_summary.txt
+            fi
+            sed -i "s/distro/$distro/g" ./whole_summary.txt
+            cd -
+        else    
+	    echo 'the distro whole_summary.txt is already prepared'	
+	fi
 
     done
 
