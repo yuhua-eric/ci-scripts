@@ -288,20 +288,23 @@ function parse_arch_map(){
 
 function get_compile_result() {
 
-    pushd $OPEN_ESTUARY_DIR/estuary	
-    touch compile_result.txt 
+    pushd $OPEN_ESTUARY_DIR/estuary
+    touch compile_result.txt
     for DISTRO in $ALL_SHELL_DISTRO;do
-        tail -n 5 $OPEN_ESTUARY_DIR/estuary/${DISTRO}.log |grep 'Build distros done!' > compile_tmp.log
-	if [ -s ./compile_tmp.log ] ; then
-		echo "${DISTRO,,}:pass" >> compile_result.txt
-	fi
+        tail -n 5 $OPEN_ESTUARY_DIR/estuary/${DISTRO}.log |sed -n '/Build distros done!/p' > compile_tmp.log
+        if [ -s ./compile_tmp.log ]; then
+                echo "${DISTRO,,}:pass" >> compile_result.txt
+        else
+                echo "${DISTRO,,}:fail" >> compile_result.txt
+        fi
     done
-    tail -n 5 $OPEN_ESTUARY_DIR/estuary/common.log |grep 'build common rootfs done!' > compile_tmp.log    
+    tail -n 5 $OPEN_ESTUARY_DIR/estuary/common.log |sed -n '/Build common done!/p' > compile_tmp.log
     if [ -s ./compile_tmp.log ] ; then
                 echo "common:pass" >> compile_result.txt
+    else
+                echo "common:fail" >> compile_result.txt
     fi
-    popd
-	    
+    popd    
 
 }
 function cp_image() {
@@ -360,7 +363,7 @@ function cp_image() {
             fi
 
             echo $distro_tar_name
-            cat $OPEN_ESTUARY_DIR/estuary/compile_result.txt |grep "${DISTRO,,}:pass" > ./compile_tmp.log
+            cat $OPEN_ESTUARY_DIR/estuary/compile_result.txt |sed -n "/${DISTRO,,}:pass/p" > ./compile_tmp.log
 	    if [ -s ./compile_tmp.log ] ; then
                 pushd $DES_DIR/binary/${arch[$PLATFORM_L]}
                 [ ! -f ${distro_tar_name,,}.sum ] && md5sum ${distro_tar_name,,} > ${distro_tar_name,,}.sum
