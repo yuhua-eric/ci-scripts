@@ -18,6 +18,9 @@ function init_build_option() {
 function init_workspace() {
     WORKSPACE=${WORKSPACE:-/home/ts/jenkins/workspace/estuary-ci}
     mkdir -p ${WORKSPACE}
+    WORKSPACE_NAME=`echo $WORKSPACE |sed 's:/: :g'|awk  '{print $5}'`
+    OPEN_ESTUARY_DIR=/home/jenkins/workspace/${WORKSPACE_NAME}/local/open-estuary
+    
 }
 
 function init_input_params() {
@@ -337,7 +340,7 @@ function tar_test_result() {
 
 #genrate compile distro whole sum file for mail to display,so we can know the compile result of every distro
 function generate_distro_file() {
-    OPEN_ESTUARY_DIR=/home/jenkins/workspace/Estuary-Test/local/open-estuary
+    #OPEN_ESTUARY_DIR=/home/jenkins/workspace/Estuary-Test/local/open-estuary
     #all build distro,better get from config.yaml
     ALL_FILE_DISTRO="Fedora OpenSuse Debian Ubuntu CentOS"
     pushd ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
