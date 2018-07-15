@@ -39,7 +39,6 @@ function parse_params() {
     pushd ${CI_SCRIPTS_DIR}
     : ${SHELL_PLATFORM:=`python configs/parameter_parser.py -f config.yaml -s Build -k Platform`}
     : ${SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
-
     : ${BOOT_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Jenkins -k Boot`}
 
     : ${TEST_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Test -k Plan`}
@@ -336,11 +335,14 @@ function tar_test_result() {
     popd
 }
 
+#genrate compile distro whole sum file for mail to display,so we can know the compile result of every distro
 function generate_distro_file() {
     OPEN_ESTUARY_DIR=/home/jenkins/workspace/Estuary-Test/local/open-estuary
+    #all build distro,better get from config.yaml
     ALL_FILE_DISTRO="Fedora OpenSuse Debian Ubuntu CentOS"
     pushd ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
     touch whole_summary.txt
+    #prepare standard whole sum file for compile distro
     echo '["distro", {"data": "pass", "color": "green"}, {"data": "0", "color": "blue"}, "0.00%", {"data": "0", "color": "green"}, {"data": "0", "color": "red"}, {"data": "0", "color": "orange"}]' > whole_summary.txt
     timeout 120 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  root@192.168.50.126:"$OPEN_ESTUARY_DIR/estuary/compile_result.txt" "./"
     for distro in ${ALL_FILE_DISTRO};do
@@ -351,17 +353,20 @@ function generate_distro_file() {
             mkdir $distro
             cd $distro
             cp ../whole_summary.txt ./
-            cat ../compile_result.txt |grep "${distro,,}:pass" > ./compile_tmp.log
+            cat ../compile_result.txt |sed -n "/${distro,,}:pass/p" > ./compile_tmp.log
             if [ -s ./compile_tmp.log ] ; then
-                echo "no need change"
+                echo "change pass rate to 100%"
                 sed -i "s/0.00%/100.00%/g" ./whole_summary.txt
             else
+		echo "change compile result to pass,default fail"
                 sed -i "s/pass/fail/g" ./whole_summary.txt
                 #sed -i "s/0.00%/100.00%/g" ./whole_summary.txt
             fi
+	    echo "replace destro to the check one"
             sed -i "s/distro/$distro/g" ./whole_summary.txt
             cd -
-        else    
+        else
+	    #the check distro is prepare by report.py
 	    echo 'the distro whole_summary.txt is already prepared'	
 	fi
 
@@ -607,6 +612,7 @@ function generate_success_mail(){
     echo "<b>2. 今日构建结果</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     JOB_RESULT_VERSION="Estuary v5.1"
     JOB_RESULT_DATA=""
+    #all build distro,better get from the config.yaml
     ALL_SHELL_DISTRO='OpenSuse Fedora Debian Ubuntu CentOS'
     for DISTRO in $ALL_SHELL_DISTRO; do
         JOB_RESULT_DATA=$(< ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/${WHOLE_SUM})",${JOB_RESULT_DATA}"
