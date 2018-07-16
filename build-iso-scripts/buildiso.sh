@@ -48,8 +48,7 @@ function parse_params() {
     WORKSPACE=${WORKSPACE:-/home/jenkins/workspace/Estuary-Test-1}
     WORK_DIR=${WORKSPACE}/local
     CI_SCRIPTS_DIR=${WORK_DIR}/ci-scripts
-    WORK_DIR=${WORKSPACE}/local
-    OPEN_ESTUARY_DIR=${WORK_/DIR}/open-estuary
+    OPEN_ESTUARY_DIR=${WORK_DIR}/open-estuary
     pushd ${CI_SCRIPTS_DIR}
     : ${SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
     : ${ALL_SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}

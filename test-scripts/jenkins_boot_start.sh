@@ -347,7 +347,8 @@ function generate_distro_file() {
     touch whole_summary.txt
     #prepare standard whole sum file for compile distro
     echo '["distro", {"data": "pass", "color": "green"}, {"data": "0", "color": "blue"}, "0.00%", {"data": "0", "color": "green"}, {"data": "0", "color": "red"}, {"data": "0", "color": "orange"}]' > whole_summary.txt
-    timeout 120 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  root@192.168.50.126:"$OPEN_ESTUARY_DIR/estuary/compile_result.txt" "./"
+    #timeout 120 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  root@192.168.50.126:"$OPEN_ESTUARY_DIR/estuary/compile_result.txt" "./"
+    cp /fileserver/open-estuary/${GIT_DESCRIBE}/compile_result.txt ./ 
     for distro in ${ALL_FILE_DISTRO};do
 	#result=$(echo $SHELL_DISTRO | grep "${distro}")    
 	#if [ "$result" = "" ]
