@@ -324,7 +324,7 @@ function cp_image() {
     pushd $BUILD_DIR  # enter BUILD_DIR
 
     cp -r out/release/*/* ${DES_DIR}/
-
+    cp $OPEN_ESTUARY_DIR/estuary/compile_result.txt $DES_DIR
     pushd ${DES_DIR} # enter DES_DIR
     MINI_ROOTFS_FILE=mini-rootfs.cpio.gz
     GRUB_IMG_FILE=grubaa64.efi
