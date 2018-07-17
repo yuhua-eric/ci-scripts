@@ -76,7 +76,8 @@ function config_uefi() {
             elif [ "${DEVICE_TYPE}" = "D05" ];then
                 python update_uefi_1.py --uefi $file_name --host ${BMC_IP} --ver ${version_name} --plat $DEVICE_TYPE
             fi
-        elif [ "${version_name}" = "v5.1" ];then
+        #elif [ "${version_name}" = "v5.1" ];then
+	else
             # do deploy
             if [ "${DEVICE_TYPE}" = "D03" ];then
                 python update_uefi_1.py --uefi $file_name --host ${BMC_IP} --ver ${version_name} --plat $DEVICE_TYPE
