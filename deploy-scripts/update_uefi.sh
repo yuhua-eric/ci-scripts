@@ -23,7 +23,7 @@ function scp_hpm() {
     local SSH_USER=root
     local SSH_IP=${BMC_IP}
 
-    sshpass -p "$SSH_PASS" scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  "~/update_uefi/v5.1/D05/UEFI_D05.hpm" root@${SSH_IP}:"/tmp"
+    sshpass -p "$SSH_PASS" scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  "/root/update_uefi/v5.1/D05/UEFI_D05.hpm" root@${SSH_IP}:"/tmp"
 }
 
 function update_uefi() {
