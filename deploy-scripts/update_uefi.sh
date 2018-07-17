@@ -34,6 +34,13 @@ function update_uefi() {
     timeout 360 sshpass -p ${SSH_PASS} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP} \
             ipmcset -d upgrade -v /tmp/UEFI_D05.hpm
 }
+function ipmi_power_reset() {
+    local IPMI_PASS="Huawei12#$"
+    local IPMI_USER=root
+    local IPMI_IP=${BMC_IP}
+
+    ipmitool -H ${IPMI_IP} -I lanplus -U ${IPMI_USER} -P ${IPMI_PASS} power reset
+}
 
 
 function config_uefi() {
@@ -74,6 +81,7 @@ function config_uefi() {
                 echo "update uefi ok" >> update_result.txt
                 else
                 echo "update uefi fail" >> update_result.txt
+		ipmi_power_reset
                 fi
 
 
