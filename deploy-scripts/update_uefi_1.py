@@ -11,7 +11,7 @@ def update_uefi(BMC_HOST,BMC_USER,BMC_PASS,UEFI_FILE,BMC_VERSION,BMC_PLAT):
     power_off_command = 'ipmitool -H %s -I lanplus -U %s -P %s power off' % (BMC_HOST, BMC_USER, BMC_PASS)
     power_on_command = 'ipmitool -H %s -I lanplus -U %s -P %s power on' % (BMC_HOST, BMC_USER, BMC_PASS)
 
-    update_uefi_command = 'provision %s -u %s -p %s -f %s -a 0x100000' % (FTP_IP, FTP_USER, FTP_PASS, UEFI_FILE)
+    update_uefi_command = 'ipmcset -d upgrade -v /tmp/%s' % (UEFI_FILE)
 
     shell.run_command(disconnction_command.split(' '), allow_fail=True)
     time.sleep(3)
@@ -23,7 +23,7 @@ def update_uefi(BMC_HOST,BMC_USER,BMC_PASS,UEFI_FILE,BMC_VERSION,BMC_PLAT):
     time.sleep(2)
 
     connection = shell.ipmi_connection(connection_command, 9000)
-    connection.prompt_str = ['seconds to stop automatical booting']
+    connection.prompt_str = ['Upgrade successfully']
     connection.wait()
     print "uefi interrupt prompt find !"
     connection.sendline("#")

@@ -78,14 +78,12 @@ function config_uefi() {
                 scp_hpm
                 update_uefi | sed -n '/successfully/p' > ./update_tmp.txt
 	        if [ -s ./update_tmp.txt ]; then
-                echo "update uefi ok" >> update_result.txt
+                echo "update ${HOST_NAME}uefi ok" >> update_result.txt
                 else
-                echo "update uefi fail" >> update_result.txt
+                echo "update ${HOST_NAME}uefi fail" >> update_result.txt
 		ipmi_power_reset
+		cat update_result.txt
                 fi
-
-
-		 
             fi
         fi
     fi
