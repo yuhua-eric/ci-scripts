@@ -69,7 +69,13 @@ function config_uefi() {
                 python update_uefi_1.py --uefi $file_name --host ${BMC_IP} --ver ${version_name} --plat $DEVICE_TYPE
             elif [ "${DEVICE_TYPE}" = "D05" ];then
                 scp_hpm
-                update_uefi | grep 'successfully'
+                update_uefi | sed -n '/successfully/p' > ./update_tmp.txt
+	        if [ -s ./update_tmp.txt ]; then
+                echo "update uefi ok" >> update_result.txt
+                else
+                echo "update uefi fail" >> update_result.txt
+                fi
+
 
 		 
             fi
