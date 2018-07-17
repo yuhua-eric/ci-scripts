@@ -23,7 +23,7 @@ function scp_hpm() {
     local SSH_PASS="Huawei12#$"
     local SSH_USER=root
     local SSH_IP=${BMC_IP}
-    pushd hpm_dir
+    pushd $hpm_dir
     file_name=`ls *.hpm`
     popd
      [ -d ${des_dir} ] && rm -fr ${des_dir}
