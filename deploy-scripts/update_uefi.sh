@@ -43,8 +43,8 @@ function config_uefi() {
     local file_name=${3:-"UEFI_D05.hpm"}
     local version_name=${4:-"v5.1"}
     
-    scp_hpm
-    update_uefi | grep 'successfully'
+    #scp_hpm
+    #update_uefi | grep 'successfully'
 
 
     if [ "${tree_name}" = 'linaro' ];then
