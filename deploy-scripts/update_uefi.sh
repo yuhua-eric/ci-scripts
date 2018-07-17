@@ -11,19 +11,25 @@ cd "${script_path}"
 TREE_NAME=${1:-"open-estuary"}
 HOST_NAME=${2:-"d05ssh01"}
 version_name=${4:-"v5.1"}
-HPM_FILE=${3:-"UEFI_D05.hpm"}
+PLATFORM=${3:-"D05"}
+hpm_dir=/fileserver/open-estuary/$version_name/binary/$PLATFORM
+des_dir=/root/update_uefi/${version_name}/$PLATFORM
 cd ../
 BMC_IP=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k bmc)
 DEVICE_TYPE=$(python configs/parameter_parser.py -f devices.yaml -s ${HOST_NAME} -k type)
 #version_name=$(python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k ip)
-
 cd -
 function scp_hpm() {
     local SSH_PASS="Huawei12#$"
     local SSH_USER=root
     local SSH_IP=${BMC_IP}
-
-    sshpass -p "$SSH_PASS" scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  "/root/update_uefi/v5.1/D05/UEFI_D05.hpm" root@${SSH_IP}:"/tmp"
+    pushd hpm_dir
+    file_name=`ls *.hpm`
+    popd
+     [ -d ${des_dir} ] && rm -fr ${des_dir}
+    mkdir -p ${des_dir}
+    cp ${hpm_dir}/${file_name} ${des_dir}
+    sshpass -p "$SSH_PASS" scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  "${des_dir}/${file_name}" root@${SSH_IP}:"/tmp"
 }
 
 function update_uefi() {
@@ -47,7 +53,7 @@ function config_uefi() {
     # config tver
     local tree_name=${1:-"open-estuary"}
     local host_name=${2:-"d05ssh01"}
-    local file_name=${3:-"UEFI_D05.hpm"}
+    local PLATFORM=${3:-"D05"}
     local version_name=${4:-"v5.1"}
     
     #scp_hpm
