@@ -33,8 +33,6 @@ function update_uefi() {
     local SSH_IP=${BMC_IP}
     timeout 360 sshpass -p ${SSH_PASS} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP} \
             ipmcset -d upgrade -v /tmp/UEFI_D05.hpm
-
-
 }
 
 
@@ -44,6 +42,10 @@ function config_uefi() {
     local host_name=${2:-"d05ssh01"}
     local file_name=${3:-"UEFI_D05.hpm"}
     local version_name=${4:-"v5.1"}
+    
+    scp_hpm
+    update_uefi | grep 'successfully'
+
 
     if [ "${tree_name}" = 'linaro' ];then
         # do deploy
@@ -64,9 +66,7 @@ function config_uefi() {
         elif [ "${version_name}" = "v5.1" ];then
             # do deploy
             if [ "${DEVICE_TYPE}" = "D03" ];then
-                #python update_uefi_1.py --uefi $file_name --host ${BMC_IP} --ver ${version_name} --plat $DEVICE_TYPE
-		scp_hpm
-		update_uefi | grep 'successfully'
+                python update_uefi_1.py --uefi $file_name --host ${BMC_IP} --ver ${version_name} --plat $DEVICE_TYPE
             elif [ "${DEVICE_TYPE}" = "D05" ];then
                 scp_hpm
                 update_uefi | grep 'successfully'
