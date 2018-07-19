@@ -348,7 +348,7 @@ function generate_distro_file() {
     #prepare standard whole sum file for compile distro
     echo '["distro", {"data": "pass", "color": "green"}, {"data": "0", "color": "blue"}, "0.00%", {"data": "0", "color": "green"}, {"data": "0", "color": "red"}, {"data": "0", "color": "orange"}]' > whole_summary.txt
     #timeout 120 sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  root@192.168.50.126:"$OPEN_ESTUARY_DIR/estuary/compile_result.txt" "./"
-    cp /fileserver/open-estuary/${GIT_DESCRIBE}/compile_result.txt ./ 
+    cp /fileserver/open-estuary/${GIT_DESCRIBE}/compile_result.txt ./ #use jenkins plugin to transmit result file
     for distro in ${ALL_FILE_DISTRO};do
 	#result=$(echo $SHELL_DISTRO | grep "${distro}")    
 	#if [ "$result" = "" ]
@@ -360,11 +360,11 @@ function generate_distro_file() {
             cat ../compile_result.txt |sed -n "/${distro,,}:pass/p" > ./compile_tmp.log
             if [ -s ./compile_tmp.log ] ; then
                 echo "change pass rate to 100%"
-                sed -i "s/0.00%/100.00%/g" ./whole_summary.txt
+                sed -i "s/0.00%/100.00%/g" ./whole_summary.txt #if compile pass ,change pass_rate to 100%
             else
 		echo "change compile result to pass,default fail"
-                sed -i "s/pass/fail/g" ./whole_summary.txt
-                #sed -i "s/0.00%/100.00%/g" ./whole_summary.txt
+                sed -i "s/pass/fail/g" ./whole_summary.txt #change build result according to file.
+                sed -i "s/green/red/" ./whole_summary.txt  #change build result to red if compile fail.
             fi
 	    echo "replace destro to the check one"
             sed -i "s/distro/$distro/g" ./whole_summary.txt
