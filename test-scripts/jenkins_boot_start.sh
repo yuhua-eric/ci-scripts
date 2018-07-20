@@ -266,7 +266,7 @@ function trigger_lava_build() {
         if [ -d $DISTRO ];then
             rm -fr $DISTRO
         fi
-	cat ../compile_result.txt |sed -n "/${DISTRO,,}:pass/p" > ./compile_tmp.log
+	cat ./compile_result.txt |sed -n "/${DISTRO,,}:pass/p" > ./compile_tmp.log
 	if [ -s ./compile_tmp.log ] ; then
             for boot_plan in $BOOT_PLAN; do
                 rm -fr ${JOBS_DIR} ${RESULTS_DIR}
