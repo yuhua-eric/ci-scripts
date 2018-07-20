@@ -261,72 +261,76 @@ function clean_workspace() {
 function trigger_lava_build() {
     pushd ${WORKSPACE}/local/ci-scripts/test-scripts
     mkdir -p ${GIT_DESCRIBE}/${RESULTS_DIR}
+    cp /fileserver/open-estuary/${GIT_DESCRIBE}/compile_result.txt ./ #use jenkins plugin to transmit result file
     for DISTRO in $SHELL_DISTRO; do
         if [ -d $DISTRO ];then
             rm -fr $DISTRO
         fi
+	cat ../compile_result.txt |sed -n "/${DISTRO,,}:pass/p" > ./compile_tmp.log
+	if [ -s ./compile_tmp.log ] ; then
+            for boot_plan in $BOOT_PLAN; do
+                rm -fr ${JOBS_DIR} ${RESULTS_DIR}
 
-        for boot_plan in $BOOT_PLAN; do
-            rm -fr ${JOBS_DIR} ${RESULTS_DIR}
+                # generate the boot jobs for all the targets
+                if [ "$boot_plan" = "BOOT_ISO" ]; then
+                    # pxe install in previous step.use ssh to do the pxe test.
+                    # BOOT_ISO
+                    # boot from ISO
+                    generate_jobs $boot_plan $DISTRO
+  
+                    if [ -d ${JOBS_DIR} ]; then
+                        if ! run_and_move_result $boot_plan $DISTRO ;then
+                            if [ ! -d ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO} ];then
+                                mv ${DISTRO} ${GIT_DESCRIBE}/${RESULTS_DIR}
+                                continue
+                            else
+                                cp -fr ${DISTRO}/* ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
+                                continue
+                            fi
+                        fi
+                    fi
+                elif [ "$boot_plan" = "BOOT_PXE" ]; then
+                    # pxe install in previous step.use ssh to do the pxe test.
+                    # BOOT_PXE
+                    # boot from PXE
+                    generate_jobs $boot_plan $DISTRO
 
-            # generate the boot jobs for all the targets
-            if [ "$boot_plan" = "BOOT_ISO" ]; then
-                # pxe install in previous step.use ssh to do the pxe test.
-                # BOOT_ISO
-                # boot from ISO
-                generate_jobs $boot_plan $DISTRO
+                    if [ -d ${JOBS_DIR} ]; then
+                        if ! run_and_move_result $boot_plan $DISTRO ;then
+                            if [ ! -d ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO} ];then
+                                mv ${DISTRO} ${GIT_DESCRIBE}/${RESULTS_DIR}
+                                continue
+                            else
+                                cp -fr ${DISTRO}/* ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
+                                continue
+                            fi
+                        fi
+                    fi
+                else
+                    # BOOT_NFS
+                    # boot from NFS
+                    generate_jobs $boot_plan $DISTRO
 
-                if [ -d ${JOBS_DIR} ]; then
-                    if ! run_and_move_result $boot_plan $DISTRO ;then
-                        if [ ! -d ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO} ];then
-                            mv ${DISTRO} ${GIT_DESCRIBE}/${RESULTS_DIR}
-                            continue
-                        else
-                            cp -fr ${DISTRO}/* ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
-                            continue
+                    if [ -d ${JOBS_DIR} ]; then
+                        if ! run_and_move_result $boot_plan $DISTRO ;then
+                            if [ ! -d ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO} ];then
+                                mv ${DISTRO} ${GIT_DESCRIBE}/${RESULTS_DIR}
+                                continue
+                            else
+                                cp -fr ${DISTRO}/* ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
+                                continue
+                            fi
                         fi
                     fi
                 fi
-            elif [ "$boot_plan" = "BOOT_PXE" ]; then
-                # pxe install in previous step.use ssh to do the pxe test.
-                # BOOT_PXE
-                # boot from PXE
-                generate_jobs $boot_plan $DISTRO
-
-                if [ -d ${JOBS_DIR} ]; then
-                    if ! run_and_move_result $boot_plan $DISTRO ;then
-                        if [ ! -d ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO} ];then
-                            mv ${DISTRO} ${GIT_DESCRIBE}/${RESULTS_DIR}
-                            continue
-                        else
-                            cp -fr ${DISTRO}/* ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
-                            continue
-                        fi
-                    fi
-                fi
+	
+            done
+            if [ ! -d $GIT_DESCRIBE/${RESULTS_DIR}/${DISTRO} ];then
+                mv ${DISTRO} $GIT_DESCRIBE/${RESULTS_DIR} && continue
             else
-                # BOOT_NFS
-                # boot from NFS
-                generate_jobs $boot_plan $DISTRO
-
-                if [ -d ${JOBS_DIR} ]; then
-                    if ! run_and_move_result $boot_plan $DISTRO ;then
-                        if [ ! -d ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO} ];then
-                            mv ${DISTRO} ${GIT_DESCRIBE}/${RESULTS_DIR}
-                            continue
-                        else
-                            cp -fr ${DISTRO}/* ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
-                            continue
-                        fi
-                    fi
-                fi
+                cp -fr ${DISTRO}/* $GIT_DESCRIBE/${RESULTS_DIR}/${DISTRO}/ && continue
             fi
-        done
-        if [ ! -d $GIT_DESCRIBE/${RESULTS_DIR}/${DISTRO} ];then
-            mv ${DISTRO} $GIT_DESCRIBE/${RESULTS_DIR} && continue
-        else
-            cp -fr ${DISTRO}/* $GIT_DESCRIBE/${RESULTS_DIR}/${DISTRO}/ && continue
-        fi
+	fi
     done
     popd
 }
