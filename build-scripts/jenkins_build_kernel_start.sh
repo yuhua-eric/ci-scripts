@@ -291,7 +291,7 @@ function get_compile_result() {
     pushd $OPEN_ESTUARY_DIR/estuary
     touch compile_result.txt
     for DISTRO in $ALL_SHELL_DISTRO;do
-        tail -n 5 $OPEN_ESTUARY_DIR/estuary/${DISTRO}.log |sed -n '/Build distros done!/p' > compile_tmp.log
+        tail -n 5 $OPEN_ESTUARY_DIR/estuary/${DISTRO}.log |sed -n "/build ${DISTRO,,} done!/p" > compile_tmp.log
         if [ -s ./compile_tmp.log ]; then
                 echo "${DISTRO,,}:pass" >> compile_result.txt
         else
@@ -301,8 +301,8 @@ function get_compile_result() {
     tail -n 5 $OPEN_ESTUARY_DIR/estuary/common.log |sed -n '/build common rootfs done!/p' > compile_tmp.log
     if [ -s ./compile_tmp.log ] ; then
                 echo "common:pass" >> compile_result.txt
-    else
-                echo "common:fail" >> compile_result.txt
+    #else
+    #           echo "common:fail" >> compile_result.txt
     fi
     popd    
 
