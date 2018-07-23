@@ -44,6 +44,11 @@ function init_input_params() {
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
     SAVE_ISO=${SAVE_ISO:-"y"}
     ALL_SHELL_DISTRO=${SHELL_DISTRO:-"Ubuntu CentOS"}
+    WORKSPACE=${WORKSPACE:-/home/jenkins/workspace/Estuary-Test-1}
+    WORK_DIR=${WORKSPACE}/local
+    CI_SCRIPTS_DIR=${WORK_DIR}/ci-scripts
+    OPEN_ESTUARY_DIR=${WORK_DIR}/open-estuary
+
 }
 
 function deal_with_iso() {
@@ -96,15 +101,18 @@ function main() {
     init_input_params
     #start_docker_service
     for DISTRO in $ALL_SHELL_DISTRO;do
-        distro="$(echo $DISTRO | tr '[:upper:]' '[:lower:]')"
-        if [ x"$distro" != x"opensuse" ]; then            
-            ./${distro}_mkautoiso.sh "${GIT_DESCRIBE}"
-        else
-            start_docker_service
-            cp_opensuse_iso
-            docker run --privileged=true -i -v /home:/root/ --name opensuse estuary/opensuse:5.1-full bash /root/jenkins/workspace/estuary-v500-build/local/ci-scripts/build-iso-scripts/opensuse_mkautoiso.sh 
-            cp_auto_iso
-        fi
+	cat $OPEN_ESTUARY_DIR/estuary/compile_result.txt |sed -n "/${DISTRO,,}:pass/p" > ./compile_tmp.log
+        if [ -s ./compile_tmp.log ] ; then
+            distro="$(echo $DISTRO | tr '[:upper:]' '[:lower:]')"
+            if [ x"$distro" != x"opensuse" ]; then            
+                ./${distro}_mkautoiso.sh "${GIT_DESCRIBE}"
+            else
+                start_docker_service
+                cp_opensuse_iso
+                docker run --privileged=true -i -v /home:/root/ --name opensuse estuary/opensuse:5.1-full bash /root/jenkins/workspace/estuary-v500-build/local/ci-scripts/build-iso-scripts/opensuse_mkautoiso.sh 
+                cp_auto_iso
+            fi
+	 fi
     done
     deal_with_iso
 }
