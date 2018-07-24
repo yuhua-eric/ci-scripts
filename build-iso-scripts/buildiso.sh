@@ -47,6 +47,7 @@ function init_input_params() {
 function parse_params() {
     WORKSPACE=${WORKSPACE:-/home/jenkins/workspace/Estuary-Test-1}
     WORK_DIR=${WORKSPACE}/local
+    WORKSPACE_NAME=`echo $WORKSPACE |sed 's:/: :g'|awk  '{print $5}'`
     CI_SCRIPTS_DIR=${WORK_DIR}/ci-scripts
     OPEN_ESTUARY_DIR=${WORK_DIR}/open-estuary
     pushd ${CI_SCRIPTS_DIR}
@@ -113,7 +114,7 @@ function main() {
             else
                 start_docker_service
                 cp_opensuse_iso
-                docker run --privileged=true -i -v /home:/root/ --name opensuse estuary/opensuse:5.1-full bash /root/jenkins/workspace/estuary-v500-build/local/ci-scripts/build-iso-scripts/opensuse_mkautoiso.sh 
+                docker run --privileged=true -i -v /home:/root/ --name opensuse estuary/opensuse:5.1-full bash /root/jenkins/workspace/${WORKSPACE_NAME}/local/ci-scripts/build-iso-scripts/opensuse_mkautoiso.sh 
                 cp_auto_iso
             fi
 	fi
