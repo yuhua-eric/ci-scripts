@@ -264,6 +264,8 @@ function get_version_info() {
         # KERNEL_GIT_DESCRIBE=$(git log --oneline | head -1 | awk '{print $1}')
         cd -
         GIT_DESCRIBE=daily_$(current_day)
+	#before_day=`expr $current_day - 1`
+	#GIT_DESCRIBE_IMAGE=daily_$(before_day)
         cd -
 
         echo "ESTUARY_GIT_DESCRIBE=${ESTUARY_GIT_DESCRIBE}" > ${WORKSPACE}/version.properties
@@ -312,6 +314,7 @@ function cp_image() {
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
     DES_DIR=$STASH_DIR/$TREE_NAME/$GIT_DESCRIBE
+    daily_build_dir=/home/jenkins/workspace/Estuary-Test-2/local/open-estuary/estuary/build/out/release/master
 
     # do clean
     rm -rf $STASH_DIR/$TREE_NAME/
@@ -335,7 +338,48 @@ function cp_image() {
     # copy platfom files
     # TODO : workaround to prepare all platform image
     # for PLATFORM in $SHELL_PLATFORM; do
+    for PLATFORM in $ALL_SHELL_PLATFORM; do
+        echo $PLATFORM
 
+        PLATFORM_L="$(echo $PLATFORM | tr '[:upper:]' '[:lower:]')"
+        PLATFORM_U="$(echo $PLATFORM | tr '[:lower:]' '[:upper:]')"
+        PLATFORM_ARCH_DIR=$DES_DIR/${PLATFORM_L}-${arch[$PLATFORM_L]}
+        [ -d $PLATFORM_ARCH_DIR ] && rm -fr $PLATFORM_ARCH_DIR
+        mkdir -p ${PLATFORM_ARCH_DIR}/{binary,distro}
+
+        pushd $PLATFORM_ARCH_DIR/binary
+        ln -s ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/$KERNEL_IMG_FILE ${KERNEL_IMG_FILE}_${PLATFORM_U}
+        ln -s ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/$MINI_ROOTFS_FILE
+        ln -s ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/$GRUB_IMG_FILE
+
+        popd
+
+        # copy distro files
+        for DISTRO in $ALL_SHELL_DISTRO;do
+            echo $DISTRO
+
+            pushd ${CI_SCRIPTS_DIR}
+            distro_tar_name=`python configs/parameter_parser.py -f config.yaml -s DISTRO -k $PLATFORM_U -v $DISTRO`
+            popd
+
+            if [ x"$distro_tar_name" = x"" ]; then
+                continue
+            fi
+              
+            echo $distro_tar_name
+            cat $OPEN_ESTUARY_DIR/estuary/compile_result.txt |sed -n "/${DISTRO,,}:pass/p" > ./compile_tmp.log
+            if [ -s ./compile_tmp.log ] ; then
+                #pushd $DES_DIR/binary/${arch[$PLATFORM_L]}
+                #[ ! -f ${distro_tar_name,,}.sum ] && md5sum ${distro_tar_name,,} > ${distro_tar_name,,}.sum
+                #popd
+
+                pushd $PLATFORM_ARCH_DIR/distro
+                ln -s ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} $distro_tar_name
+                ln -s ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum $distro_tar_name.sum
+                popd
+            fi
+        done
+    done
     popd  # leave DES_DIR
     popd  # leave BUILD_DIR
     popd  # leave OPEN_ESTUARY_DIR
