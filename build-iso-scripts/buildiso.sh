@@ -47,7 +47,7 @@ function init_input_params() {
 function parse_params() {
     WORKSPACE=${WORKSPACE:-/home/jenkins/workspace/Estuary-Test-1}
     WORK_DIR=${WORKSPACE}/local
-    WORKSPACE_NAME=`echo $WORKSPACE |sed 's:/: :g'|awk  '{print $5}'`
+    WORKSPACE_NAME=`echo $WORKSPACE |sed 's:/: :g'|awk  '{print $4}'`
     CI_SCRIPTS_DIR=${WORK_DIR}/ci-scripts
     OPEN_ESTUARY_DIR=${WORK_DIR}/open-estuary
     pushd ${CI_SCRIPTS_DIR}
