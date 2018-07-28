@@ -348,9 +348,9 @@ function cp_image() {
         mkdir -p ${PLATFORM_ARCH_DIR}/{binary,distro}
 
         pushd $PLATFORM_ARCH_DIR/binary
-        ln -s ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/$KERNEL_IMG_FILE ${KERNEL_IMG_FILE}_${PLATFORM_U}
-        ln -s ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/$MINI_ROOTFS_FILE
-        ln -s ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/$GRUB_IMG_FILE
+        cp  ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/$KERNEL_IMG_FILE ./${KERNEL_IMG_FILE}_${PLATFORM_U}
+        cp  ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/$MINI_ROOTFS_FILE ./
+        #cp  ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/$GRUB_IMG_FILE ./
 
         popd
 
@@ -374,8 +374,8 @@ function cp_image() {
                 #popd
 
                 pushd $PLATFORM_ARCH_DIR/distro
-                ln -s ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} $distro_tar_name
-                ln -s ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum $distro_tar_name.sum
+                cp  ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} ./$distro_tar_name
+                cp  ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum ./$distro_tar_name.sum
                 popd
             fi
         done

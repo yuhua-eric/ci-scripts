@@ -308,7 +308,7 @@ function cp_image() {
         pushd $PLATFORM_ARCH_DIR/binary
         ln -s ../../binary/${arch[$PLATFORM_L]}/$KERNEL_IMG_FILE ${KERNEL_IMG_FILE}_${PLATFORM_U}
         ln -s ../../binary/${arch[$PLATFORM_L]}/$MINI_ROOTFS_FILE
-        ln -s ../../binary/${arch[$PLATFORM_L]}/$GRUB_IMG_FILE
+        #ln -s ../../binary/${arch[$PLATFORM_L]}/$GRUB_IMG_FILE
 
         popd
 
