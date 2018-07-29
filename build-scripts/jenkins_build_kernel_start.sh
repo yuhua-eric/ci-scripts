@@ -54,6 +54,8 @@ function init_input_params() {
     # project name
     TREE_NAME=${TREE_NAME:-"open-estuary"}
     # select a version
+    SOURCE_CODE=${SOURCE_CODE:-"https://github.com/open-estuary/estuary.git"}
+    BRANCH=${BRANCH:-""}
     VERSION=${VERSION:-""}
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
 
@@ -64,7 +66,6 @@ function init_input_params() {
     SETUP_TYPE=${SETUP_TYPE:-""}
     ALL_SHELL_PLATFORM=${SHELL_PLATFORM:-"D05"}
     ALL_SHELL_DISTRO=${SHELL_DISTRO:-"Ubuntu CentOS"}
-
     DEBUG=${DEBUG:-""}
 
     JENKINS_JOB_START_TIME=${JENKINS_JOB_START_TIME:-$(current_time)}
@@ -73,9 +74,9 @@ function init_input_params() {
 function parse_params() {
     pushd ${CI_SCRIPTS_DIR}
     : ${SHELL_PLATFORM:=`python configs/parameter_parser.py -f config.yaml -s Build -k Platform`}
-    #: ${ALL_SHELL_PLATFORM:=`python configs/parameter_parser.py -f config.yaml -s Build -k Platform`}
+#    : ${ALL_SHELL_PLATFORM:=`python configs/parameter_parser.py -f config.yaml -s Build -k Platform`}
     : ${SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
-   # : ${ALL_SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
+#    : ${ALL_SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
 
     : ${BOOT_PLAN:=`python configs/parameter_parser.py -f config.yaml -s Jenkins -k Boot`}
 
@@ -173,28 +174,41 @@ function sync_code() {
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
     # remove old estuary repo
-    # rm -rf estuary
-    if [ "$VERSION"x != ""x ]; then
-        if [ -d "estuary" ];then
-            cd estuary
-            git fetch
-            git checkout refs/tags/${VERSION}
-            cd -
-        else
-            git clone "https://github.com/open-estuary/estuary.git"
-            cd estuary
-            git checkout refs/tags/${VERSION}
-            cd -
-        fi
-    else
-        if [ -d "estuary" ];then
-            cd estuary
-            git fetch
-            git checkout origin/master
-            cd -
-        else
-            git clone "https://github.com/open-estuary/estuary.git" -b master
-        fi
+    rm -rf estuary
+    git clone ${SOURCE_CODE}
+	
+    #if [ "$VERSION"x != ""x ]; then
+    #    if [ -d "estuary" ];then
+    #        cd estuary
+    #        git fetch
+    #        git checkout refs/tags/${VERSION}
+    #        cd -
+    #    else
+    #        git clone "https://github.com/open-estuary/estuary.git"
+    #        cd estuary
+    #        git checkout refs/tags/${VERSION}
+    #        cd -
+    #    fi
+    #else
+    #    if [ -d "estuary" ];then
+    #        cd estuary
+    #        git fetch
+    #        git checkout origin/master
+    #        cd -
+    #    else
+    #        git clone "https://github.com/open-estuary/estuary.git" -b master
+    #    fi
+    #fi
+	if [ "$BRANCH"x != ""x ]; then
+        cd estuary
+        git checkout ${BRANCH}
+        cd -
+    fi
+	
+	if [ "$VERSION"x != ""x ]; then
+        cd estuary
+        git checkout refs/tags/${VERSION}
+        cd -
     fi
 
     # TODO : import gpg file
@@ -220,11 +234,14 @@ function do_build() {
         pushd estuary
         # TODO : workaround for build all in single machine
         for DISTRO in $ALL_SHELL_DISTRO;do
-            ./build.sh --build_dir=${BUILD_DIR} -d "${DISTRO,,}" &
+            ./build.sh --build_dir=${BUILD_DIR} -d "${DISTRO,,}" -k true |tee > ${DISTRO}.log 2>&1 &
             sleep 1m
         done
-        ./build.sh --build_dir=${BUILD_DIR} -d common &
         wait
+#	full_distro=`ls *.log`
+#	for DISTRO in $full_distro;do
+#            cat ${DISTRO}.log
+#        done
 
         # ./build.sh --build_dir=${BUILD_DIR}
         popd
@@ -247,6 +264,8 @@ function get_version_info() {
         # KERNEL_GIT_DESCRIBE=$(git log --oneline | head -1 | awk '{print $1}')
         cd -
         GIT_DESCRIBE=daily_$(current_day)
+	#before_day=`expr $current_day - 1`
+	#GIT_DESCRIBE_IMAGE=daily_$(before_day)
         cd -
 
         echo "ESTUARY_GIT_DESCRIBE=${ESTUARY_GIT_DESCRIBE}" > ${WORKSPACE}/version.properties
@@ -269,10 +288,33 @@ function parse_arch_map(){
     done
 }
 
+function get_compile_result() {
+
+    pushd $OPEN_ESTUARY_DIR/estuary
+    touch compile_result.txt
+    for DISTRO in $ALL_SHELL_DISTRO;do
+        tail -n 5 $OPEN_ESTUARY_DIR/estuary/${DISTRO}.log |sed -n "/build ${DISTRO,,} done!/p" > compile_tmp.log
+        if [ -s ./compile_tmp.log ]; then
+                echo "${DISTRO,,}:pass" >> compile_result.txt
+        else
+                echo "${DISTRO,,}:fail" >> compile_result.txt
+        fi
+    done
+    tail -n 5 $OPEN_ESTUARY_DIR/estuary/common.log |sed -n '/build common rootfs done!/p' > compile_tmp.log
+    if [ -s ./compile_tmp.log ] ; then
+                echo "common:pass" >> compile_result.txt
+    #else
+    #           echo "common:fail" >> compile_result.txt
+    fi
+    popd    
+
+}
+#simplify cp_image,now only build iso,no need prepare all platform image and common file.
 function cp_image() {
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
     DES_DIR=$STASH_DIR/$TREE_NAME/$GIT_DESCRIBE
+    daily_build_dir=/home/jenkins/workspace/Estuary-Test-2/local/open-estuary/estuary/build/out/release/master
 
     # do clean
     rm -rf $STASH_DIR/$TREE_NAME/
@@ -286,7 +328,7 @@ function cp_image() {
     pushd $BUILD_DIR  # enter BUILD_DIR
 
     cp -r out/release/*/* ${DES_DIR}/
-
+    cp $OPEN_ESTUARY_DIR/estuary/compile_result.txt $DES_DIR
     pushd ${DES_DIR} # enter DES_DIR
     MINI_ROOTFS_FILE=mini-rootfs.cpio.gz
     GRUB_IMG_FILE=grubaa64.efi
@@ -306,9 +348,9 @@ function cp_image() {
         mkdir -p ${PLATFORM_ARCH_DIR}/{binary,distro}
 
         pushd $PLATFORM_ARCH_DIR/binary
-        ln -s ../../binary/${arch[$PLATFORM_L]}/$KERNEL_IMG_FILE ${KERNEL_IMG_FILE}_${PLATFORM_U}
-        ln -s ../../binary/${arch[$PLATFORM_L]}/$MINI_ROOTFS_FILE
-        #ln -s ../../binary/${arch[$PLATFORM_L]}/$GRUB_IMG_FILE
+        cp  ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/$KERNEL_IMG_FILE ./${KERNEL_IMG_FILE}_${PLATFORM_U}
+        cp  ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/$MINI_ROOTFS_FILE ./
+        #cp  ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/$GRUB_IMG_FILE ./
 
         popd
 
@@ -323,20 +365,21 @@ function cp_image() {
             if [ x"$distro_tar_name" = x"" ]; then
                 continue
             fi
-
+              
             echo $distro_tar_name
+            cat $OPEN_ESTUARY_DIR/estuary/compile_result.txt |sed -n "/${DISTRO,,}:pass/p" > ./compile_tmp.log
+            if [ -s ./compile_tmp.log ] ; then
+                #pushd $DES_DIR/binary/${arch[$PLATFORM_L]}
+                #[ ! -f ${distro_tar_name,,}.sum ] && md5sum ${distro_tar_name,,} > ${distro_tar_name,,}.sum
+                #popd
 
-            pushd $DES_DIR/binary/${arch[$PLATFORM_L]}
-            [ ! -f ${distro_tar_name,,}.sum ] && md5sum ${distro_tar_name,,} > ${distro_tar_name,,}.sum
-            popd
-
-            pushd $PLATFORM_ARCH_DIR/distro
-            ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} $distro_tar_name
-            ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum $distro_tar_name.sum
-            popd
+                pushd $PLATFORM_ARCH_DIR/distro
+                cp  ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} ./$distro_tar_name
+                cp  ${daily_build_dir}/binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum ./$distro_tar_name.sum
+                popd
+            fi
         done
     done
-
     popd  # leave DES_DIR
     popd  # leave BUILD_DIR
     popd  # leave OPEN_ESTUARY_DIR
@@ -405,6 +448,7 @@ function main() {
         do_build
         get_version_info
         parse_arch_map
+	get_compile_result
         if [ x"$SKIP_CP_IMAGE" = x"false" ];then
             cp_image
         fi
