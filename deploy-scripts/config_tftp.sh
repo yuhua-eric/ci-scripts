@@ -85,6 +85,7 @@ function config_tftp_iso() {
         else
             timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} mkdir -p "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/"
             sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/tftp/iso_install/arm64/estuary/${version_name}/${distro_name}/${DEVICE_TYPE,,}" root@${NEXT_SERVER}:"/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/${version_name}/${distro_name}/" &
+	    sleep 1m
             wait
         fi
     fi
