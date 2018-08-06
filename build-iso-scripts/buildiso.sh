@@ -42,10 +42,10 @@ function parse_input() {
 function init_input_params() {
     TREE_NAME=${TREE_NAME:-"open-estuary"}
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
-    SAVE_ISO=${SAVE_ISO:-"y"}
+    SAVE_ISO=${SAVE_ISO:-"n"}
 }
 function parse_params() {
-    WORKSPACE=${WORKSPACE:-/home/jenkins/workspace/Estuary-Test-1}
+    WORKSPACE=${WORKSPACE:-/home/jenkins/workspace/Estuary-Test}
     WORK_DIR=${WORKSPACE}/local
     WORKSPACE_NAME=`echo $WORKSPACE |sed 's:/: :g'|awk  '{print $4}'`
     CI_SCRIPTS_DIR=${WORK_DIR}/ci-scripts

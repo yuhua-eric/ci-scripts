@@ -11,7 +11,9 @@ cfg_path="../configs/auto-install/opensuse/auto-iso/"
 new_grub="grub.cfg"
 #new_kickstart="ks-iso.cfg"
 new_xml="autoinst-iso.xml"
-cu_dir='/root/jenkins/workspace/estuary-v500-build/local/ci-scripts/build-iso-scripts' 
+WORKSPACE=${WORKSPACE:-/home/jenkins/workspace/Estuary-Test}
+WORKSPACE_NAME=`echo $WORKSPACE |sed 's:/: :g'|awk  '{print $4}'`
+cu_dir="/root/jenkins/workspace/${WORKSPACE_NAME}/local/ci-scripts/build-iso-scripts"
 cd $cu_dir
 #VERSION=$(ls /fileserver/open-estuary)
 #if [ -z ${VERSION} ];then
