@@ -111,11 +111,11 @@ function main() {
             distro="$(echo $DISTRO | tr '[:upper:]' '[:lower:]')"
             if [ x"$distro" != x"opensuse" ]; then            
                 ./${distro}_mkautoiso.sh "${GIT_DESCRIBE}"
-            #else
-                #start_docker_service
-                #cp_opensuse_iso
-                #docker run --privileged=true -i -v /home:/root/ --name opensuse estuary/opensuse:5.1-full bash /root/jenkins/workspace/${WORKSPACE_NAME}/local/ci-scripts/build-iso-scripts/opensuse_mkautoiso.sh 
-                #cp_auto_iso
+            else
+                start_docker_service
+                cp_opensuse_iso
+                docker run --privileged=true -i -v /home:/root/ --name opensuse estuary/opensuse:5.1-full bash /root/jenkins/workspace/${WORKSPACE_NAME}/local/ci-scripts/build-iso-scripts/opensuse_mkautoiso.sh 
+                cp_auto_iso
             fi
 	fi
     done
