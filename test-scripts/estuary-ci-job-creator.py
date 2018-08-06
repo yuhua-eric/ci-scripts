@@ -314,7 +314,7 @@ def generate_job_file(cwd,
                             if plan == 'BOOT_NFS':
                                 tmp = tmp.replace('{device_type}', device_type)
                             else: 
-                                if distro = 'Fedora':
+                                if distro == 'Fedora':
                                     tmp = tmp.replace('{device_type}', device_type + "ssh_fedora")
                                 else:    
                                     tmp = tmp.replace('{device_type}', device_type + "ssh")
