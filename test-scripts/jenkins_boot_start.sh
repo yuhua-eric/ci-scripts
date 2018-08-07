@@ -458,8 +458,20 @@ function generate_pass_rate() {
     month=$(date +"%Y%m")
     day=$(date +"%d")
 
-    release_list=$(ls ${FTP_DIR}/${TREE_NAME}/ | grep "$month" || true)
-    success_day=$(echo ${release_list} | wc -w)
+	today=$(date +"%Y%m%d")
+    lastday=$(date  +"%Y%m%d" -d  "-1 days")
+
+    if [ $day -eq 1 ];then
+        if [ -d ${FTP_DIR}/${TREE_NAME}/"daily_${lastday}" ];then
+            success_day=1
+        else
+            success_day=0
+        fi
+    else
+        day=`expr ${day} - 1`
+        release_list=$(ls ${FTP_DIR}/${TREE_NAME}/ --hide "daily_${today}" | grep "$month" || true)
+        success_day=$(echo ${release_list} | wc -w)
+    fi
     rate=$(echo "${success_day} * 100 / ${day}" | bc)
     echo ${rate}
 }
@@ -469,15 +481,28 @@ function generate_test_rate() {
     month=$(date +"%Y%m")
     day=$(date +"%d")
 
-    release_list=$(ls ${FTP_DIR}/${TREE_NAME}/ | grep "$month" || true)
-    success_day=0
-    for release in ${release_list};do
-        if [ -e ${FTP_DIR}/${TREE_NAME}/${release}/results/${DETAILS_SUM} ];then
-           if ! grep -qE 'fail$' ${FTP_DIR}/${TREE_NAME}/${release}/results/${DETAILS_SUM};then
-               success_day=$((success_day + 1))
-           fi
+	today=$(date +"%Y%m%d")
+    lastday=$(date  +"%Y%m%d" -d  "-1 days")
+
+	if [ $day -eq 1 ];then
+	    release=$(ls ${FTP_DIR}/${TREE_NAME}/ | grep "daily_${lastday}" || true)
+        if [ ! grep -qE 'fail$' ${FTP_DIR}/${TREE_NAME}/${release}/results/${DETAILS_SUM} ];then
+            success_day=1
+        else
+	        success_day=0
         fi
-    done
+    else
+	    day=`expr ${day} - 1`
+        release_list=$(ls ${FTP_DIR}/${TREE_NAME}/ --hide "daily_${today}" | grep "$month" || true)
+        success_day=0
+        for release in ${release_list};do
+            if [ -e ${FTP_DIR}/${TREE_NAME}/${release}/results/${DETAILS_SUM} ];then
+                if ! grep -qE 'fail$' ${FTP_DIR}/${TREE_NAME}/${release}/results/${DETAILS_SUM};then
+                    success_day=$((success_day + 1))
+                fi
+            fi
+        done
+	fi
     rate=$(echo "${success_day} * 100 / ${day}" | bc)
     echo ${rate}
 }
