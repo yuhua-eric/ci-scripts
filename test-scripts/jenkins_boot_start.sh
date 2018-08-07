@@ -486,7 +486,7 @@ function generate_test_rate() {
 
 	if [ $day -eq 1 ];then
 	    release=$(ls ${FTP_DIR}/${TREE_NAME}/ | grep "daily_${lastday}" || true)
-        if [ ! grep -qE 'fail$' ${FTP_DIR}/${TREE_NAME}/${release}/results/${DETAILS_SUM} ];then
+        if ! grep -qE 'fail$' ${FTP_DIR}/${TREE_NAME}/${release}/results/${DETAILS_SUM};then
             success_day=1
         else
 	        success_day=0
