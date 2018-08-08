@@ -232,8 +232,7 @@ function do_build() {
         # Execute build
         pushd estuary
         # TODO : workaround for build all in single machine
-        ./build.sh --build_dir=${BUILD_DIR} -d common |tee > common.log 2>&1 &
-	sleep 1m
+        ./build.sh --build_dir=${BUILD_DIR} -d common |tee > common.log 2>&1
         for DISTRO in $ALL_SHELL_DISTRO;do
             ./build.sh --build_dir=${BUILD_DIR} -d "${DISTRO,,}" |tee > ${DISTRO}.log 2>&1 &
             sleep 1m
