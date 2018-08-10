@@ -10,6 +10,8 @@ function comfirm_scp() {
     timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} du -sh "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/$version/centos/d05/auto-install.iso"
 
 }
+time_p=`date`
+echo "$time_p" >> scp_result.txt
 time1=`date +%s`
 time_begin=`expr $time1 / 60`
 for((i=1;i<=${loop_time};i++));  
