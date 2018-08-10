@@ -13,6 +13,8 @@ time1=`date +%s`
 time_begin=`expr $time1 / 60`
 for((i=1;i<=${loop_time};i++));  
 do
+    timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} rm -rf "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/daily_20180808/centos/d05/"
+
     if timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} test -d "/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/daily_20180808/centos/d05/";then
         echo  "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/daily_20180808/centos/d05/ exist in ${NEXT_SERVER}"
     else
@@ -28,7 +30,6 @@ do
     else
                 echo "$i:fail" >> scp_result.txt
     fi
-    timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} rm -rf "/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/daily_20180808/centos/d05/"
     #i=`expr $i + 1`
 done
 time2=`date +%s`
