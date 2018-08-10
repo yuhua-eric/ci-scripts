@@ -1,25 +1,26 @@
 #!/bin/bash -ex
 
 
-loop_time=${1:-"3"}
+version=${1:-"$version"}
+loop_time=${2:-"3"}
 i=1
 NEXT_SERVER='192.168.50.222'
 function comfirm_scp() {
 
-    timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} du -sh "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/daily_20180808/centos/d05/auto-install.iso"
+    timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} du -sh "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/$version/centos/d05/auto-install.iso"
 
 }
 time1=`date +%s`
 time_begin=`expr $time1 / 60`
 for((i=1;i<=${loop_time};i++));  
 do
-    timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} rm -rf "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/daily_20180808/centos/d05/"
+    timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} rm -rf "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/$version/centos/d05/"
 
-    if timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} test -d "/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/daily_20180808/centos/d05/";then
-        echo  "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/daily_20180808/centos/d05/ exist in ${NEXT_SERVER}"
+    if timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} test -d "/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/$version/centos/d05/";then
+        echo  "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/$version/centos/d05/ exist in ${NEXT_SERVER}"
     else
-        timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} mkdir -p "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/daily_20180808/centos/"
-        sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/tftp/iso_install/arm64/estuary/daily_20180808/centos/d05/" root@${NEXT_SERVER}:"/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/daily_20180808/centos/" &
+        timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} mkdir -p "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/$version/centos/"
+        sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/tftp/iso_install/arm64/estuary/$version/centos/d05/" root@${NEXT_SERVER}:"/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/$version/centos/" &
         sleep 1m
         wait
     fi 
