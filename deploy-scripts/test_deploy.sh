@@ -61,7 +61,7 @@ function main() {
 function main() {
 
     hour=`date "+%H:%M:%S"|awk -F ':' '{print $1}'`
-    if [ "$hour" -gt "12" ]
+    if [ "$hour" -gt "1" ]
     then
         do_test
     else
