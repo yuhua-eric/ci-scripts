@@ -7,7 +7,7 @@ start_time=${3:-"12"}
 i=1
 NEXT_SERVER='192.168.50.222'
 pwd
-cd ci-scripts/
+cd ./local/ci-scripts/
 FTP_SERVER=$(python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k ftpserver)
 
 function comfirm_scp() {
