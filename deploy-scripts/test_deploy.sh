@@ -1,4 +1,11 @@
 #!/bin/bash -ex
+# -*- coding: utf-8 -*-
+#
+#    E-mail    :    yu_hua1@hoperun.com
+#    Data      :    2018-08-10 11:44:33
+#    Desc      :    test new worker deploy(d05ssh08 09)
+#    Example   :    ./local/ci-scripts/deploy-scripts/test_deploy.sh "${VERSION}" "${LOOP_TIME}" "${START_TIME}"
+
 
 
 version=${1:-"$version"}
