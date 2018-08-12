@@ -1,8 +1,8 @@
 #!/bin/bash -ex
-#: Title                  : jenkins_build_v500_start.sh
-#: Usage                  : ./local/ci-scripts/build-scripts/jenkins_build_v500_start.sh -p env.properties
-#: Author                 : qinsl0106@thundersoft.com
-#: Description            : CI中自动编译的jenkins任务脚本，针对v500
+#: Title                  : esturay_build_v500_start.sh
+#: Usage                  : ./local/ci-scripts/build-scripts/estuary_build_v500_start.sh -p env.properties
+#: Author                 : yu_hua1@hoperun.com
+#: Description            : CI编译工程专用脚本（estuary-v500-build），针对v500
 # only works on centos
 
 __ORIGIN_PATH__="$PWD"
