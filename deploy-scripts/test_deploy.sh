@@ -3,6 +3,7 @@
 
 version=${1:-"$version"}
 loop_time=${2:-"3"}
+start_time=${3:-"12"}
 i=1
 NEXT_SERVER='192.168.50.222'
 function comfirm_scp() {
@@ -61,7 +62,7 @@ function main() {
 function main() {
 
     hour=`date "+%H:%M:%S"|awk -F ':' '{print $1}'`
-    if [ "$hour" -gt "1" ]
+    if [ "$hour" -gt "${start_time}" ]
     then
         do_test
     else
