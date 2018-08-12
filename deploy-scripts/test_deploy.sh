@@ -45,19 +45,8 @@ time_end=`expr $time2 / 60`
 test_time=`expr ${time_end} - ${time_begin}`
 echo "the time cost is ${test_time} minute" >> scp_result.txt
 cat scp_result.txt 
+rm scp_result.txt
 }
-
-function main() {
-
-    hour=`date "+%H:%M:%S"|awk -F ':' '{print $1}'`
-    if [ "$hour" -gt "12" ] and [ "$hour" -le "17"]
-    then
-        do_test
-    else 
-        echo "now is not the right time"    
-    fi    
-}
-
 
 function main() {
 
