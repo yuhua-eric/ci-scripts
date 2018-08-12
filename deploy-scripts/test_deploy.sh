@@ -6,6 +6,9 @@ loop_time=${2:-"3"}
 start_time=${3:-"12"}
 i=1
 NEXT_SERVER='192.168.50.222'
+cd ../
+FTP_SERVER=$(python configs/parameter_parser.py -f config.yaml -s Ftpinfo -k ftpserver)
+
 function comfirm_scp() {
 
     timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} du -sh "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/$version/centos/d05/auto-install.iso"
@@ -21,7 +24,16 @@ function do_test() {
 
     for((i=1;i<=${loop_time};i++));  
     do
+	
         timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} rm -rf "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/$version/centos/d05/"
+         if [ ! -e "/tftp/iso_install/arm64/estuary/$version/centos/d05/auto-install.iso" ];then
+            mkdir -p "/tftp/iso_install/arm64/estuary/${version}/centos/d05"
+            cd "/tftp/iso_install/arm64/estuary/${version}/centos/d05"
+            # replave iso
+            rm -rf *.iso || true
+            init_os_dict
+wget -c -q ${FTP_SERVER}/open-estuary/${version}/CentOS/auto-install.iso
+        fi
 
         if timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} test -d "/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/$version/centos/d05/";then
             echo  "/var/lib/lava/dispatcher/tmp/iso_install/arm64/estuary/$version/centos/d05/ exist in ${NEXT_SERVER}"
