@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 #: Title                  : fedora_mkautoiso.sh
 #: Usage                  : ./fedora_mkautoiso.sh
-#: Author                 : qinsl0106@thundersoft.com
+#: Author                 : yu_hua1@hoperun.com
 #: Description            : 生成 fedora auto-install.iso
 
 GIT_DESCRIBE=${1:-"None"}

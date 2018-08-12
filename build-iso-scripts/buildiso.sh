@@ -8,6 +8,7 @@
 # wget https://www.gnu.org/software/xorriso/xorriso-1.4.8.tar.gz
 # tar -xzvf xorriso-1.4.8.tar.gz
 # ./configure && make && make install
+#  E-mail    :    yu_hua1@hoperun.com
 
 __ORIGIN_PATH__="$PWD"
 script_path="${0%/*}"  # remove the script name ,get the path
