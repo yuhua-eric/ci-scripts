@@ -96,6 +96,7 @@ function cp_auto_iso(){
         exit 1
     fi
     cp -f ./auto-install.iso /home/fileserver/open-estuary/${VERSION}/OpenSuse/
+    rm -f ./*openSUSE*.iso
 }
 function main() {
     parse_input "$@"
