@@ -65,7 +65,7 @@ time_end=`expr $time2 / 60`
 test_time=`expr ${time_end} - ${time_begin}`
 echo "the time cost is ${test_time} minute" >> scp_result.txt
 cat scp_result.txt 
-rm scp_result.txt
+#rm scp_result.txt
 }
 
 function main() {
