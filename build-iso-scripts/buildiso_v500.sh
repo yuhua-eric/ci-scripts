@@ -8,6 +8,7 @@
 # wget https://www.gnu.org/software/xorriso/xorriso-1.4.8.tar.gz
 # tar -xzvf xorriso-1.4.8.tar.gz
 # ./configure && make && make install
+# Author    :    yu_hua1@hoperun.com
 
 __ORIGIN_PATH__="$PWD"
 script_path="${0%/*}"  # remove the script name ,get the path
@@ -95,6 +96,7 @@ function cp_auto_iso(){
         exit 1
     fi
     cp -f ./auto-install.iso /home/fileserver/open-estuary/${VERSION}/OpenSuse/
+    rm -f ./*openSUSE*.iso
 }
 function main() {
     parse_input "$@"

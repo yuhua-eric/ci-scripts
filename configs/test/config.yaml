@@ -1,10 +1,10 @@
 Build:
     # parameters for the build
     Distro:
-        - Fedora
-        - OpenSuse
-        - Ubuntu
         - CentOS
+        - Fedora
+        - Ubuntu
+        - OpenSuse
         - Debian
         #- Rancher
         #- OpenEmbedded

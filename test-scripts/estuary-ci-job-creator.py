@@ -313,8 +313,11 @@ def generate_job_file(cwd,
                         else:
                             if plan == 'BOOT_NFS':
                                 tmp = tmp.replace('{device_type}', device_type)
-                            else:
-                                tmp = tmp.replace('{device_type}', device_type + "ssh")
+                            else: 
+                                if distro == 'Fedora':
+                                    tmp = tmp.replace('{device_type}', device_type + "ssh_fedora")
+                                else:    
+                                    tmp = tmp.replace('{device_type}', device_type + "ssh")
 
                         tmp = tmp.replace('{job_name}',
                                           CONFIG.get("jenkinsJob") + "-" + job_json.split("/")[-1].split(".yaml")[0])

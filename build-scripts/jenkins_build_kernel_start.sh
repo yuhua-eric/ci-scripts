@@ -1,8 +1,8 @@
 #!/bin/bash -ex
 #: Title                  : jenkins_build_v500_start.sh
 #: Usage                  : ./local/ci-scripts/build-scripts/jenkins_build_v500_start.sh -p env.properties
-#: Author                 : qinsl0106@thundersoft.com
-#: Description            : CI中自动编译的jenkins任务脚本，针对v500
+#: Author                 : yu_hua1@hoperun.com
+#: Description            : ci内核自动化编译专用脚本（Estuary-Test-Kernel_1），针对v500
 # only works on centos
 
 __ORIGIN_PATH__="$PWD"
