@@ -71,7 +71,7 @@ rm scp_result.txt
 function main() {
 
     hour=`date "+%H:%M:%S"|awk -F ':' '{print $1}'`
-    if [ "$hour" -gt "${start_time}" ]
+    if [ "$hour" -ge "${start_time}" ]
     then
         do_test
     else
