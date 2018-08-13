@@ -39,8 +39,8 @@ function do_test() {
             cd "/tftp/iso_install/arm64/estuary/${version}/centos/d05"
             # replave iso
             rm -rf *.iso || true
-            init_os_dict
-wget -c -q ${FTP_SERVER}/open-estuary/${version}/CentOS/auto-install.iso
+            #init_os_dict
+            wget -c -q ${FTP_SERVER}/open-estuary/${version}/CentOS/auto-install.iso
         fi
 
         if timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${NEXT_SERVER} test -d "/var/lib/lava/dispatcher/tmp/pxe_install/arm64/estuary/$version/centos/d05/";then
