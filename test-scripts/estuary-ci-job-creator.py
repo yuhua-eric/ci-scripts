@@ -316,13 +316,17 @@ def generate_job_file(cwd,
                             else: 
                                 if distro == 'Fedora':
                                     tmp = tmp.replace('{device_type}', device_type + "ssh_fedora")
-                                else:    
+                                elif distro == 'OpenSuse':    
+                                    tmp = tmp.replace('{device_type}', device_type + "ssh_suse")
+                                else:
                                     tmp = tmp.replace('{device_type}', device_type + "ssh")
 
                         tmp = tmp.replace('{job_name}',
                                           CONFIG.get("jenkinsJob") + "-" + job_json.split("/")[-1].split(".yaml")[0])
-
-                        tmp = tmp.replace('{distro}', distro.lower())
+                        if distro == 'OpenSuse':
+                            tmp = tmp.replace('{distro}', 'oe')
+                        else:
+                            tmp = tmp.replace('{distro}', distro.lower())
 
                         # end by wuyanjun
                         tmp = tmp.replace('{image_url}', image_url)
