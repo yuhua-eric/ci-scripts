@@ -1,8 +1,9 @@
-#!/bin/bash -ex
+#!/bin/bash
 #: Title                  : opensuse_mkautoiso.sh
 #: Usage                  : ./opensuse_mkautoiso.sh
 #: Author                 : yu_hua1@hoperun.com
 #: Description            : 生成 opensuse auto-install.iso
+set -ex
 
 GIT_DESCRIBE=${1:-"None"}
 
@@ -11,8 +12,8 @@ cfg_path="../configs/auto-install/opensuse/auto-iso/"
 new_grub="grub.cfg"
 #new_kickstart="ks-iso.cfg"
 new_xml="autoinst-iso.xml"
-WORKSPACE=${WORKSPACE:-/home/jenkins/workspace/Estuary-Test}
-WORKSPACE_NAME=`echo $WORKSPACE |sed 's:/: :g'|awk  '{print $4}'`
+#WORKSPACE=${WORKSPACE:-/home/jenkins/workspace/Estuary-Test}
+WORKSPACE_NAME=${1:-"Estuary-Test"}
 cu_dir="/root/jenkins/workspace/${WORKSPACE_NAME}/local/ci-scripts/build-iso-scripts"
 cd $cu_dir
 #VERSION=$(ls /fileserver/open-estuary)
