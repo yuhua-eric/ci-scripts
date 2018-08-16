@@ -173,34 +173,47 @@ function sync_code() {
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
     # remove old estuary repo
-    # rm -rf estuary
-    if [ "$VERSION"x != ""x ]; then
-        if [ -d "estuary" ];then
-            cd estuary
-            git fetch
-            git checkout refs/tags/${VERSION}
-            cd -
-        else
-            git clone "https://github.com/open-estuary/estuary.git"
-            cd estuary
-            git checkout refs/tags/${VERSION}
-            cd -
-        fi
-    else
-        if [ -d "estuary" ];then
-            cd estuary
-            git fetch
-            git checkout origin/master
-            cd -
-        else
-            git clone "https://github.com/open-estuary/estuary.git" -b master
-        fi
+    rm -rf estuary
+    git clone ${SOURCE_CODE}
+
+    #if [ "$VERSION"x != ""x ]; then
+    #    if [ -d "estuary" ];then
+    #        cd estuary
+    #        git fetch
+    #        git checkout refs/tags/${VERSION}
+    #        cd -
+    #    else
+    #        git clone "https://github.com/open-estuary/estuary.git"
+    #        cd estuary
+    #        git checkout refs/tags/${VERSION}
+    #        cd -
+    #    fi
+    #else
+    #    if [ -d "estuary" ];then
+    #        cd estuary
+    #        git fetch
+    #        git checkout origin/master
+    #        cd -
+    #    else
+    #        git clone "https://github.com/open-estuary/estuary.git" -b master
+    #    fi
+    #fi
+        if [ "$BRANCH"x != ""x ]; then
+        cd estuary
+        git checkout ${BRANCH}
+        cd -
     fi
 
+        if [ "$VERSION"x != ""x ]; then
+        cd estuary
+        git checkout refs/tags/${VERSION}
+        cd -
+    fi
     # TODO : import gpg file
     # wget http://192.168.1.108:8083/v500_build/ESTUARY-GPG-SECURE-KEY
     # gpg --import ESTUARY-GPG-SECURE-KEY
     popd
+
 }
 
 # config the estuarycfg.json , do the build
