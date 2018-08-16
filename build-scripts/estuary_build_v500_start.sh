@@ -270,6 +270,29 @@ function parse_arch_map(){
     done
 }
 
+
+function get_compile_result() {
+
+    pushd $OPEN_ESTUARY_DIR/estuary
+    touch compile_result.txt
+    for DISTRO in $ALL_SHELL_DISTRO;do
+        tail -n 5 $OPEN_ESTUARY_DIR/estuary/${DISTRO}.log |sed -n '/Build distros done!/p' > compile_tmp.log
+        if [ -s ./compile_tmp.log ]; then
+                echo "${DISTRO,,}:pass" >> compile_result.txt
+        else
+                echo "${DISTRO,,}:fail" >> compile_result.txt
+        fi
+    done
+    tail -n 5 $OPEN_ESTUARY_DIR/estuary/common.log |sed -n '/build common rootfs done!/p' > compile_tmp.log
+    if [ -s ./compile_tmp.log ] ; then
+                echo "common:pass" >> compile_result.txt
+    else
+                echo "common:fail" >> compile_result.txt
+    fi
+    popd
+
+}
+
 function cp_image() {
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
@@ -287,7 +310,7 @@ function cp_image() {
     pushd $BUILD_DIR  # enter BUILD_DIR
 
     cp -r out/release/*/* ${DES_DIR}/
-
+    cp $OPEN_ESTUARY_DIR/estuary/compile_result.txt $DES_DIR
     pushd ${DES_DIR} # enter DES_DIR
     MINI_ROOTFS_FILE=mini-rootfs.cpio.gz
     GRUB_IMG_FILE=grubaa64.efi
@@ -326,15 +349,18 @@ function cp_image() {
             fi
 
             echo $distro_tar_name
+	    cat $OPEN_ESTUARY_DIR/estuary/compile_result.txt |sed -n "/${DISTRO,,}:pass/p" > ./compile_tmp.log
+            if [ -s ./compile_tmp.log ] ; then
 
-            pushd $DES_DIR/binary/${arch[$PLATFORM_L]}
-            [ ! -f ${distro_tar_name,,}.sum ] && md5sum ${distro_tar_name,,} > ${distro_tar_name,,}.sum
-            popd
+                pushd $DES_DIR/binary/${arch[$PLATFORM_L]}
+                [ ! -f ${distro_tar_name,,}.sum ] && md5sum ${distro_tar_name,,} > ${distro_tar_name,,}.sum
+                popd
 
-            pushd $PLATFORM_ARCH_DIR/distro
-            ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} $distro_tar_name
-            ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum $distro_tar_name.sum
-            popd
+                pushd $PLATFORM_ARCH_DIR/distro
+                ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,} $distro_tar_name
+                ln -s ../../binary/${arch[$PLATFORM_L]}/${distro_tar_name,,}.sum $distro_tar_name.sum
+                popd
+            fi		
         done
     done
 
@@ -406,6 +432,7 @@ function main() {
         do_build
         get_version_info
         parse_arch_map
+	get_compile_result
         if [ x"$SKIP_CP_IMAGE" = x"false" ];then
             cp_image
         fi
