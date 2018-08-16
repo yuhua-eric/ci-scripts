@@ -46,8 +46,7 @@ cp $cfg_path$new_preseed ./debian/
 # TODO: sed grub and cfg info.
 sed -i 's/${template}/'"${GIT_DESCRIBE}"'/g' ./debian/boot/grub/$new_grub || true
 
-xorriso -as mkisofs -r -checksum_algorithm_iso md5,sha1 -o ./$new_iso -J -joliet-long -cache-inodes -e boot/grub/efi.img -no-emul-boot -append_partition 2 0xef debian/boot/grub/efi.img -partition_cyl_align all debian/
-
+xorriso -as mkisofs -r -o ./$new_iso -J -joliet-long -e boot/grub/efi.img -no-emul-boot debian/
 umount ./mnt/
 rm -rf ./debian ./mnt
 

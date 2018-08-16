@@ -48,7 +48,7 @@ cp $cfg_path$new_preseed ./ubuntu/preseed/
 sed -i 's/${template}/'"${GIT_DESCRIBE}"'/g' ./ubuntu/boot/grub/$new_grub || true
 
 
-xorriso -as mkisofs -r -checksum_algorithm_iso md5,sha1 -V 'custom' -o ./$new_iso -J -joliet-long -cache-inodes -e boot/grub/efi.img -no-emul-boot -append_partition 2 0xef ubuntu/boot/grub/efi.img  -partition_cyl_align all ubuntu/
+xorriso -as mkisofs -r -V 'custom' -o ./$new_iso -J -joliet-long -e boot/grub/efi.img -no-emul-boot ubuntu/
 
 umount ./mnt/
 rm -rf ./ubuntu ./mnt
