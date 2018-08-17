@@ -54,6 +54,8 @@ function init_input_params() {
     # project name
     TREE_NAME=${TREE_NAME:-"open-estuary"}
     # select a version
+    SOURCE_CODE=${SOURCE_CODE:-"https://github.com/open-estuary/estuary.git"}
+    BRANCH=${BRANCH:-""}
     VERSION=${VERSION:-""}
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
 
@@ -175,7 +177,11 @@ function sync_code() {
     # remove old estuary repo
     rm -rf estuary
     git clone ${SOURCE_CODE}
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 13792f6e409c6d1d45e367e67123b58d42ea75b2
     #if [ "$VERSION"x != ""x ]; then
     #    if [ -d "estuary" ];then
     #        cd estuary
@@ -184,6 +190,7 @@ function sync_code() {
     #        cd -
     #    else
     #        git clone "https://github.com/open-estuary/estuary.git"
+<<<<<<< HEAD
     #        cd estuary
     #        git checkout refs/tags/${VERSION}
     #        cd -
@@ -202,6 +209,32 @@ function sync_code() {
         cd estuary
         git checkout ${BRANCH}
         cd -
+=======
+     #       cd estuary
+     #       git checkout refs/tags/${VERSION}
+     #       cd -
+     #   fi
+    #else
+     #   if [ -d "estuary" ];then
+     #       cd estuary
+     #       git fetch
+     #       git checkout origin/master
+     #       cd -
+     #   else
+     #       git clone "https://github.com/open-estuary/estuary.git" -b master
+     #   fi
+    #fi
+    if [ "$BRANCH"x != ""x ]; then
+        cd estuary
+        git checkout ${BRANCH}
+        cd -
+    fi
+    
+    if [ "$VERSION"x != ""x ]; then
+        cd estuary
+        git checkout refs/tags/${VERSION}
+        cd -
+>>>>>>> 13792f6e409c6d1d45e367e67123b58d42ea75b2
     fi
 
         if [ "$VERSION"x != ""x ]; then
