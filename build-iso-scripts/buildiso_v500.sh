@@ -112,7 +112,7 @@ function main() {
             else
                 start_docker_service
                 cp_opensuse_iso
-                docker run --privileged=true -i -v /home:/root/ --name opensuse estuary/opensuse:5.1-full bash /root/jenkins/workspace/${WORKSPACE_NAME}/local/ci-scripts/build-iso-scripts/opensuse_mkautoiso.sh 
+                docker run --privileged=true -i -v /home:/root/ --name opensuse estuary/opensuse:5.1-full bash /root/jenkins/workspace/${WORKSPACE_NAME}/local/ci-scripts/build-iso-scripts/opensuse_mkautoiso.sh ${WORKSPACE_NAME} 
                 cp_auto_iso
             fi
 	 fi
