@@ -19,7 +19,7 @@ def getGitUrl() {
     return scm.getUserRemoteConfigs()[0].getUrl()
 }
 
-node ('ci-v500-compile'){
+node ('ci-v500-compile_1'){
 
 
     stage('Build Preparation') { // for display purposes
