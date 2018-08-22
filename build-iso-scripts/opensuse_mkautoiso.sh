@@ -46,18 +46,20 @@ mount "${material_iso}" ./mnt
 
 cp -rf ./mnt/* ./opensuse/
 
+
 #cp $cfg_path$new_grub ./opensuse/EFI/BOOT/
 # TODO: sed grub and cfg info.
 #sed -i 's/${template}/'"${GIT_DESCRIBE}"'/g' ./opensuse/EFI/BOOT/$new_grub || true
 
 ## modify:add kickstart file into initrd
-mkdir initr
+mkdir -p initr
 cp ./opensuse/boot/aarch64/initrd ./
 cd initr
-xzcat ../initrd | cpio -idmv
+xzcat ../initrd | cpio -idm
 rm ../initrd
 cp -f ../$cfg_path$new_xml ./autoinst.xml
-find . | cpio -o -H newc | xz --check=crc32 --lzma2=dict=512KiB > ../initrd
+cat ./autoinst.xml
+find . | cpio -o -H newc | xz -T0 --check=crc32 --lzma2=dict=512KiB > ../initrd
 cd ..
 cp ./initrd ./opensuse/boot/aarch64/
 ##end of modify

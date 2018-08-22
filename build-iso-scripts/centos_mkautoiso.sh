@@ -46,7 +46,8 @@ cp $cfg_path$new_grub ./centos/EFI/BOOT/
 sed -i 's/${template}/'"${GIT_DESCRIBE}"'/g' ./centos/EFI/BOOT/$new_grub || true
 
 ## modify:add kickstart file into initrd
-mkdir initrd
+rm -rf initrd
+mkdir -p initrd
 cp ./centos/images/pxeboot/initrd.img ./
 cd initrd
 xzcat ../initrd.img | cpio -idmv
