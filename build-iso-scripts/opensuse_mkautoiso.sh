@@ -51,7 +51,8 @@ cp -rf ./mnt/* ./opensuse/
 #sed -i 's/${template}/'"${GIT_DESCRIBE}"'/g' ./opensuse/EFI/BOOT/$new_grub || true
 
 ## modify:add kickstart file into initrd
-mkdir initr
+rm -rf initr
+mkdir -p initr
 cp ./opensuse/boot/aarch64/initrd ./
 cd initr
 xzcat ../initrd | cpio -idmv
