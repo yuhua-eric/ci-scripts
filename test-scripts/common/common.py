@@ -152,10 +152,10 @@ def filter_test_definitions(distro, device_type, test_scope, test_level,
                 os = test_yaml['metadata']['totalcase']
                 print 'start show totalcase:'
                 print os 
-            #num1 = test_yaml['metadata']['totalcase'][dist]
-            #num = int(num1)
-            #sum1 = sum1 + num
-            #sum_dict[dist] = sum1
+                num1 = test_yaml['metadata']['totalcase'][dist]
+                num = int(num1)
+                sum1 = sum1 + num
+                sum_dict[dist] = sum1
             test_path = file[start_point:]
             test_yaml['metadata']['test_path'] = test_path
             work_test_list.append(test_yaml)
