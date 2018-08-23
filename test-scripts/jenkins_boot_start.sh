@@ -288,6 +288,7 @@ function trigger_lava_build() {
                                 continue
                             fi
                         fi
+			replace_whole_sum_file $DISTRO
                     fi
                 elif [ "$boot_plan" = "BOOT_PXE" ]; then
                     # pxe install in previous step.use ssh to do the pxe test.
@@ -340,6 +341,19 @@ function tar_test_result() {
     tar czf test_result.tar.gz ${GIT_DESCRIBE}/*
     cp test_result.tar.gz  ${WORKSPACE}
     popd
+}
+function replace_whole_sum_file() {
+    local distro=$1
+    pushd ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
+    cd $distro
+    total_case=`cat ${CI_SCRIPTS_DIR}/test-scripts/total_sum.txt |awk -F ':' '{print $2}'`
+
+
+
+
+
+
+
 }
 
 #genrate compile distro whole sum file for mail to display,so we can know the compile result of every distro
