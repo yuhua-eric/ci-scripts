@@ -5,6 +5,7 @@ import os
 import re
 import yaml
 from lib import utils
+from os import popen
 
 TEST_DIR_BASE_NAME = "auto-test"
 PLAN_DIR_BASE_NAME = "plans"
