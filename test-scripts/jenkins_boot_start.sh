@@ -347,6 +347,7 @@ function replace_whole_sum_file() {
     pushd ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
     cd $distro
     total_case=`cat ${CI_SCRIPTS_DIR}/test-scripts/total_sum.txt |awk -F ':' '{print $2}'`
+    or_case=`cat whole_summary.txt |awk -F ',' '{print $4}'|awk -F ':' '{print $2}'`
 
 
 
