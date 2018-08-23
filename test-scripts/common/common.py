@@ -81,6 +81,8 @@ def filter_test_definitions(distro, device_type, test_scope, test_level,
     load_yaml = utils.load_yaml
     start_point = len(test_case_definition_dir) + 1
     test_definitions = []
+    sum_dict = {}
+    sum1 = 0
 
     ## check all test
     for file in test_case_definition_file_list:
@@ -145,23 +147,20 @@ def filter_test_definitions(distro, device_type, test_scope, test_level,
         if ready \
                 and device_type.lower() in test_yaml['metadata']['devices'] \
                 and distro.lower() in test_yaml['metadata']['os']:
+            dist = distro.lower()
+            num1 = sort_yaml['metadata']['totalcase'][dist]
+            num = int(num1)
+            sum1 = sum1 + num
+            sum_dict[dist] = sum1
             test_path = file[start_point:]
             test_yaml['metadata']['test_path'] = test_path
             work_test_list.append(test_yaml)
+    for key,value in sum_dict.items():
+        print 'the %s total case:' % dist
+        print('{key}:{value}'.format(key = key, value = value))
 
     work_test_list = sorted(work_test_list,
                             key=lambda x: x['metadata']['level'] if 'level' in x['metadata'] else 5,
                             reverse=True)
-    sum_dict = {}
-    sum1 = 0
-    for sort_yaml in work_test_list:
-        dist = distro.lower()
-        num1 = sort_yaml['metadata']['totalcase'][dist]
-        num = int(num1)
-        sum1 = sum1 + num
-        sum_dict[dist] = sum1
-        for key,value in sum_dict.items():
-            print 'the %s total case:' % dist
-            print('{key}:{value}'.format(key = key, value = value))
-              
+             
     return work_test_list
