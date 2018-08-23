@@ -152,4 +152,16 @@ def filter_test_definitions(distro, device_type, test_scope, test_level,
     work_test_list = sorted(work_test_list,
                             key=lambda x: x['metadata']['level'] if 'level' in x['metadata'] else 5,
                             reverse=True)
+    sum_dict = {}
+    sum1 = 0
+    for sort_yaml in work_test_list:
+        dist = distro.lower()
+        num1 = sort_yaml['metadata']['totalcase'][dist]
+        num = int(num1)
+        sum1 = sum1 + num
+        sum_dict[dist] = sum1
+        for key,value in sum_dict.items():
+            print 'the %s total case:' % dist
+            print('{key}:{value}'.format(key = key, value = value))
+              
     return work_test_list
