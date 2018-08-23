@@ -168,7 +168,7 @@ def filter_test_definitions(distro, device_type, test_scope, test_level,
     os.system('touch total_sum.txt')
     for key,value in sum_dict.items():
         with open('total_sum.txt', 'w') as fp:
-            fp.write("%s:%s" % (key,value))
+            fp.write("%s:\"%s\"" % (key,value))
             print 'save the %s total case in file' % dist
     work_test_list = sorted(work_test_list,
                             key=lambda x: x['metadata']['level'] if 'level' in x['metadata'] else 5,
