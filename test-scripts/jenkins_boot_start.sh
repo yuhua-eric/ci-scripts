@@ -275,7 +275,7 @@ function trigger_lava_build() {
                 if [ "$boot_plan" = "BOOT_ISO" ]; then
                     # pxe install in previous step.use ssh to do the pxe test.
                     # BOOT_ISO
-                    # boot from ISO
+          JOBS_DIR          # boot from ISO
                     generate_jobs $boot_plan $DISTRO
   
                     if [ -d ${JOBS_DIR} ]; then
@@ -343,6 +343,9 @@ function tar_test_result() {
     cp test_result.tar.gz  ${WORKSPACE}
     popd
 }
+
+#add by yuhua 9513 
+#modi whole sum file to show really total case and unrun case num.
 function replace_whole_sum_file() {
     local distro=$1
     pushd ${CI_SCRIPTS_DIR}/test-scripts/
@@ -363,6 +366,9 @@ function replace_whole_sum_file() {
 #    sed -i 's/"o", "color": "orange"/"rep", "color": "orange"/' ./${WHOLE_SUM}  #use template to get location 
 #    sed -i "s/rep/${untest_num}/" ./${WHOLE_SUM} #repace unrun case num with actual num
     echo "the actually unrun case is:${untest_num}"
+    cd -
+    popd
+
 }
 
 #genrate compile distro whole sum file for mail to display,so we can know the compile result of every distro
