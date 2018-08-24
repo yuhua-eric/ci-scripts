@@ -306,6 +306,7 @@ function trigger_lava_build() {
                                 continue
                             fi
                         fi
+			replace_whole_sum_file $DISTRO
                     fi
                 else
                     # BOOT_NFS
