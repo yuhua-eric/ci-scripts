@@ -348,13 +348,20 @@ function replace_whole_sum_file() {
     cd $distro
     total_case=`cat ${CI_SCRIPTS_DIR}/test-scripts/total_sum.txt |awk -F ':' '{print $2}'`
     or_case=`cat whole_summary.txt |awk -F ',' '{print $4}'|awk -F ':' '{print $2}'`
-
-
-
-
-
-
-
+    total_num=`echo $total_case | awk '{split($0,a,"\"");print a[2];}'`
+    or_num=`echo $or_case | awk '{split($0,a,"\"");print a[2];}'`
+    sed -i "s/$or_case/${total_case}/" ./${WHOLE_SUM}   #replace or_case with total-case
+    untest_num=`expr $total_num - $or_num`
+    sed -i "s/$or_case/${total_case}/" ./${WHOLE_SUM}
+    zero_num=`grep -o '"0"' whole_summary.txt |wc -l`
+    if [ x"$zero_num" = x"2" ]; then
+	 sed -i "s/\"0\"/\"${untest_num}\"/2" ./${WHOLE_SUM}
+    else
+	sed -i "s/\"0\"/\"${untest_num}\"/1" ./${WHOLE_SUM}
+    fi
+#    sed -i 's/"o", "color": "orange"/"rep", "color": "orange"/' ./${WHOLE_SUM}  #use template to get location 
+#    sed -i "s/rep/${untest_num}/" ./${WHOLE_SUM} #repace unrun case num with actual num
+    echo "the actually unrun case is:${untest_num}"
 }
 
 #genrate compile distro whole sum file for mail to display,so we can know the compile result of every distro
