@@ -275,7 +275,7 @@ function trigger_lava_build() {
                 if [ "$boot_plan" = "BOOT_ISO" ]; then
                     # pxe install in previous step.use ssh to do the pxe test.
                     # BOOT_ISO
-          JOBS_DIR          # boot from ISO
+                   # boot from ISO
                     generate_jobs $boot_plan $DISTRO
   
                     if [ -d ${JOBS_DIR} ]; then
