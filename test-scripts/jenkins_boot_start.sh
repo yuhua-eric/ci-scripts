@@ -345,7 +345,7 @@ function tar_test_result() {
 }
 function replace_whole_sum_file() {
     local distro=$1
-    pushd ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
+    pushd ${CI_SCRIPTS_DIR}/test-scripts/
     cd $distro
     total_case=`cat ${CI_SCRIPTS_DIR}/test-scripts/total_sum.txt |awk -F ':' '{print $2}'`
     or_case=`cat whole_summary.txt |awk -F ',' '{print $4}'|awk -F ':' '{print $2}'`
