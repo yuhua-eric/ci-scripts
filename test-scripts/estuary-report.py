@@ -829,6 +829,8 @@ def get_name_from_yaml(path_list, dir_name_lists, owner, test_case_definition_di
 
     for item in path_list:
         paths = item[len(test_case_definition_dir):].split('/')
+        print "the len of test_case_definition_dir is:"
+        print len(test_case_definition_dir)
         with open(item, 'r') as f:
             try:
                 data = yaml.load(f)
@@ -890,8 +892,96 @@ def get_all_dir_names(dir_list, test_case_definition_dir):
             dir_name[item][sub_dir] = {}
     return dir_name
 
+#add by yuhua 9513
+#filter the search yaml,return a yaml list
+def filter_test_definitions(distro, test_scope, test_level,
+                            test_case_definition_dir, test_case_definition_file_list):
+    # TODO : put it into parameters
+    # filter the test
+    work_yaml_list = []
+    work_test_list = []
+    load_yaml = utils.load_yaml
+    start_point = len(test_case_definition_dir) + 1
+    test_definitions = []
+   
+    ## check all test
+    for file in test_case_definition_file_list:
+        try:
+            test_yaml = load_yaml(file)
+        except(yaml.parser.ParserError, yaml.scanner.ScannerError) as e:
+            print "warnings: wrong yaml syntax :\n %s" % e
+            continue
 
-def generate_module_dict(result_json_dict, test_dir):
+        if not test_yaml or not 'metadata' in test_yaml:
+            print "warning : don't have metadata : " + str(file)
+            continue
+
+        if not 'format' in test_yaml['metadata']:
+            print "warning : don't have metadata.format : " + str(file)
+            continue
+
+        if 'name' in test_yaml['metadata']:
+            name = test_yaml['metadata']['name']
+        else:
+            name = "unknown"
+
+        if 'ready' in test_yaml['metadata']:
+            ready = test_yaml['metadata']['ready']
+        else:
+            ready = True
+
+        if 'level' in test_yaml['metadata']:
+            level = test_yaml['metadata']['level']
+        else:
+            level = 5
+
+        if 'scope' in test_yaml['metadata']:
+            scope = test_yaml['metadata']['scope']
+        else:
+            scope = "*"
+
+        print "name = " + str(name) + " " \
+              "ready = " + str(ready) + " " \
+              "level = " + str(level) + " " \
+              "scope = " + str(scope) + " "
+
+        if name in test_definitions:
+            print "warning: duplicate test definition name. skip it."
+            continue
+        elif " " in name:
+            print "warning: test definition name contains space. skip it."
+            continue
+        else:
+            test_definitions.append(name)
+
+        if test_scope.lower().strip() == "*" or test_scope.lower() in scope:
+            pass
+        else:
+            continue
+
+        if int(level) > 5 or (int(level) <= 5 and int(level) <= int(test_level)):
+            pass
+        else:
+            continue
+
+        if ready \
+                and distro.lower() in test_yaml['metadata']['os']:
+            test_path = file[start_point:]
+            test_yaml['metadata']['test_path'] = test_path
+            work_test_list.append(test_yaml)
+            work_yaml_list.append(file)
+    cu_dir = os.popen('pwd').readlines()
+    print 'so the current dir  in e-r is: %s' % cu_dir
+
+    work_test_list = sorted(work_test_list,
+                            key=lambda x: x['metadata']['level'] if 'level' in x['metadata'] else 5,
+                            reverse=True)
+
+    return work_yaml_list
+
+
+def generate_module_dict(result_json_dict, test_dir, distro, scope, \
+                level):
     test_case_definition_dir = os.path.realpath(test_dir + "/" + common.TEST_DIR_BASE_NAME)
     test_plan_definition_dir = os.path.realpath(test_dir + "/" + common.PLAN_DIR_BASE_NAME)
     owner_file = test_dir + "/owner/owner.md"
@@ -935,9 +1025,51 @@ def generate_module_dict(result_json_dict, test_dir):
             name_dict[key][sub_key]["total"] = 0
             name_dict[key][sub_key]["pass"] = 0
             name_dict[key][sub_key]["fail"] = 0
-
+            
     for key in name_dict.keys():
+        module_sum = 0
         for sub_key in name_dict[key].keys():
+            #add by yuhua 9513
+            #try to get total case num for each submodule on test
+            work_yaml_list = filter_test_definitions(distro, scope, level,
+                            test_case_definition_dir, yaml_list)
+            sub_module_sum = 0
+
+            for yaml_file in work_yaml_list:
+                if sub_key in yaml_file:
+                    load_yaml = utils.load_yaml
+                    try:
+                        test_yaml = load_yaml(yaml_file)
+                    except(yaml.parser.ParserError, yaml.scanner.ScannerError) as e:
+                        print "warnings: wrong yaml syntax :\n %s" % e
+                        continue
+                    dist = distro.lower()
+                    if 'totalcase' in  test_yaml['metadata']:
+                        OS = test_yaml['metadata']['totalcase']
+                        print 'start show totalcase:'
+                        print OS
+                        num1 = test_yaml['metadata']['totalcase'][dist]
+                        num = int(num1)
+                        sub_module_sum = sub_module_sum + num
+            name_dict[key][sub_key]["total"] = sub_module_sum
+
+            print "the really total case num for %s is: %d" % (sub_key,sub_module_sum)
+            module_sum = module_sum + sub_module_sum
+        name_dict[key]["total"] = module_sum
+        #end get total case num for each submodule on test
+
+
+            if check_special_module_dict_key(sub_key):
+                continue
+            for suite_key in name_dict[key][sub_key].keys():
+                if check_special_module_dict_key(suite_key):
+                    continue
+estuary-report.py[+] [dos] (18:15 26/08/2018)                                                 1057,13 91%
+-- 插入 --
+
+            #end get total case num for each submodule on test
+                       
+
             if check_special_module_dict_key(sub_key):
                 continue
             for suite_key in name_dict[key][sub_key].keys():
@@ -947,13 +1079,13 @@ def generate_module_dict(result_json_dict, test_dir):
                     if name_dict[key][sub_key][suite_key][case_key] == "pass":
                         name_dict[key][sub_key]["pass"] += 1
                         name_dict[key]["pass"] += 1
-                        name_dict[key][sub_key]["total"] += 1
-                        name_dict[key]["total"] += 1
+                        #name_dict[key][sub_key]["total"] += 1
+                        #name_dict[key]["total"] += 1
                     elif name_dict[key][sub_key][suite_key][case_key] == "fail":
                         name_dict[key][sub_key]["fail"] += 1
                         name_dict[key]["fail"] += 1
-                        name_dict[key][sub_key]["total"] += 1
-                        name_dict[key]["total"] += 1
+                        #name_dict[key][sub_key]["total"] += 1
+                        #name_dict[key]["total"] += 1
                     else:
                         print "WARNING: the result not pass or fail" + name_dict[key][sub_key][suite_key][case_key]
     return name_dict
@@ -1017,11 +1149,14 @@ def main(args):
     global TEST_CASE_DEFINITION_DIR
     TEST_CASE_DEFINITION_DIR = config.get("testDir")
     distro = config.get("distro")
+    scope = config.get("scope")
+    level = config.get("level")
 
     if config.get("boot"):
         boot_report(config)
-        module_dict = generate_module_dict(job_result_dict, TEST_CASE_DEFINITION_DIR)
-        generate_scope_test_report(TEST_CASE_DEFINITION_DIR, module_dict, jenkins_build_url, distro)
+        module_dict = generate_module_dict(job_result_dict, TEST_CASE_DEFINITION_DIR, distro, scope, \
+                level)
+        generate_scope_test_report(TEST_CASE_DEFINITION_DIR, module_dict, jenkins_build_url)
         generate_current_test_report()
         generate_email_test_report(distro, module_dict, jenkins_build_url)
         generate_history_test_report()
@@ -1036,5 +1171,7 @@ if __name__ == '__main__':
     parser.add_argument("--distro", choices=['Ubuntu', 'Debian', 'CentOS',
                                              'OpenSuse', 'Fedora'],
                         help="distro for sata deploying")
+    parser.add_argument("--scope", help="test case group", default="*")
+    parser.add_argument("--level", help="test case level", default="1")
     args = vars(parser.parse_args())
     main(args)
