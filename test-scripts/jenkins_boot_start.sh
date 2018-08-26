@@ -152,7 +152,8 @@ function run_and_report_jobs() {
 
     if [ x"$SKIP_LAVA_RUN" = x"false" ];then
         pushd ${JOBS_DIR}
-        python ../estuary-job-runner.py --username $LAVA_USER --token $LAVA_TOKEN --server $LAVA_SERVER --stream $LAVA_STREAM --poll POLL
+        python ../estuary-job-runner.py --username $LAVA_USER --token $LAVA_TOKEN --server $LAVA_SERVER --stream $LAVA_STREAM --poll POLL 
+
         popd
 
         if [ ! -f ${JOBS_DIR}/${RESULTS_DIR}/POLL ]; then
@@ -163,7 +164,7 @@ function run_and_report_jobs() {
             cat ${JOBS_DIR}/${RESULTS_DIR}/POLL
         fi
 
-        python estuary-report.py --boot ${JOBS_DIR}/${RESULTS_DIR}/POLL --lab $LAVA_USER --testDir "${TEST_CASE_DIR}" --distro "$distro"
+        python estuary-report.py --boot ${JOBS_DIR}/${RESULTS_DIR}/POLL --lab $LAVA_USER --testDir "${TEST_CASE_DIR}" --distro "$distro" --scope "${TEST_SCOPE}" --level "${TEST_LEVEL}"
         if [ ! -d ${RESULTS_DIR} ]; then
             echo "running jobs error! Aborting"
             return -1
