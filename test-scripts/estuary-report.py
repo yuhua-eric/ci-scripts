@@ -1154,7 +1154,7 @@ def main(args):
         boot_report(config)
         module_dict = generate_module_dict(job_result_dict, TEST_CASE_DEFINITION_DIR, distro, scope, \
                 level)
-        generate_scope_test_report(TEST_CASE_DEFINITION_DIR, module_dict, jenkins_build_url)
+        generate_scope_test_report(TEST_CASE_DEFINITION_DIR, module_dict, jenkins_build_url, distro)
         generate_current_test_report()
         generate_email_test_report(distro, module_dict, jenkins_build_url)
         generate_history_test_report()
