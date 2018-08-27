@@ -1006,7 +1006,7 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
                 for key in name_dict.keys():
                     for sub_key in name_dict[key].keys():
                         for suite_key in name_dict[key][sub_key].keys():
-                            ifilter_test_definitionsf suite_key != "tester" and suite_key != "developer":
+                            if suite_key != "tester" and suite_key != "developer":             
                                 if suite_key == suit_name:
                                     index += 1
                                     if item["name"] in name_dict[key][sub_key][suite_key]:
