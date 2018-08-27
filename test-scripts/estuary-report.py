@@ -1058,7 +1058,6 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
         name_dict[key]["total"] = module_sum
         #end get total case num for each submodule on test
 
-
             if check_special_module_dict_key(sub_key):
                 continue
             for suite_key in name_dict[key][sub_key].keys():
