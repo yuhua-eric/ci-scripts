@@ -1006,7 +1006,7 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
                 for key in name_dict.keys():
                     for sub_key in name_dict[key].keys():
                         for suite_key in name_dict[key][sub_key].keys():
-                            if suite_key != "tester" and suite_key != "developer":
+                            ifilter_test_definitionsf suite_key != "tester" and suite_key != "developer":
                                 if suite_key == suit_name:
                                     index += 1
                                     if item["name"] in name_dict[key][sub_key][suite_key]:
@@ -1064,8 +1064,6 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
             for suite_key in name_dict[key][sub_key].keys():
                 if check_special_module_dict_key(suite_key):
                     continue
-estuary-report.py[+] [dos] (18:15 26/08/2018)                                                 1057,13 91%
--- 插入 --
 
             #end get total case num for each submodule on test
                        
