@@ -1064,15 +1064,6 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
             for suite_key in name_dict[key][sub_key].keys():
                 if check_special_module_dict_key(suite_key):
                     continue
-
-            #end get total case num for each submodule on test
-                       
-
-            if check_special_module_dict_key(sub_key):
-                continue
-            for suite_key in name_dict[key][sub_key].keys():
-                if check_special_module_dict_key(suite_key):
-                    continue
                 for case_key in name_dict[key][sub_key][suite_key].keys():
                     if name_dict[key][sub_key][suite_key][case_key] == "pass":
                         name_dict[key][sub_key]["pass"] += 1
