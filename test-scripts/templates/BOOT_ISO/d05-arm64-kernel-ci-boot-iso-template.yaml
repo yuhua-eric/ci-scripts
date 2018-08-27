@@ -15,15 +15,15 @@ metadata:
 
 timeouts:
   job:
-    minutes: 100
+    minutes: 80
   action:
-    minutes: 70
+    minutes: 60
   connection:
     minutes: 10
 actions:
 - deploy:
     timeout:
-      minutes: 50
+      minutes: 40
     to: ssh
     os: {distro}
     tree_name: {tree_name}
@@ -39,6 +39,6 @@ actions:
       - 'root@localhost ~'
 - test:
     timeout:
-      minutes: 100
+      minutes: 80
     definitions:
 {test_definitions}
