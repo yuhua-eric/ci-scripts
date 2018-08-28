@@ -1039,7 +1039,7 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
                 print "show filterd_yaml file: %s" % i
             for yaml_file in work_yaml_list:
                 if sub_key in yaml_file:
-                    load_yaml = utils.load_yamlsub_module_sum 
+                    load_yaml = utils.load_yaml 
                     try:
                         test_yaml = load_yaml(yaml_file)
                     except(yaml.parser.ParserError, yaml.scanner.ScannerError) as e:
