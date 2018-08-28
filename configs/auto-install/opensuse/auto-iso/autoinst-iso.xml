@@ -118,7 +118,7 @@ cat > /etc/zypp/repos.d/Estuary.repo << EOF
 [Estuary]
 enabled=1
 autorefresh=1
-baseurl=http://ftp.neowiz.com/opensuse/ports/aarch64/distribution/leap/15.0/repo/oss/
+baseurl=http://download.opensuse.org/ports/aarch64/distribution/leap/15.0/repo/oss/
 type=NONE
 EOF
       exit 0
