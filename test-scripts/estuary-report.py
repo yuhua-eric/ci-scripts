@@ -1036,7 +1036,7 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
             for i in work_yaml_list:
                 print "show filterd_yaml file: %s" % i
             for yaml_file in work_yaml_list:
-                if sub_key in yaml_file：
+                if sub_key in yaml_file:
                     load_yaml = utils.load_yamlsub_module_sum 
                     try:
                         test_yaml = load_yaml(yaml_file)
