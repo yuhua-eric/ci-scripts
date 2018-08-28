@@ -1053,6 +1053,7 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
                         num1 = test_yaml['metadata']['totalcase'][dist]
                         num = int(num1)
                         sub_module_sum = sub_module_sum + num
+                        sub_module_sum += 2
             name_dict[key][sub_key]["total"] += sub_module_sum
             print "the really total case num for %s is: %d" % (sub_key,sub_module_sum)
             module_sum = module_sum + sub_module_sum 
