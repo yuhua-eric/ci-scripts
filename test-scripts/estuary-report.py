@@ -1033,6 +1033,8 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
             #try to get total case num for each submodule on test
             work_yaml_list = filter_test_definitions(distro, scope, level, test_case_definition_dir, yaml_list)
             sub_module_sum = 0
+            for i in work_yaml_list:
+                print "show filterd_yaml file: %s" % i
             for yaml_file in work_yaml_list:
                 if sub_key in yaml_file：
                     load_yaml = utils.load_yamlsub_module_sum 
@@ -1051,9 +1053,8 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
                         sub_module_sum = sub_module_sum + num
             name_dict[key][sub_key]["total"] = sub_module_sum
             print "the really total case num for %s is: %d" % (sub_key,sub_module_sum)
-            module_sum = module_sum + sub_module_sum
-        name_dict[key]["total"] = module_sum  
-       #end get total case num for each submodule on test
+            module_sum = module_sum + sub_module_sum 
+            #end get total case num for each submodule on test
 
 
             if check_special_module_dict_key(sub_key):
@@ -1074,6 +1075,7 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
                         #name_dict[key]["total"] += 1
                     else:
                         print "WARNING: the result not pass or fail" + name_dict[key][sub_key][suite_key][case_key]
+        name_dict[key]["total"] = module_sum
     return name_dict
 
 def print_scope_result(name_dict, jenkins_build_url, distro):
