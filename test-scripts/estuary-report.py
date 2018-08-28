@@ -1031,6 +1031,28 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
         for sub_key in name_dict[key].keys():
             #add by yuhua 9513
             #try to get total case num for each submodule on test
+            work_yaml_list = filter_test_definitions(distro, scope, level, test_case_definition_dir, yaml_list)
+            sub_module_sum = 0
+            for yaml_file im work_yaml_list:
+                if sub_key in yaml_file：
+                    load_yaml = utils.load_yamlsub_module_sum 
+                    try:
+                        test_yaml = load_yaml(yaml_file)
+                    except(yaml.parser.ParserError, yaml.scanner.ScannerError) as e:
+                        print "warnings: wrong yaml syntax :\n %s" % e
+                        continue
+                    dist = distro.lower()
+                    if 'totalcase' in test_yaml['metadata']:
+                        OS = test_yaml['metadata']['totalcase']
+                        print 'start show totalcase:'
+                        print OS
+                        num1 = test_yaml['metadata']['totalcase'][dist]
+                        num = int(num1)
+                        sub_module_sum = sub_module_sum + num
+            name_dict[key][sub_key]["total"] = sub_module_sum
+            print "the really total case num for %s is: %d" % (sub_key,sub_module_sum)
+            module_sum = module_sum + sub_module_sum
+        name_dict[key]["total"] = module_sum  
        #end get total case num for each submodule on test
 
 
