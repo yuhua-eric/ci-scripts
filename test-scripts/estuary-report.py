@@ -1033,7 +1033,7 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
             #try to get total case num for each submodule on test
             work_yaml_list = filter_test_definitions(distro, scope, level, test_case_definition_dir, yaml_list)
             sub_module_sum = 0
-            for yaml_file im work_yaml_list:
+            for yaml_file in work_yaml_list:
                 if sub_key in yaml_file：
                     load_yaml = utils.load_yamlsub_module_sum 
                     try:
