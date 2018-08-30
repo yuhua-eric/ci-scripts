@@ -940,10 +940,10 @@ def filter_test_definitions(distro, test_scope, test_level,
         else:
             scope = "*"
 
-        print "name = " + str(name) + " " \
-              "ready = " + str(ready) + " " \
-              "level = " + str(level) + " " \
-              "scope = " + str(scope) + " "
+       # print "name = " + str(name) + " " \
+       #       "ready = " + str(ready) + " " \
+       #       "level = " + str(level) + " " \
+       #       "scope = " + str(scope) + " "
 
         if name in test_definitions:
             print "warning: duplicate test definition name. skip it."
@@ -1025,7 +1025,8 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
             name_dict[key][sub_key]["total"] = 0
             name_dict[key][sub_key]["pass"] = 0
             name_dict[key][sub_key]["fail"] = 0
-            
+
+    work_yaml_list = filter_test_definitions(distro, scope, level, test_case_definition_dir, yaml_list)            
     for key in name_dict.keys():
         module_sum = 0
         for sub_key in name_dict[key].keys():
@@ -1033,7 +1034,6 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
                 continue
             #add by yuhua 9513
             #try to get total case num for each submodule on test
-            work_yaml_list = filter_test_definitions(distro, scope, level, test_case_definition_dir, yaml_list)
             sub_module_sum = 0
             for i in work_yaml_list:
                 print "show filterd_yaml file: %s" % i
@@ -1049,12 +1049,13 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
                     if 'totalcase' in test_yaml['metadata']:
                         OS = test_yaml['metadata']['totalcase']
                         print 'start show totalcase:'
-                        print OS
+                        print OSS
                         if dist in test_yaml['metadata']['totalcase']:
                             num1 = test_yaml['metadata']['totalcase'][dist]
-                            num = int(num1)
-                            sub_module_sum = sub_module_sum + num
-                            sub_module_sum += 2
+                            if num1 is None:
+                                num = int(num1)
+                                sub_module_sum = sub_module_sum + num
+                                sub_module_sum += 2
             name_dict[key][sub_key]["total"] += sub_module_sum
             print "the really total case num for %s is: %d" % (sub_key,sub_module_sum)
             module_sum = module_sum + sub_module_sum 
@@ -1077,6 +1078,7 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
                     else:
                         print "WARNING: the result not pass or fail" + name_dict[key][sub_key][suite_key][case_key]
         name_dict[key]["total"] += module_sum
+        print "the really total case num for %s is: %d" % (key,module_sum)
     return name_dict
 
 def print_scope_result(name_dict, jenkins_build_url, distro):
