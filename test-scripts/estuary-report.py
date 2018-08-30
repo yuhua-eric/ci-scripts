@@ -1049,7 +1049,7 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
                     if 'totalcase' in test_yaml['metadata']:
                         OS = test_yaml['metadata']['totalcase']
                         print 'start show totalcase:'
-                        print OSS
+                        print OS
                         if dist in test_yaml['metadata']['totalcase']:
                             num1 = test_yaml['metadata']['totalcase'][dist]
                             if num1 is None:
