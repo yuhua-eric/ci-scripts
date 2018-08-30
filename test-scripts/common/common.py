@@ -155,13 +155,14 @@ def filter_test_definitions(distro, device_type, test_scope, test_level,
                 print OS 
                 if dist in test_yaml['metadata']['totalcase']:
                     num1 = test_yaml['metadata']['totalcase'][dist]
-                    num = int(num1)
-                    sum1 = sum1 + num
-                    sum1 = sum1 + 2
-                    sum_dict[dist] = sum1
+                    if num1 is not None:
+                        num = int(num1)
+                        sum1 = sum1 + num
+                        sum1 = sum1 + 2
             test_path = file[start_point:]
             test_yaml['metadata']['test_path'] = test_path
             work_test_list.append(test_yaml)
+    sum_dict[dist] = sum1
     for key,value in sum_dict.items():
         print 'the %s total case:' % dist
         print('{key}:{value}'.format(key = key, value = value))
