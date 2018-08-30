@@ -1052,7 +1052,7 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
                         print OS
                         if dist in test_yaml['metadata']['totalcase']:
                             num1 = test_yaml['metadata']['totalcase'][dist]
-                            if num1 is None:
+                            if num1 is not None:
                                 num = int(num1)
                                 sub_module_sum = sub_module_sum + num
                                 sub_module_sum += 2
