@@ -90,11 +90,7 @@ node ('compile'){
         }
     }
 
-    stage ('mirror') {
-        build job: 'step_mirror_test_repo_in_lava', parameters: [[$class: 'StringParameterValue', name: 'TEST_REPO', value: TEST_REPO]]
-    }
-
-    // load functions
+        // load functions
     def functions = load "./local/ci-scripts/pipeline/functions.groovy"
 
     def test_result = 0
