@@ -1050,7 +1050,7 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
                         OS = test_yaml['metadata']['totalcase']
                         print 'start show totalcase:'
                         print OS
-                        if dist in test_yaml['metadata']['totalcase']:
+                        if test_yaml['metadata']['totalcase'] is not None and dist in test_yaml['metadata']['totalcase']:
                             num1 = test_yaml['metadata']['totalcase'][dist]
                             if num1 is not None:
                                 num = int(num1)

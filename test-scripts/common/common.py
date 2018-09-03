@@ -153,7 +153,7 @@ def filter_test_definitions(distro, device_type, test_scope, test_level,
                 OS = test_yaml['metadata']['totalcase']
                 print 'start show totalcase:'
                 print OS 
-                if dist in test_yaml['metadata']['totalcase']:
+                if test_yaml['metadata']['totalcase'] is not None and dist in test_yaml['metadata']['totalcase']:
                     num1 = test_yaml['metadata']['totalcase'][dist]
                     if num1 is not None:
                         num = int(num1)
