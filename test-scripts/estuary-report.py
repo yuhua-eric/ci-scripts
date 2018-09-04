@@ -981,11 +981,14 @@ def filter_test_definitions(distro, test_scope, test_level,
 
 
 def generate_module_dict(result_json_dict, test_dir, distro, scope, \
-                level):
+                level, plan):
     test_case_definition_dir = os.path.realpath(test_dir + "/" + common.TEST_DIR_BASE_NAME)
     test_plan_definition_dir = os.path.realpath(test_dir + "/" + common.PLAN_DIR_BASE_NAME)
     owner_file = test_dir + "/owner/owner.md"
     yaml_list = common.find_all_test_case_by_search(test_case_definition_dir)
+    cal_yaml_list = common.find_all_test_case(plan,
+                                                               test_case_definition_dir,
+                                                               test_plan_definition_dir)
     dir_list = os.listdir(test_case_definition_dir)
     dir_name_lists = get_all_dir_names(dir_list, test_case_definition_dir)
 
@@ -1026,7 +1029,7 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
             name_dict[key][sub_key]["pass"] = 0
             name_dict[key][sub_key]["fail"] = 0
 
-    work_yaml_list = filter_test_definitions(distro, scope, level, test_case_definition_dir, yaml_list)            
+    work_yaml_list = filter_test_definitions(distro, scope, level, test_case_definition_dir, cal_yaml_list)            
     for key in name_dict.keys():
         module_sum = 0
         for sub_key in name_dict[key].keys():
@@ -1142,11 +1145,11 @@ def main(args):
     distro = config.get("distro")
     scope = config.get("scope")
     level = config.get("level")
-
+    plan = config.get("plan")
     if config.get("boot"):
         boot_report(config)
         module_dict = generate_module_dict(job_result_dict, TEST_CASE_DEFINITION_DIR, distro, scope, \
-                level)
+                level, plan)
         generate_scope_test_report(TEST_CASE_DEFINITION_DIR, module_dict, jenkins_build_url, distro)
         generate_current_test_report()
         generate_email_test_report(distro, module_dict, jenkins_build_url)
@@ -1164,5 +1167,6 @@ if __name__ == '__main__':
                         help="distro for sata deploying")
     parser.add_argument("--scope", help="test case group", default="*")
     parser.add_argument("--level", help="test case level", default="1")
+    parser.add_argument("--plan", help="test case plan", default="*")
     args = vars(parser.parse_args())
     main(args)
