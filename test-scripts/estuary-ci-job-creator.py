@@ -315,7 +315,7 @@ def generate_job_file(cwd,
                                 tmp = tmp.replace('{device_type}', device_type)
                             else: 
                                 if distro == 'Fedora':
-                                    tmp = tmp.replace('{device_type}', device_type + "ssh_fedora")
+                                    tmp = tmp.replace('{device_type}', device_type + "ssh")
                                 elif distro == 'OpenSuse':    
                                     tmp = tmp.replace('{device_type}', device_type + "ssh")
                                 else:

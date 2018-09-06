@@ -5,6 +5,7 @@ import os
 import re
 import yaml
 from lib import utils
+from os import popen
 
 TEST_DIR_BASE_NAME = "auto-test"
 PLAN_DIR_BASE_NAME = "plans"
@@ -81,6 +82,8 @@ def filter_test_definitions(distro, device_type, test_scope, test_level,
     load_yaml = utils.load_yaml
     start_point = len(test_case_definition_dir) + 1
     test_definitions = []
+    sum_dict = {}
+    sum1 = 0
 
     ## check all test
     for file in test_case_definition_file_list:
@@ -145,11 +148,33 @@ def filter_test_definitions(distro, device_type, test_scope, test_level,
         if ready \
                 and device_type.lower() in test_yaml['metadata']['devices'] \
                 and distro.lower() in test_yaml['metadata']['os']:
+            dist = distro.lower()
+            if 'totalcase' in  test_yaml['metadata']:
+                OS = test_yaml['metadata']['totalcase']
+                print 'start show totalcase:'
+                print OS 
+                if test_yaml['metadata']['totalcase'] is not None and dist in test_yaml['metadata']['totalcase']:
+                    num1 = test_yaml['metadata']['totalcase'][dist]
+                    if num1 is not None:
+                        num = int(num1)
+                        sum1 = sum1 + num
+                        sum1 = sum1 + 2
             test_path = file[start_point:]
             test_yaml['metadata']['test_path'] = test_path
             work_test_list.append(test_yaml)
-
+    sum_dict[dist] = sum1
+    for key,value in sum_dict.items():
+        print 'the %s total case:' % dist
+        print('{key}:{value}'.format(key = key, value = value))
+    cu_dir = os.popen('pwd').readlines()
+    print 'so the current dir is: %s' % cu_dir
+    os.system('touch total_sum.txt')
+    for key,value in sum_dict.items():
+        with open('total_sum.txt', 'w') as fp:
+            fp.write("%s:\"%s\"" % (key,value))
+            print 'save the %s total case in file' % dist
     work_test_list = sorted(work_test_list,
                             key=lambda x: x['metadata']['level'] if 'level' in x['metadata'] else 5,
                             reverse=True)
+             
     return work_test_list

@@ -27,8 +27,8 @@ ci-lava-slave2:
 # DUT
 d05ssh01:
   type: D05
-  bmc: 192.168.2.174
-  ip: 192.168.50.125
+  bmc: 192.168.2.128
+  ip: 192.168.50.126
   mac: c0:a8:02:ae:00:04
   next-server: 192.168.50.122
   nfs-server: 192.168.2.49
@@ -158,8 +158,8 @@ d03ssh04:
 # v500 compile server
 d05compile01:
   type: D05
-  bmc: 192.168.2.128
-  ip: 192.168.50.126
+  bmc: 192.168.2.174
+  ip: 192.168.50.125
   mac: c0:a8:03:80:00:04
   next-server: 192.168.50.122
   nfs-server: 192.168.2.49

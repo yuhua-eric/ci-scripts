@@ -152,7 +152,8 @@ function run_and_report_jobs() {
 
     if [ x"$SKIP_LAVA_RUN" = x"false" ];then
         pushd ${JOBS_DIR}
-        python ../estuary-job-runner.py --username $LAVA_USER --token $LAVA_TOKEN --server $LAVA_SERVER --stream $LAVA_STREAM --poll POLL
+        python ../estuary-job-runner.py --username $LAVA_USER --token $LAVA_TOKEN --server $LAVA_SERVER --stream $LAVA_STREAM --poll POLL 
+
         popd
 
         if [ ! -f ${JOBS_DIR}/${RESULTS_DIR}/POLL ]; then
@@ -163,7 +164,7 @@ function run_and_report_jobs() {
             cat ${JOBS_DIR}/${RESULTS_DIR}/POLL
         fi
 
-        python estuary-report.py --boot ${JOBS_DIR}/${RESULTS_DIR}/POLL --lab $LAVA_USER --testDir "${TEST_CASE_DIR}" --distro "$distro"
+        python estuary-report.py --boot ${JOBS_DIR}/${RESULTS_DIR}/POLL --lab $LAVA_USER --testDir "${TEST_CASE_DIR}" --distro "$distro" --scope "${TEST_SCOPE}" --level "${TEST_LEVEL}" --plan "${TEST_PLAN}" 
         if [ ! -d ${RESULTS_DIR} ]; then
             echo "running jobs error! Aborting"
             return -1
@@ -275,19 +276,20 @@ function trigger_lava_build() {
                 if [ "$boot_plan" = "BOOT_ISO" ]; then
                     # pxe install in previous step.use ssh to do the pxe test.
                     # BOOT_ISO
-                    # boot from ISO
+                   # boot from ISO
                     generate_jobs $boot_plan $DISTRO
   
                     if [ -d ${JOBS_DIR} ]; then
                         if ! run_and_move_result $boot_plan $DISTRO ;then
                             if [ ! -d ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO} ];then
                                 mv ${DISTRO} ${GIT_DESCRIBE}/${RESULTS_DIR}
-                                continue
+                                #continue
                             else
                                 cp -fr ${DISTRO}/* ${GIT_DESCRIBE}/${RESULTS_DIR}/${DISTRO}/
-                                continue
+                                #continue
                             fi
                         fi
+			replace_whole_sum_file $DISTRO
                     fi
                 elif [ "$boot_plan" = "BOOT_PXE" ]; then
                     # pxe install in previous step.use ssh to do the pxe test.
@@ -305,6 +307,7 @@ function trigger_lava_build() {
                                 continue
                             fi
                         fi
+			replace_whole_sum_file $DISTRO
                     fi
                 else
                     # BOOT_NFS
@@ -340,6 +343,55 @@ function tar_test_result() {
     tar czf test_result.tar.gz ${GIT_DESCRIBE}/*
     cp test_result.tar.gz  ${WORKSPACE}
     popd
+}
+
+#add by yuhua 9513 
+#modi whole sum file to show really total case and unrun case num.
+function replace_whole_sum_file() {
+    local distro=$1
+    pushd ${CI_SCRIPTS_DIR}/test-scripts/
+    if [ -d $distro ];then
+        cd $distro
+        total_case=`cat ${CI_SCRIPTS_DIR}/test-scripts/total_sum.txt |awk -F ':' '{print $2}'`
+        or_case=`cat whole_summary.txt |awk -F ',' '{print $4}'|awk -F ' ' '{print $2}'`
+        total_num=`echo $total_case | awk '{split($0,a,"\"");print a[2];}'`
+        or_num=`echo $or_case | awk '{split($0,a,"\"");print a[2];}'`
+        sed -i "s/$or_case/${total_case}/1" ./${WHOLE_SUM}   #replace or_case with total-case
+        untest_num=`expr $total_num - $or_num`
+        #sed -i "s/$or_case/${total_case}/" ./${WHOLE_SUM}
+        zero_num=`grep -o '"0"' whole_summary.txt |wc -l`
+        if [ x"$zero_num" = x"2" ]; then
+	    sed -i "s/\"0\"/\"${untest_num}\"/2" ./${WHOLE_SUM}
+        else
+	    sed -i "s/\"0\"/\"${untest_num}\"/1" ./${WHOLE_SUM}
+        fi
+#    sed -i 's/"o", "color": "orange"/"rep", "color": "orange"/' ./${WHOLE_SUM}  #use template to get location 
+#    sed -i "s/rep/${untest_num}/" ./${WHOLE_SUM} #repace unrun case num with actual num
+        echo "the actually unrun case is:${untest_num}"
+        cd -
+    else
+	cd ${GIT_DESCRIBE}/${RESULTS_DIR}/$distro
+	total_case=`cat ${CI_SCRIPTS_DIR}/test-scripts/total_sum.txt |awk -F ':' '{print $2}'`
+        or_case=`cat whole_summary.txt |awk -F ',' '{print $4}'|awk -F ' ' '{print $2}'`
+        total_num=`echo $total_case | awk '{split($0,a,"\"");print a[2];}'`
+        or_num=`echo $or_case | awk '{split($0,a,"\"");print a[2];}'`
+        sed -i "s/$or_case/${total_case}/1" ./${WHOLE_SUM}   #replace or_case with total-case
+        untest_num=`expr $total_num - $or_num`
+        #sed -i "s/$or_case/${total_case}/" ./${WHOLE_SUM}
+        zero_num=`grep -o '"0"' whole_summary.txt |wc -l`
+        if [ x"$zero_num" = x"2" ]; then
+            sed -i "s/\"0\"/\"${untest_num}\"/2" ./${WHOLE_SUM}
+        else
+            sed -i "s/\"0\"/\"${untest_num}\"/1" ./${WHOLE_SUM}
+        fi
+#    sed -i 's/"o", "color": "orange"/"rep", "color": "orange"/' ./${WHOLE_SUM}  #use template to get location
+#    sed -i "s/rep/${untest_num}/" ./${WHOLE_SUM} #repace unrun case num with actual num
+        echo "the actually unrun case is:${untest_num}"
+        cd -
+
+    fi	
+    popd
+  
 }
 
 #genrate compile distro whole sum file for mail to display,so we can know the compile result of every distro
