@@ -148,13 +148,13 @@ def filter_test_definitions(distro, device_type, test_scope, test_level,
         if ready \
                 and device_type.lower() in test_yaml['metadata']['devices'] \
                 and distro.lower() in test_yaml['metadata']['os']:
-            dist = distro.lower()
+            dist_lower = distro.lower()
             if 'totalcase' in  test_yaml['metadata']:
                 OS = test_yaml['metadata']['totalcase']
                 print 'start show totalcase:'
                 print OS 
-                if test_yaml['metadata']['totalcase'] is not None and dist in test_yaml['metadata']['totalcase']:
-                    num1 = test_yaml['metadata']['totalcase'][dist]
+                if test_yaml['metadata']['totalcase'] is not None and dist_lower in test_yaml['metadata']['totalcase']:
+                    num1 = test_yaml['metadata']['totalcase'][dist_lower]
                     if num1 is not None:
                         num = int(num1)
                         sum1 = sum1 + num
@@ -162,7 +162,7 @@ def filter_test_definitions(distro, device_type, test_scope, test_level,
             test_path = file[start_point:]
             test_yaml['metadata']['test_path'] = test_path
             work_test_list.append(test_yaml)
-    sum_dict[dist] = sum1
+    sum_dict[dist_lower] = sum1
     for key,value in sum_dict.items():
         print 'the %s total case:' % dist
         print('{key}:{value}'.format(key = key, value = value))
