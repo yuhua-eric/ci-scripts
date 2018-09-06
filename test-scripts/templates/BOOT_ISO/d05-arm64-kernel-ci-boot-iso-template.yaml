@@ -39,6 +39,6 @@ actions:
       - 'root@localhost ~'
 - test:
     timeout:
-      minutes: 80
+      minutes: 60
     definitions:
 {test_definitions}
