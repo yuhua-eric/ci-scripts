@@ -1080,7 +1080,15 @@ def generate_module_dict(result_json_dict, test_dir, distro, scope, \
                         #name_dict[key]["total"] += 1
                     else:
                         print "WARNING: the result not pass or fail" + name_dict[key][sub_key][suite_key][case_key]
+            sub_module_run =  name_dict[key][sub_key]["pass"] + name_dict[key][sub_key]["fail"]
+            if sub_module_run > sub_module_sum:
+                name_dict[key][sub_key]["total"] = sub_module_run
+                print "the total case num in yaml of %s have problem" % sub_key
         name_dict[key]["total"] += module_sum
+        module_run = name_dict[key]["fail"] + name_dict[key]["pass"]
+        if module_run > module_sum:
+            name_dict[key]["total"] = module_run
+            print "the total case num in yaml of %s is wrong!" % key
         print "the really total case num for %s is: %d" % (key,module_sum)
     return name_dict
 

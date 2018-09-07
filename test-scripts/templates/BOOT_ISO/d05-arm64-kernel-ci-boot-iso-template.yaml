@@ -15,7 +15,7 @@ metadata:
 
 timeouts:
   job:
-    minutes: 80
+    minutes: 100
   action:
     minutes: 60
   connection:
@@ -39,6 +39,6 @@ actions:
       - 'root@localhost ~'
 - test:
     timeout:
-      minutes: 60
+      minutes: 80
     definitions:
 {test_definitions}
