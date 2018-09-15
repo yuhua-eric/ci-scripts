@@ -7,6 +7,9 @@ function clean_last_n_day_dir() {
     DEL_DATE=$(date '+%Y%m%d' --date="-${n_day} day")
     echo ${DEL_DATE}
     rm -rf ./*${DEL_DATE}*
+    sleep 2
+    rm -rf ./*${DEL_DATE}*
+    sleep 2
     cd -
 }
 
