@@ -476,7 +476,7 @@ function collect_result() {
     for distro_name in ${distro_dirs};do
         # add distro info in txt file
         # sed -i -e 's/^/'"${distro_name}"' /' ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM}
-        cat ./compile_result.txt |sed -n "/${DISTRO,,}:pass/p" > ./compile_tmp.log
+        cat ./compile_result.txt |sed -n "/${distro_name,,}:pass/p" > ./compile_tmp.log
 	if [ -s ./compile_tmp.log ] ; then
             cat ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}/${distro_name}/${DETAILS_SUM} >> ${GIT_DESCRIBE}/${RESULTS_DIR}/${DETAILS_SUM}
         fi    
