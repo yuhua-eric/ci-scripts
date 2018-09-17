@@ -405,6 +405,7 @@ function replace_whole_sum_file() {
 #    sed -i 's/"o", "color": "orange"/"rep", "color": "orange"/' ./${WHOLE_SUM}  #use template to get location
 #    sed -i "s/rep/${untest_num}/" ./${WHOLE_SUM} #repace unrun case num with actual num
         echo "the actually unrun case is:${untest_num}"
+        or_pass_rate=`cat whole_summary.txt |awk -F ',' '{print $6}'`
         sed -i "s/${or_pass_rate}/${ac_pass_rate}/1" ./${WHOLE_SUM}
         cd -
 
