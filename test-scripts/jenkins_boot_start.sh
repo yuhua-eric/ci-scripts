@@ -359,7 +359,10 @@ function replace_whole_sum_file() {
         untest_num=`expr $total_num - $or_num`
         #sed -i "s/$or_case/${total_case}/" ./${WHOLE_SUM}
         zero_num=`grep -o '"0"' whole_summary.txt |wc -l`
+	pass_case=`cat whole_summary.txt |awk -F ',' '{print $7}'|awk -F ' ' '{print $2}'`
+        pass_num=`echo $pass_case | awk '{split($0,a,"\"");print a[2];}'`
 	if [ $total_num -gt $or_num ]; then
+	    ac_pass_rate=`awk 'BEGIN{printf "%.2f%\n",'$pass_num'/'$total_num'*100}'`
             sed -i "s/$or_case/${total_case}/1" ./${WHOLE_SUM}   #replace or_case with total-case
             if [ x"$zero_num" = x"2" ]; then
 	        sed -i "s/\"0\"/\"${untest_num}\"/2" ./${WHOLE_SUM}
@@ -367,11 +370,14 @@ function replace_whole_sum_file() {
 	        sed -i "s/\"0\"/\"${untest_num}\"/1" ./${WHOLE_SUM}
             fi
 	else
+	    ac_pass_rate=`awk 'BEGIN{printf "%.2f%\n",'$pass_num'/'$or_num'*100}'`
 	    echo "the total caes num is not correct,skip the replacement."
         fi
 #    sed -i 's/"o", "color": "orange"/"rep", "color": "orange"/' ./${WHOLE_SUM}  #use template to get location 
 #    sed -i "s/rep/${untest_num}/" ./${WHOLE_SUM} #repace unrun case num with actual num
         echo "the actually unrun case is:${untest_num}"
+	or_pass_rate=`cat whole_summary.txt |awk -F ',' '{print $6}'`
+        sed -i "s/${or_pass_rate}/ \"${ac_pass_rate}\"/1" ./${WHOLE_SUM} 	
         cd -
     else
 	cd ${GIT_DESCRIBE}/${RESULTS_DIR}/$distro
@@ -382,7 +388,10 @@ function replace_whole_sum_file() {
         untest_num=`expr $total_num - $or_num`
         #sed -i "s/$or_case/${total_case}/" ./${WHOLE_SUM}
         zero_num=`grep -o '"0"' whole_summary.txt |wc -l`
+        pass_case=`cat whole_summary.txt |awk -F ',' '{print $7}'|awk -F ' ' '{print $2}'`
+        pass_num=`echo $pass_case | awk '{split($0,a,"\"");print a[2];}'`
 	if [ $total_num -gt $or_num ]; then
+	    ac_pass_rate=`awk 'BEGIN{printf "%.2f%\n",'$pass_num'/'$total_num'*100}'`
             sed -i "s/$or_case/${total_case}/1" ./${WHOLE_SUM}   #replace or_case with total-case
             if [ x"$zero_num" = x"2" ]; then
                 sed -i "s/\"0\"/\"${untest_num}\"/2" ./${WHOLE_SUM}
@@ -390,11 +399,14 @@ function replace_whole_sum_file() {
                 sed -i "s/\"0\"/\"${untest_num}\"/1" ./${WHOLE_SUM}
             fi
 	else
+            ac_pass_rate=`awk 'BEGIN{printf "%.2f%\n",'$pass_num'/'$or_num'*100}'`
             echo "the total case num is not correct ,skip the replacement."
 	fi
 #    sed -i 's/"o", "color": "orange"/"rep", "color": "orange"/' ./${WHOLE_SUM}  #use template to get location
 #    sed -i "s/rep/${untest_num}/" ./${WHOLE_SUM} #repace unrun case num with actual num
         echo "the actually unrun case is:${untest_num}"
+        or_pass_rate=`cat whole_summary.txt |awk -F ',' '{print $6}'`
+        sed -i "s/${or_pass_rate}/ \"${ac_pass_rate}\"/1" ./${WHOLE_SUM}
         cd -
 
     fi	
