@@ -433,7 +433,7 @@ function main() {
     save_properties_and_result fail
     show_properties
 
-    generate_failed_mail
+    #generate_failed_mail
 
     print_time "time_build_build_begin"
 
