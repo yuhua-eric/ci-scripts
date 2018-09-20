@@ -934,7 +934,7 @@ function main() {
 
     save_properties_and_result pass
 
-    generate_success_mail
+    #generate_success_mail
 }
 
 main "$@"
