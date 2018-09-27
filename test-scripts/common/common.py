@@ -161,6 +161,7 @@ def filter_test_definitions(distro, device_type, test_scope, test_level,
             test_path = file[start_point:]
             test_yaml['metadata']['test_path'] = test_path
             work_test_list.append(test_yaml)
+    dist = distro.lower()
     if dist is not None:
         sum_dict[dist] = sum1
     for key,value in sum_dict.items():
