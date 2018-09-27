@@ -101,7 +101,7 @@ d05ssh08:
   ip: 192.168.50.201
   mac: c0:a8:02:a9:00:04
   next-server: 192.168.50.122
-  nfs-server: 192.168.2.47
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 d05ssh09:
@@ -110,7 +110,7 @@ d05ssh09:
   ip: 192.168.50.121
   mac: c0:a8:02:c1:00:04
   next-server: 192.168.50.122
-  nfs-server: 192.168.2.47
+  nfs-server: 192.168.2.49
   filename: "estuary_install/grubaa64.efi"
 
 # DUT
