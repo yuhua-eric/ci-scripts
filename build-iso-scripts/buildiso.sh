@@ -140,6 +140,7 @@ function main() {
 	fi
     done
     deal_with_iso
+    scp_build_result
 }
 
 main "$@"
