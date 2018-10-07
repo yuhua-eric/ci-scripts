@@ -54,6 +54,7 @@ function parse_params() {
     pushd ${CI_SCRIPTS_DIR}
     : ${SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
     : ${ALL_SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
+    : ${TARGET_IP:=`python configs/parameter_parser.py -f config.yaml -s DHCP -k ip`}
     popd    # restore current work directory
 }
 function deal_with_iso() {
@@ -76,6 +77,19 @@ function deal_with_iso() {
         #cd OpenSuse && rm -f *openSUSE*.iso && cd -
     fi
  }
+
+function scp_build_result() {
+
+    local SSH_PASS="root"
+    local SSH_USER=root
+    local SSH_IP=${TARGET_IP}
+    sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/home/fileserver/open-estuary/*" root@${TARGET_IP}:"/mnt/data/fileserver_data/open-estuary/" &
+    sleep 3m
+    wait
+
+}
+
+
 
 function start_docker_service() {
     docker_status=`service docker status|grep "running"`
