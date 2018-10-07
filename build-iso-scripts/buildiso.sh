@@ -83,10 +83,14 @@ function scp_build_result() {
     local SSH_PASS="root"
     local SSH_USER=root
     local SSH_IP=${TARGET_IP}
-    sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/home/fileserver/open-estuary/*" root@${TARGET_IP}:"/mnt/data/fileserver_data/open-estuary/" &
-    sleep 3m
-    wait
-
+    target_dir=$(ls /home/fileserver/open-estuary/)
+    if timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${TARGET_IP} test -d "/mnt/data/fileserver_data/open-estuary/${target_dir}";then
+        echo  "/mnt/data/fileserver_data/open-estuary/${target_dir} exist in ${TARGET_IP}"
+    else
+        sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/home/fileserver/open-estuary/*" root@${TARGET_IP}:"/mnt/data/fileserver_data/open-estuary/" &
+        sleep 3m
+        wait
+    fi
 }
 
 
