@@ -87,7 +87,7 @@ function scp_build_result() {
     if timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${TARGET_IP} test -d "/mnt/data/fileserver_data/open-estuary/${target_dir}";then
         echo  "/mnt/data/fileserver_data/open-estuary/${target_dir} exist in ${TARGET_IP}"
     else
-        sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "/home/fileserver/open-estuary/*" root@${TARGET_IP}:"/mnt/data/fileserver_data/open-estuary/" &
+        sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r /home/fileserver/open-estuary/* root@${TARGET_IP}:"/mnt/data/fileserver_data/open-estuary/" &
         sleep 3m
         wait
     fi
