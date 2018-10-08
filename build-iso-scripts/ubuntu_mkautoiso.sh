@@ -26,7 +26,7 @@ fi
 if [ ! -d ./mnt ];then
     mkdir ./mnt
 else
-    umount -l ./mnt/
+    umount -l ./mnt/ || true
     rm -rf ./mnt
     mkdir ./mnt
 fi
