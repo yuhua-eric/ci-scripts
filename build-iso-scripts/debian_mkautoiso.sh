@@ -17,7 +17,7 @@ if [ -z "${VERSION}" ];then
     exit 1
 fi
 
-material_iso=$(ls /home/fileserver/open-estuary/${VERSION}/Debian/*debian*.iso)
+material_iso=$(ls /home/fileserver/open-estuary/${VERSION}/Debian/*everything*.iso)
 if [ -z "${material_iso}" ];then
     exit 1
 fi
