@@ -21,8 +21,7 @@ cd $cu_dir
 #    exit 1
 #fi
 
-#material_iso=$(ls /fileserver/open-estuary/${VERSION}/OpenSuse/*everything*.iso)
-material_iso=$(ls ./*openSUSE*.iso)
+material_iso=$(ls ./*everything*.iso)
 if [ -z "${material_iso}" ];then
     exit 1
 fi
