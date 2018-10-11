@@ -21,8 +21,7 @@ cd $cu_dir
 #    exit 1
 #fi
 
-#material_iso=$(ls /fileserver/open-estuary/${VERSION}/OpenSuse/*openSUSE*.iso)
-material_iso=$(ls ./*openSUSE*.iso)
+material_iso=$(ls ./*everything*.iso)
 if [ -z "${material_iso}" ];then
     exit 1
 fi
@@ -30,7 +29,7 @@ fi
 if [ ! -d ./mnt ];then
     mkdir ./mnt
 else
-    umount -l ./mnt/
+    umount -l ./mnt/ || true
     rm -rf ./mnt
     mkdir ./mnt
 fi

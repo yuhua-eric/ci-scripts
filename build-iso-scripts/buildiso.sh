@@ -70,10 +70,9 @@ function deal_with_iso() {
                 distro="$(echo $DISTRO | tr '[:upper:]' '[:lower:]')"
                 cd $DISTRO && rm -f *$distro*.iso && cd -
             elif [ x"$DISTRO" = x"OpenSuse" ]; then
-                cd OpenSuse && rm -f *openSUSE*.iso && cd -
+                cd OpenSuse && rm -f *everything*.iso && cd -
             fi
         done
-        #cd OpenSuse && rm -f *openSUSE*.iso && cd -
     fi
  }
 
@@ -89,7 +88,7 @@ function cp_opensuse_iso(){
     if [ -z ${VERSION} ];then
         exit 1
     fi 
-    material_iso=$(ls /home/fileserver/open-estuary/${VERSION}/OpenSuse/*openSUSE*.iso)
+    material_iso=$(ls /home/fileserver/open-estuary/${VERSION}/OpenSuse/*everything*.iso)
     cp ${material_iso} ./
 }
 
@@ -99,7 +98,7 @@ function cp_auto_iso(){
         exit 1
     fi
     cp -f ./auto-install.iso /home/fileserver/open-estuary/${VERSION}/OpenSuse/
-    rm -f ./*openSUSE*.iso
+    rm -f ./*everything*.iso
 }
 function main() {
     parse_input "$@"
