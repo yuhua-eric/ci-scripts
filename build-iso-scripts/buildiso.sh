@@ -54,6 +54,7 @@ function parse_params() {
     pushd ${CI_SCRIPTS_DIR}
     : ${SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
     : ${ALL_SHELL_DISTRO:=`python configs/parameter_parser.py -f config.yaml -s Build -k Distro`}
+    : ${TARGET_IP:=`python configs/parameter_parser.py -f config.yaml -s DHCP -k ip`}
     popd    # restore current work directory
 }
 function deal_with_iso() {
@@ -75,6 +76,23 @@ function deal_with_iso() {
         done
     fi
  }
+
+function scp_build_result() {
+
+    local SSH_PASS="root"
+    local SSH_USER=root
+    local SSH_IP=${TARGET_IP}
+    target_dir=$(ls /home/fileserver/open-estuary/)
+    if timeout 120 sshpass -p 'root' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${TARGET_IP} test -d "/mnt/data/fileserver_data/open-estuary/${target_dir}";then
+        echo  "/mnt/data/fileserver_data/open-estuary/${target_dir} exist in ${TARGET_IP}"
+    else
+        sshpass -p 'root' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r /home/fileserver/open-estuary/* root@${TARGET_IP}:"/mnt/data/fileserver_data/open-estuary/" &
+        sleep 3m
+        wait
+    fi
+}
+
+
 
 function start_docker_service() {
     docker_status=`service docker status|grep "running"`
@@ -121,6 +139,7 @@ function main() {
 	fi
     done
     deal_with_iso
+    scp_build_result
 }
 
 main "$@"
