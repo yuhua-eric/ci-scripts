@@ -253,6 +253,7 @@ function do_build() {
 
 # generate version number by git sha
 function get_version_info() {
+    time_detail=`date +%Y%m%d%H%M`
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
     if [ "$VERSION"x != ""x ]; then
@@ -263,7 +264,8 @@ function get_version_info() {
         # cd kernel
         # KERNEL_GIT_DESCRIBE=$(git log --oneline | head -1 | awk '{print $1}')
         cd -
-        GIT_DESCRIBE=daily_$(current_day)
+        #GIT_DESCRIBE=daily_$(current_day)
+	GIT_DESCRIBE=daily_$(time_detail)
         cd -
 
         echo "ESTUARY_GIT_DESCRIBE=${ESTUARY_GIT_DESCRIBE}" > ${WORKSPACE}/version.properties
