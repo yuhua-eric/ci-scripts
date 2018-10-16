@@ -265,7 +265,7 @@ function get_version_info() {
         # KERNEL_GIT_DESCRIBE=$(git log --oneline | head -1 | awk '{print $1}')
         cd -
         #GIT_DESCRIBE=daily_$(current_day)
-	GIT_DESCRIBE=daily_$(time_detail)
+	GIT_DESCRIBE=daily_${time_detail}
         cd -
 
         echo "ESTUARY_GIT_DESCRIBE=${ESTUARY_GIT_DESCRIBE}" > ${WORKSPACE}/version.properties
