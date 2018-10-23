@@ -23,7 +23,7 @@ timeouts:
 actions:
 - deploy:
     timeout:
-      minutes: 40
+      minutes: 80
     to: ssh
     os: {distro}
     tree_name: {tree_name}
