@@ -9,8 +9,7 @@ import re
 # DEPLOY_TIME_OUT = 3000
 # set 25 minutes, so that it can retry the deploy
 # (* 35 60)2100
-#DEPLOY_TIME_OUT = 2100
-DEPLOY_TIME_OUT = 2600
+DEPLOY_TIME_OUT = 2100
 
 def boot_device(DEPLOY_TYPE, BMC_HOST, BMC_USER, BMC_PASS):
     connection_command = 'ipmitool -H %s -I lanplus -U %s -P %s sol activate' % (BMC_HOST, BMC_USER, BMC_PASS)
