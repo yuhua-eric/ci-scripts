@@ -418,7 +418,7 @@ function replace_whole_sum_file() {
 function generate_distro_file() {
     #OPEN_ESTUARY_DIR=/home/jenkins/workspace/Estuary-Test/local/open-estuary
     #all build distro,better get from config.yaml
-    ALL_FILE_DISTRO="Fedora OpenSuse Debian Ubuntu CentOS"
+    ALL_FILE_DISTRO="OpenSuse Debian Ubuntu CentOS"
     pushd ${CI_SCRIPTS_DIR}/test-scripts/${GIT_DESCRIBE}/${RESULTS_DIR}
     touch whole_summary.txt
     #prepare standard whole sum file for compile distro
