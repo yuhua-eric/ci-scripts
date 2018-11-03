@@ -15,7 +15,7 @@ metadata:
 
 timeouts:
   job:
-    minutes: 120
+    minutes: 140
   action:
     minutes: 90
   connection:
