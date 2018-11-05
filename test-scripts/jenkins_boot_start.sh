@@ -927,7 +927,7 @@ function main() {
     print_time "time_preparing_envireonment"
 
     trigger_lava_build
-    generate_distro_file
+   # generate_distro_file
     collect_result
 
     print_time "time_test_test_end"
