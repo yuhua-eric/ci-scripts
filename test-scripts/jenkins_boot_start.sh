@@ -593,8 +593,14 @@ function generate_pass_rate() {
         release_list=$(ls ${FTP_DIR}/${TREE_NAME}/ --hide "daily_${today}" | grep "$month" || true)
         success_day=$(echo ${release_list} | wc -w)
     fi
-    rate=$(echo "${success_day} * 100 / ${day}" | bc)
-    echo ${rate}
+    if [ $day -gt ${success_day} ];then
+        rate=$(echo "${success_day} * 100 / ${day}" | bc)
+        echo ${rate}
+    else
+        rate=100%
+	echo ${rate}
+    fi
+    
 }
 
 # export FTP_DIR="/fileserver"; export TREE_NAME="open-estuary"; export DETAILS_SUM='details_summary.txt'
