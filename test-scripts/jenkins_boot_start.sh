@@ -597,7 +597,7 @@ function generate_pass_rate() {
         rate=$(echo "${success_day} * 100 / ${day}" | bc)
         echo ${rate}
     else
-        rate=100%
+        rate=100
 	echo ${rate}
     fi
     
