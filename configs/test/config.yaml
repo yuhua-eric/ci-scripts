@@ -36,17 +36,17 @@ Arch:
 # for lava connection
 LAVA:
     TOKEN: 0p9a29zs4rq15xyaaw9eza9sa1hsdb8axx4p9fankh6j0304wrla08w9n7s9qghn2m8bnofcolbrng0sy0zzef7awwt6hjnajhmnoq5aj0ufxm4mqt7629d3fskcnm75
-    lavaserver: http://192.168.50.122/RPC2/
+    lavaserver: http://203.160.91.226/RPC2/
     lavastream: /anonymous/admin/
     lavauser: admin
-    lavaurl: http://192.168.50.122
-    LAVA_DISPLAY_URL: http://120.31.149.194:180
+    lavaurl: http://203.160.91.226
+    LAVA_DISPLAY_URL: http://203.160.91.226
 
 # for lava job parameter
 Jenkins:
     url: http://192.168.50.122:8080
     Boot: BOOT_NFS
-    JENKINS_DISPLAY_URL: http://120.31.149.194:18080
+    JENKINS_DISPLAY_URL: http://203.160.91.226:18080
 
 Test:
     Plan: '*'
@@ -57,7 +57,7 @@ Test:
 # for kernelci access
 Ftpinfo:
     ftpserver: http://192.168.50.122:8083
-    FTPSERVER_DISPLAY_URL: http://120.31.149.194:18083
+    FTPSERVER_DISPLAY_URL: http://203.160.91.226:18083
     FTP_DIR : /fileserver
     STASH_DIR : /home/fileserver
 
