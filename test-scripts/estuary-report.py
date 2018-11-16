@@ -5,6 +5,7 @@
 # pip install matplotlib
 # pip install numpy
 # pip install reportlab
+#get total case and unrun case--modi by yuhua-eric
 import os
 import xmlrpclib
 import yaml
