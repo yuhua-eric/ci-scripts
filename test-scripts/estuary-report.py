@@ -1147,7 +1147,7 @@ def main2():
 
 def main(args):
     config = configuration.get_config(args)
-    jenkins_build_url = 'http://203.160.91.226:18080/job/Estuary-Test/352/'
+    jenkins_build_url = os.getenv('BUILD_URL', '')
     global TEST_CASE_DEFINITION_DIR
     TEST_CASE_DEFINITION_DIR = config.get("testDir")
     distro = config.get("distro")
