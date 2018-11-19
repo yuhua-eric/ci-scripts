@@ -32,6 +32,8 @@ function init_input_params() {
     GIT_DESCRIBE=${GIT_DESCRIBE:-""}
 
     DEBUG=${DEBUG:-""}
+    
+    BUILD_URL=`echo $BUILD_URL | sed 's/120.31.149.194/203.160.91.226/g'`
 
     JENKINS_JOB_INFO=$(expr "${BUILD_URL}" : '^http.*/job/\(.*\)/$' | sed "s#/#-#g")
 
