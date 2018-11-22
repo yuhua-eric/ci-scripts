@@ -1,27 +1,63 @@
 d05ssh01:
-  distro_version: daily_20180926
-  os: centos
+  distro_version: daily_20181020
+  os: oe
+  fail_os: centos
+  fail_version: v5.0
+  fail_time: 0
+
 d05ssh02:
   distro_version: daily_20180829
   os: fedora
+  fail_os: centos
+  fail_version: v5.0
+  fail_time: 0
+
 d05ssh03:
   distro_version: null
   os: null
+  fail_os: centos
+  fail_version: v5.0
+  fail_time: 0
+
 d05ssh04:
-  distro_version: v5.0
-  os: centos
-d05ssh05:
-  distro_version: daily_20180926
-  os: fedora
-d05ssh06:
-  distro_version: daily_20180926
-  os: fedora
-d05ssh07:
-  distro_version: daily_20180926
+  distro_version: daily_20181020
   os: oe
+  fail_os: centos
+  fail_version: v5.0
+  fail_time: 0
+
+d05ssh05:
+  distro_version: daily_20181020
+  os: oe
+  fail_os: centos
+  fail_version: v5.0
+  fail_time: 0
+
+d05ssh06:
+  distro_version: daily_20181020
+  os: oe
+  fail_os: centos
+  fail_version: v5.0
+  fail_time: 0
+
+d05ssh07:
+  distro_version: daily_20181020
+  os: oe
+  fail_os: centos
+  fail_version: v5.0
+  fail_time: 0
+
 d05ssh08:
-  distro_version: v5.0
+  distro_version: daily_20181020
   os: centos
+  fail_os: centos
+  fail_version: v5.0
+  fail_time: 0
+
 d05ssh09:
-  distro_version: v5.0
-  os: centos
+  distro_version: daily_20181020
+  os: oe
+  fail_os: centos
+  fail_version: v5.0
+  fail_time: 0
+

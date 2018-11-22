@@ -1,5 +1,5 @@
 #!/bin/bash 
-
+#author yuhua-eric
 set -x
 
 function show_help(){
@@ -73,6 +73,15 @@ function clean_lava() {
     timeout 120 sshpass -p ${SSH_PASS} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP} rm -f /*.tar.gz
 }
 
+#add by yuhua,change dns config when os is ubuntu to fix resove problem.
+function change_dns() {
+    local SSH_PASS="root"
+    local SSH_USER=root
+    local SSH_IP=${TARGET_IP}
+
+    timeout 120 sshpass -p ${SSH_PASS} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${SSH_IP} sed -i "'/nameserver/i\nameserver 192.168.1.107' /etc/resolv.conf"
+}
+
 function main(){
     parse_input "$@"
 
@@ -94,6 +103,7 @@ function main(){
         java -jar jenkins-cli.jar -s http://${JENKINS_URL}/ login
         java -jar jenkins-cli.jar -s http://${JENKINS_URL}/ build step_lava_config_dhcp -w -s -p TREE_NAME="${TREE_NAME}" -p HOST_NAME="${TARGET_HOSTNAME}" -p DISTRO="${DISTRO}" -p DISTRO_VERSION="${DISTRO_VERSION}" -p DEPLOY_TYPE="${DEPLOY_TYPE}"
         java -jar jenkins-cli.jar -s http://${JENKINS_URL}/ build step_lava_deploy_device -w -s -p TREE_NAME="${TREE_NAME}" -p HOST_NAME="${TARGET_HOSTNAME}" -p DISTRO="${DISTRO}" -p DISTRO_VERSION="${DISTRO_VERSION}" -p DEPLOY_TYPE="${DEPLOY_TYPE}"
+        change_dns
         if [ "$?" = "0" ];then 
             if [ $DISTRO != oe ];then
                 comfirm_os |grep -i "$DISTRO" >./tmp.txt
@@ -102,24 +112,76 @@ function main(){
                     echo "write the lastest os and distro_version in yaml"
                     python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k os -w $DISTRO
                     python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k distro_version -w $DISTRO_VERSION    
+                    python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time -w 0
 	        else
-	            python /usr/local/bin/cancel_job.py --dut ${TARGET_HOSTNAME}
+                    echo "fail the deploy,write the fail info into yaml file;if failed before cancel job"
+                    fail_os=$(python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_os)
+                    fail_version=$(python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_version)
+                    if [ $fail_os = $DISTRO ] && [ $fail_version = $DISTRO_VERSION ]; then
+                        fail_time=$(python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time)
+                        new_time=`expr $fail_time + 1`
+                        python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time -w $new_time
+                    else
+                        python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_os -w $DISTRO
+                        python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_version -w $DISTRO_VERSION
+                        python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time -w 1
+                    fi
+                    fail_time=$(python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time) 
+                    if [ $fail_os = $DISTRO ] && [ $fail_version = $DISTRO_VERSION ] && [ "$fail_time" = "2" ];then
+                        python /usr/local/bin/cancel_job.py --dut ${TARGET_HOSTNAME}
+                    fi
+
+	            #python /usr/local/bin/cancel_job.py --dut ${TARGET_HOSTNAME}
                 fi
             else
                 comfirm_os |grep -i "opensuse" >./tmp.txt
                 if [ -s ./tmp.txt ] ; then
-                echo "already get the right os"
-                echo "write the lastest os and distro_version in yaml"
-                python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k os -w $DISTRO
-                python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k distro_version -w $DISTRO_VERSION
+                    echo "already get the right os"
+                    echo "write the lastest os and distro_version in yaml"
+                    python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k os -w $DISTRO
+                    python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k distro_version -w $DISTRO_VERSION
+                    python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time -w 0
                 else
-                    python /usr/local/bin/cancel_job.py --dut ${TARGET_HOSTNAME}
+                    fail_os=$(python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_os)
+                    fail_version=$(python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_version)
+                    if [ $fail_os = $DISTRO ] && [ $fail_version = $DISTRO_VERSION ]; then
+                        fail_time=$(python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time)
+                        new_time=`expr $fail_time + 1`
+                        python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time -w $new_time
+                    else
+                        python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_os -w $DISTRO
+                        python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_version -w $DISTRO_VERSION
+                        python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time -w 1
+                    fi
+                    fail_time=$(python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time)
+                    if [ $fail_os = $DISTRO ] && [ $fail_version = $DISTRO_VERSION ] && [ "$fail_time" = "2" ];then
+                        python /usr/local/bin/cancel_job.py --dut ${TARGET_HOSTNAME}
+                    fi 
+                    #python /usr/local/bin/cancel_job.py --dut ${TARGET_HOSTNAME}
                 fi
             fi
 	else
-            python /usr/local/bin/cancel_job.py --dut ${TARGET_HOSTNAME}
+            fail_os=$(python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_os)
+            fail_version=$(python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_version)
+            if [ $fail_os = $DISTRO ] && [ $fail_version = $DISTRO_VERSION ]; then
+                fail_time=$(python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time)
+                new_time=`expr $fail_time + 1`
+                python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time -w $new_time
+            else
+                python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_os -w $DISTRO
+                python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_version -w $DISTRO_VERSION
+                python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time -w 1
+            fi
+            fail_time=$(python /usr/local/bin/parameter_yaml.py -f devices_os.yaml -s ${TARGET_HOSTNAME} -k fail_time)
+            if [ $fail_os = $DISTRO ] && [ $fail_version = $DISTRO_VERSION ] && [ "$fail_time" = "2" ];then
+                python /usr/local/bin/cancel_job.py --dut ${TARGET_HOSTNAME}
+            fi
+            #python /usr/local/bin/cancel_job.py --dut ${TARGET_HOSTNAME}
         fi 
     fi
+  #  if [ $DISTRO = ubuntu ];then
+  #      change_dns
+  #  fi 
     # test
     # java -jar jenkins-cli.jar -s http://192.168.67.146:8080/ build test-trigger-by-restapi -w -v -p TREE_NAME="open-estuary"
     sleep 2
