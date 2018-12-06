@@ -711,7 +711,7 @@ function generate_success_mail(){
     echo "<br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
     echo "<b>1. 构建信息</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
-    JOB_INFO_VERSION="Estuary v5.1 - ${TODAY}"
+    JOB_INFO_VERSION="Estuary v5.2 - ${TODAY}"
     # TODO : the start time need read from file.
     JOB_INFO_SHA1="${GIT_DESCRIBE}"
     JOB_INFO_RESULT=${JOB_RESULT}
@@ -725,7 +725,7 @@ function generate_success_mail(){
     echo "<br><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
 
     echo "<b>2. 今日构建结果</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-    JOB_RESULT_VERSION="Estuary v5.1"
+    JOB_RESULT_VERSION="Estuary v5.2"
     JOB_RESULT_DATA=""
     #all build distro,better get from the config.yaml
     #ALL_SHELL_DISTRO='OpenSuse Fedora Debian Ubuntu CentOS'
@@ -760,7 +760,7 @@ function generate_success_mail(){
 done
 
   echo "<b>4. ${MONTH}月版本健康度统计</b><br>" >> ${WORKSPACE}/MAIL_CONTENT.txt
-  HEALTH_RATE_VERSION="Estuary v5.1"
+  HEALTH_RATE_VERSION="Estuary v5.2"
   BUILD_PASS_RATE=$(generate_pass_rate || true)
   HEALTH_RATE_COMPILE="{\"data\": \"${BUILD_PASS_RATE}%\", \"link\": \"${BUILD_URL}BuildReport\"}"
   TEST_PASS_RATE=$(generate_test_rate || true)
