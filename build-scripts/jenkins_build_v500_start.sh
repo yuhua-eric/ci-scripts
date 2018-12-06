@@ -253,7 +253,7 @@ function do_build() {
 
 # generate version number by git sha
 function get_version_info() {
-    time_detail=`date +%Y%m%d%H%M`
+    time_detail=`date +%Y%m%d`
     pushd $OPEN_ESTUARY_DIR;    # enter OPEN_ESTUARY_DIR
 
     if [ "$VERSION"x != ""x ]; then
