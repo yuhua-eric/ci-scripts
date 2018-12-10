@@ -264,7 +264,7 @@ function clean_workspace() {
 function trigger_lava_build() {
     pushd ${WORKSPACE}/local/ci-scripts/test-scripts
     mkdir -p ${GIT_DESCRIBE}/${RESULTS_DIR}
-    cp /fileserver/open-estuary/${GIT_DESCRIBE}/self-test/compile_result.txt ./ #use jenkins plugin to transmit result file
+    cp /fileserver/open-estuary/self-test/${GIT_DESCRIBE}/compile_result.txt ./ #use jenkins plugin to transmit result file
     for DISTRO in $SHELL_DISTRO; do
         if [ -d $DISTRO ];then
             rm -fr $DISTRO
@@ -459,7 +459,7 @@ function generate_distro_file() {
 function collect_result() {
     # push the binary files to the ftpserver
     pushd ${WORKSPACE}/local/ci-scripts/test-scripts
-    DES_DIR=${FTP_DIR}/${TREE_NAME}/${GIT_DESCRIBE}/
+    DES_DIR=${FTP_DIR}/${TREE_NAME}/self-test/${GIT_DESCRIBE}/
     [ ! -d $DES_DIR ] && echo "Don't have the images and dtbs" && exit -1
 
     if [ -e  ${WORKSPACE}/${WHOLE_SUM} ]; then
