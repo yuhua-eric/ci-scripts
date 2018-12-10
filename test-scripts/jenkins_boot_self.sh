@@ -132,7 +132,7 @@ function generate_jobs() {
     for PLAT in $SHELL_PLATFORM; do
         board_arch=${dict[$PLAT]}
         if [ x"$distro" != x"" ]; then
-            python estuary-ci-job-creator.py "$FTP_SERVER/${TREE_NAME}/${GIT_DESCRIBE}/${PLAT}-${board_arch}/" \
+            python estuary-ci-job-creator.py "$FTP_SERVER/${TREE_NAME}/self-test/${GIT_DESCRIBE}/${PLAT}-${board_arch}/" \
                    --tree "${TREE_NAME}" --plans "$test_name" --distro "$distro" --arch "${board_arch}" \
                    --testUrl "${TEST_REPO}" --testDir "${TEST_CASE_DIR}" --plan "${TEST_PLAN}" --scope "${TEST_SCOPE}" --level "${TEST_LEVEL}" \
                    --jenkinsJob "${JENKINS_JOB_INFO}"
