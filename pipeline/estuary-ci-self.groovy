@@ -174,7 +174,7 @@ node('ci-compile') {
         } finally {
         }
 
-        test_result = sh script: "./local/ci-scripts/test-scripts/jenkins_boot_start.sh -p env.properties 2>&1 " , returnStatus: true
+        test_result = sh script: "./local/ci-scripts/test-scripts/jenkins_boot_self.sh -p env.properties 2>&1 " , returnStatus: true
     }
     echo "test_result : ${test_result}"
     if (test_result == 0) {
