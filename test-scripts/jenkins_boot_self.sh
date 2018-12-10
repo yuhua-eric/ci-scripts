@@ -3,8 +3,8 @@
 
 #: Title                  : jenkins_boot_start.sh
 #: Usage                  : ./local/ci-scripts/test-scripts/jenkins_boot_start.sh -p env.properties
-#: Author                 : qinsl0106@thundersoft.com
-#: Description            : CI中 测试部分 的jenkins任务脚本
+#: Author                 : yuhua-eric
+#: Description            : 支持基于编译的自测试
 
 __ORIGIN_PATH__="$PWD"
 script_path="${0%/*}"  # remove the script name ,get the path
