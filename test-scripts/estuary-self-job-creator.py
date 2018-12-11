@@ -221,7 +221,9 @@ def create_jobs(base_url, kernel, plans, platform_list, targets, priority,
 
     build_info = url.path.split('/')
     tree = build_info[1]
-    kernel_version = build_info[3]
+    kernel_version_1 = build_info[2]
+    kernel_version_2 = build_info[3]
+    kernel_version = kernel_version_1 + '/' + kernel_version_2
     defconfig = build_info[4]
 
     for platform in platform_list:
